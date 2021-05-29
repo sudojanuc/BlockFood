@@ -14,6 +14,11 @@ import { MatListModule } from '@angular/material/list';
 import { WEB3PROVIDER } from './services/providers';
 import {MatCardModule} from '@angular/material/card';
 import { HomeComponent } from './home/home.component';
+import { RestaurantComponent } from './restaurant/restaurant.component';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatInputModule} from '@angular/material/input';
+import { FormsModule } from '@angular/forms';
+
 
 
 export function enableWeb3Provider(provider : any) {
@@ -26,7 +31,8 @@ export function enableWeb3Provider(provider : any) {
   declarations: [
     AppComponent,
     NavComponent,
-    HomeComponent
+    HomeComponent,
+    RestaurantComponent
   ],
   imports: [
     BrowserModule,
@@ -38,7 +44,10 @@ export function enableWeb3Provider(provider : any) {
     MatSidenavModule,
     MatIconModule,
     MatListModule,
-    MatCardModule
+    MatCardModule,
+    MatFormFieldModule,
+    MatInputModule ,
+    FormsModule
   ],
   providers: [
     {
