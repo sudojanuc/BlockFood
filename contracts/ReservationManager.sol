@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 pragma solidity >=0.8.0;
 
 contract ReservationManager
@@ -78,12 +80,13 @@ contract ReservationManager
     function getReservationUnitsOfProvider(uint id) public view returns(ReservationUnit[] memory)
     {
         require(providerOfId[id].isCreated);
+        uint count = 0;
         ReservationUnit[] memory ru = new ReservationUnit[](reservationUnitCountOfProvider[id]);
 
-        for(uint i = 0;i< reservationUnitCountOfProvider[id]; i++)
+        for(uint i = 0;i < reservationUnits.length; i++)
         {
             if(reservationUnitOfProvider[i] == id)
-                ru[i] = reservationUnits[i];
+                ru[count++] = reservationUnits[i];
         }
         return ru;
     }

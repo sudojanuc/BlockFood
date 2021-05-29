@@ -1,6 +1,5 @@
 package-lock.json
 build/
-migrations/
 test/
 .secret
 package.json
