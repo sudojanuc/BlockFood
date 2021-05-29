@@ -16,6 +16,9 @@ contract ReservationManager
         bool isCreated;
     }
 
+    event NewProvider(address owner, Provider provider);
+    event NewReservationUnit(address owner, uint providerId, string providerName, ReservationUnit reservationUnit);
+
     Provider[] private providers;
     ReservationUnit[] private reservationUnits;
 
@@ -40,17 +43,21 @@ contract ReservationManager
         ownerOfProvider[id] = msg.sender;
         providerOfOwner[msg.sender] = provider;
         providerOfId[id] = provider;
+
+        emit NewProvider(msg.sender, provider);
     }
 
     function createReservationUnit(uint16 guestCount) public
     {
-        require(providerOfOwner[msg.sender].isCreated);
+        require(providerOfOwner[msg.sender].isCreated && guestCount > 0);
 
         uint id = reservationUnits.length;
 
         reservationUnits.push(ReservationUnit(id, guestCount, true));
         reservationUnitOfProvider[id] = providerOfOwner[msg.sender].id;
         reservationUnitCountOfProvider[providerOfOwner[msg.sender].id]++;
+
+        emit NewReservationUnit(msg.sender, providerOfOwner[msg.sender].id, providerOfOwner[msg.sender].name, reservationUnits[id]);
     }
 
     function getProviders() public view returns(Provider[] memory)
