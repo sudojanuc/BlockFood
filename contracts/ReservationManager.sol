@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 pragma solidity >=0.8.0;
 
 contract ReservationManager
@@ -15,6 +17,9 @@ contract ReservationManager
         uint16 possibleGuestCount;
         bool isCreated;
     }
+
+    event NewProvider(address owner, Provider provider);
+    event NewReservationUnit(address owner, uint providerId, string providerName, ReservationUnit reservationUnit);
 
     Provider[] private providers;
     ReservationUnit[] private reservationUnits;
@@ -40,17 +45,21 @@ contract ReservationManager
         ownerOfProvider[id] = msg.sender;
         providerOfOwner[msg.sender] = provider;
         providerOfId[id] = provider;
+
+        emit NewProvider(msg.sender, provider);
     }
 
     function createReservationUnit(uint16 guestCount) public
     {
-        require(providerOfOwner[msg.sender].isCreated);
+        require(providerOfOwner[msg.sender].isCreated && guestCount > 0);
 
         uint id = reservationUnits.length;
 
         reservationUnits.push(ReservationUnit(id, guestCount, true));
         reservationUnitOfProvider[id] = providerOfOwner[msg.sender].id;
         reservationUnitCountOfProvider[providerOfOwner[msg.sender].id]++;
+
+        emit NewReservationUnit(msg.sender, providerOfOwner[msg.sender].id, providerOfOwner[msg.sender].name, reservationUnits[id]);
     }
 
     function getProviders() public view returns(Provider[] memory)
@@ -71,12 +80,13 @@ contract ReservationManager
     function getReservationUnitsOfProvider(uint id) public view returns(ReservationUnit[] memory)
     {
         require(providerOfId[id].isCreated);
+        uint count = 0;
         ReservationUnit[] memory ru = new ReservationUnit[](reservationUnitCountOfProvider[id]);
 
-        for(uint i = 0;i< reservationUnitCountOfProvider[id]; i++)
+        for(uint i = 0;i < reservationUnits.length; i++)
         {
             if(reservationUnitOfProvider[i] == id)
-                ru[i] = reservationUnits[i];
+                ru[count++] = reservationUnits[i];
         }
         return ru;
     }
