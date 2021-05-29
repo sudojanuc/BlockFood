@@ -1,1 +1,5 @@
 package-lock.json
+build/
+migrations/
+test/
+truffle-config.js
