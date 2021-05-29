@@ -1,0 +1,15 @@
+<div class="wrapper" color="primary">
+  
+    <mat-card *ngIf="!restaurant" class="card">
+        <mat-card-title>Create a new Restaurant</mat-card-title>
+        <mat-card-content style="margin-top: 20%;">
+            <mat-form-field appearance="fill">
+                <mat-label>Restaurant name</mat-label>
+                <input matInput [(ngModel)]="name">
+            </mat-form-field>
+        </mat-card-content>
+        <mat-card-actions>
+            <button mat-flat-button color="primary" (click)="saveRestaurant()">Save</button>
+        </mat-card-actions>
+    </mat-card>
+</div>
