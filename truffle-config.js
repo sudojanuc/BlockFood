@@ -19,7 +19,9 @@
  */
 
 const HDWalletProvider = require('@truffle/hdwallet-provider');
+//const infuraKey = "0b13f7010f844b9abaea41a05659c7f2";
 const infuraKey = "0b13f7010f844b9abaea41a05659c7f2";
+//https://rinkeby.infura.io/v3/0b13f7010f844b9abaea41a05659c7f2
 const fs = require('fs');
 const mnemonic = fs.readFileSync(".secret").toString().trim();
 
@@ -57,13 +59,13 @@ module.exports = {
     // },
     // Useful for deploying to a public network.
     // NB: It's important to wrap the provider as a function.
-    kovan: {
-    provider: () => new HDWalletProvider(mnemonic, `https://kovan.infura.io/v3/${infuraKey}`),
+    rinkeby: {
+
+    provider: () => new HDWalletProvider(mnemonic, `https://rinkeby.infura.io/v3/${infuraKey}`),
+      //provider: () => new HDWalletProvider(mnemonic, `https://kovan.infura.io/v3/${infuraKey}`),
     gas: 5000000,
     gasPrice: 25000000000,
-    network_id: 42,
-    confirmations: 2,    // # of confs to wait between deployments. (default: 0)
-    timeoutBlocks: 200,  // # of blocks before a deployment times out  (minimum/default: 50)
+    network_id: 4,
     skipDryRun: true     // Skip dry run before migrations? (default: false for public nets )
     },
     // Useful for private networks
@@ -82,7 +84,7 @@ module.exports = {
   // Configure your compilers
   compilers: {
     solc: {
-      version: "^0.8.0",    // Fetch exact version from solc-bin (default: truffle's version)
+      version: "^0.5.0",    // Fetch exact version from solc-bin (default: truffle's version)
       // docker: true,        // Use "0.5.1" you've installed locally with docker (default: false)
       // settings: {          // See the solidity docs for advice about optimization and evmVersion
       //  optimizer: {
