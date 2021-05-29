@@ -18,7 +18,7 @@ import { RestaurantComponent } from './restaurant/restaurant.component';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
-
+import {MatDividerModule} from '@angular/material/divider';
 
 
 export function enableWeb3Provider(provider : any) {
@@ -47,7 +47,8 @@ export function enableWeb3Provider(provider : any) {
     MatCardModule,
     MatFormFieldModule,
     MatInputModule ,
-    FormsModule
+    FormsModule,
+    MatDividerModule
   ],
   providers: [
     {

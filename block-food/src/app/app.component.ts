@@ -28,7 +28,6 @@ export class AppComponent implements OnInit {
 
 
 public changeMode(mode:any){
-  console.log('mode',mode);
   this.mode = mode;
 }
 

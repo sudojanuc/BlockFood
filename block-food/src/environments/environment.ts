@@ -5,8 +5,8 @@
 export const environment = {
   production: false,
   network: 'Kovan',
-  address: '0xB77c3546332e9838b0d6603A19F2C83c57831F0e',
-  abi: [
+  address: '0x80651894BA59EFe325Ac52892DC4be8782Ec52cD',
+  "abi": [
     {
       "inputs": [
         {
@@ -31,36 +31,6 @@ export const environment = {
       "name": "createReservationUnit",
       "outputs": [],
       "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "getProviders",
-      "outputs": [
-        {
-          "components": [
-            {
-              "internalType": "uint256",
-              "name": "id",
-              "type": "uint256"
-            },
-            {
-              "internalType": "string",
-              "name": "name",
-              "type": "string"
-            },
-            {
-              "internalType": "bool",
-              "name": "isCreated",
-              "type": "bool"
-            }
-          ],
-          "internalType": "struct ReservationManager.Provider[]",
-          "name": "",
-          "type": "tuple[]"
-        }
-      ],
-      "stateMutability": "view",
       "type": "function"
     },
     {
@@ -159,7 +129,7 @@ export const environment = {
       "stateMutability": "view",
       "type": "function"
     }
-  ]
+  ],
 };
 
 /*

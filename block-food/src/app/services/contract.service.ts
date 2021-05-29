@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@angular/core';
 import { ethers } from 'ethers';
 import { environment } from 'src/environments/environment';
-import { Restaurant } from '../restaurant/restaurant.component';
+import { Restaurant, Table } from '../restaurant/restaurant.component';
 import { WEB3PROVIDER } from './providers';
 declare const window: any;
 
@@ -9,6 +9,7 @@ declare const window: any;
   providedIn: 'root'
 })
 export class ContractService {
+
   public address: any;
   private contract: any;
   private provider: any;
@@ -33,8 +34,16 @@ export class ContractService {
     this.contract.functions.createProvider(name); 
   }
 
-  public getRestaurant():Restaurant{
+  public getRestaurant():Promise<Restaurant[]>{
     return this.contract.functions.getCurrentProvider(); 
+  }
+
+  public getMyTables(restaurant:Restaurant):Promise<[Table[]]>{
+    return this.contract.functions.getReservationUnitsOfProvider(restaurant.id); 
+  }
+
+  saveTable(guestCount: number) {
+    this.contract.functions.createReservationUnit(guestCount); 
   }
 
 }
