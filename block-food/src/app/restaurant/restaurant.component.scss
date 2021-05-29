@@ -6,11 +6,33 @@
     // align-items: center; 
 }
 
-.card{
-    margin-top: 6%;
+
+.marginTop{
+    margin-top: 5%;
 }
 
 .header{
     flex: 1 1 auto;
     text-align: center;
+}
+
+.tableWrapper{
+    display: flex;
+    width: 5%;
+    min-height: 15%;
+}
+
+.table{
+    height: 65%;
+    margin: 5%;
+    // width: 50px;
+    // padding: 5px;
+}
+
+.newTable{
+    // width: 210px;
+}
+
+.restaurant{
+    // width: 400px;
 }

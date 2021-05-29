@@ -19,6 +19,7 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
 import {MatDividerModule} from '@angular/material/divider';
+import { UserComponent } from './user/user.component';
 
 
 export function enableWeb3Provider(provider : any) {
@@ -32,7 +33,8 @@ export function enableWeb3Provider(provider : any) {
     AppComponent,
     NavComponent,
     HomeComponent,
-    RestaurantComponent
+    RestaurantComponent,
+    UserComponent
   ],
   imports: [
     BrowserModule,
