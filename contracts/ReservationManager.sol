@@ -37,7 +37,7 @@ contract ReservationManager
      * Aggregator: ETH/USD
      * Address: 0x9326BFA02ADD2366b30bacB125260Af641031331
      */
-    constructor()
+    constructor() public
     {
         //priceFeed = AggregatorV3Interface(0x9326BFA02ADD2366b30bacB125260Af641031331);
     }
