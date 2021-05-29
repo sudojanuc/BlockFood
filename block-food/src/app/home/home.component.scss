@@ -1,0 +1,21 @@
+.container{
+    display: flex;
+    height: 70%;
+}
+
+.option{
+    width: 50%;
+}
+
+.card{
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    cursor: pointer;
+    align-items: center;
+    
+}
+
+.text{
+    font-size: xx-large;
+}

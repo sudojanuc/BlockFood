@@ -12,6 +12,9 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { WEB3PROVIDER } from './services/providers';
+import {MatCardModule} from '@angular/material/card';
+import { HomeComponent } from './home/home.component';
+
 
 export function enableWeb3Provider(provider : any) {
   return () => {
@@ -22,7 +25,8 @@ export function enableWeb3Provider(provider : any) {
 @NgModule({
   declarations: [
     AppComponent,
-    NavComponent
+    NavComponent,
+    HomeComponent
   ],
   imports: [
     BrowserModule,
@@ -33,7 +37,8 @@ export function enableWeb3Provider(provider : any) {
     MatButtonModule,
     MatSidenavModule,
     MatIconModule,
-    MatListModule
+    MatListModule,
+    MatCardModule
   ],
   providers: [
     {
