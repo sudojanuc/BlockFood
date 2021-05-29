@@ -2,4 +2,6 @@ package-lock.json
 build/
 migrations/
 test/
-truffle-config.js
+.secret
+package.json
+node_modules/
