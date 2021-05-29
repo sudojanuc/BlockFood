@@ -1,12 +1,8 @@
-pragma solidity >=0.5.16;
-
-//import "../node_modules/@chainlink/contracts/src/v0.6/interfaces/AggregatorV3Interface.sol";
+pragma solidity >=0.5.0;
+pragma experimental ABIEncoderV2;
 
 contract ReservationManager
 {
-
-    //AggregatorV3Interface internal priceFeed;
-
     struct Provider
     {
         uint id;
@@ -16,67 +12,68 @@ contract ReservationManager
 
     struct ReservationUnit
     {
+        uint id;
         uint16 possibleGuestCount;
         bool isCreated;
     }
 
-    Provider[] public providers;
-    ReservationUnit[] public reservationUnits;
+    Provider[] private providers;
+    ReservationUnit[] private reservationUnits;
 
     //owner mappings
-    mapping (uint => address) public ownerOfProvider;
-    mapping (address => Provider) public providerOfOwner;
+    mapping (uint => address) private ownerOfProvider;
+    mapping (address => Provider) private providerOfOwner;
 
     //reservationUnit mappings
-    mapping (uint => ReservationUnit) public reservationUnitOfProvider;
-    mapping (uint => uint) public reservationUnitCountOfProvider;
+    mapping (uint => uint) private reservationUnitOfProvider;
+    mapping (uint => uint) private reservationUnitCountOfProvider;
 
-
-    /**
-     * Network: Kovan
-     * Aggregator: ETH/USD
-     * Address: 0x9326BFA02ADD2366b30bacB125260Af641031331
-     */
-    constructor() public
-    {
-        //priceFeed = AggregatorV3Interface(0x9326BFA02ADD2366b30bacB125260Af641031331);
-    }
+    mapping (uint => Provider) private providerOfId;
 
     function createProvider(string memory name) public
     {
+        require(!providerOfOwner[msg.sender].isCreated);
+
         uint id = providers.length;
         Provider memory provider = Provider(id, name, true);
         providers.push(provider);
 
         ownerOfProvider[id] = msg.sender;
         providerOfOwner[msg.sender] = provider;
+        providerOfId[id] = provider;
     }
 
     function createReservationUnit(uint16 guestCount) public
     {
         require(providerOfOwner[msg.sender].isCreated);
 
-        reservationUnits.push(ReservationUnit(guestCount, true));
-        uint id = reservationUnits.length - 1;
-        reservationUnitOfProvider[providerOfOwner[msg.sender].id] = reservationUnits[id];
+        uint id = reservationUnits.length;
+
+        reservationUnits.push(ReservationUnit(id, guestCount, true));
+        reservationUnitOfProvider[id] = providerOfOwner[msg.sender].id;
         reservationUnitCountOfProvider[providerOfOwner[msg.sender].id]++;
     }
 
-
-
-
-    /**
-     * Returns the latest price
-     */
-    /*function getThePrice() public view returns (int)
+    function getProviders() public view returns(Provider[] memory)
     {
-        (
-            uint80 roundID,
-            int price,
-            uint startedAt,
-            uint timeStamp,
-            uint80 answeredInRound
-        ) = priceFeed.latestRoundData();
-        return price;
-    }*/
+        return providers;
+    }
+
+    function getReservationUnits() public view returns(ReservationUnit[] memory)
+    {
+        return reservationUnits;
+    }
+
+    function getReservationUnitsOfProvider(uint id) public view returns(ReservationUnit[] memory)
+    {
+        require(providerOfId[id].isCreated);
+        ReservationUnit[] memory ru = new ReservationUnit[](reservationUnitCountOfProvider[id]);
+
+        for(uint i = 0;i< reservationUnitCountOfProvider[id]; i++)
+        {
+            if(reservationUnitOfProvider[i] == id)
+                ru[i] = reservationUnits[i];
+        }
+        return ru;
+    }
 }
