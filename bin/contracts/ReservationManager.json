@@ -1,0 +1,2310 @@
+{
+    "contractName": "ReservationManager",
+    "abi": [
+        {
+            "inputs": [],
+            "stateMutability": "nonpayable",
+            "type": "constructor"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "string",
+                    "name": "name",
+                    "type": "string"
+                }
+            ],
+            "name": "createProvider",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "uint16",
+                    "name": "guestCount",
+                    "type": "uint16"
+                }
+            ],
+            "name": "createReservationUnit",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [],
+            "name": "getThePrice",
+            "outputs": [
+                {
+                    "internalType": "int256",
+                    "name": "",
+                    "type": "int256"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "",
+                    "type": "uint256"
+                }
+            ],
+            "name": "ownerOfProvider",
+            "outputs": [
+                {
+                    "internalType": "address",
+                    "name": "",
+                    "type": "address"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "address",
+                    "name": "",
+                    "type": "address"
+                }
+            ],
+            "name": "providerOfOwner",
+            "outputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "id",
+                    "type": "uint256"
+                },
+                {
+                    "internalType": "string",
+                    "name": "name",
+                    "type": "string"
+                },
+                {
+                    "internalType": "bool",
+                    "name": "isCreated",
+                    "type": "bool"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "",
+                    "type": "uint256"
+                }
+            ],
+            "name": "providers",
+            "outputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "id",
+                    "type": "uint256"
+                },
+                {
+                    "internalType": "string",
+                    "name": "name",
+                    "type": "string"
+                },
+                {
+                    "internalType": "bool",
+                    "name": "isCreated",
+                    "type": "bool"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "",
+                    "type": "uint256"
+                }
+            ],
+            "name": "reservationUnitCountOfProvider",
+            "outputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "",
+                    "type": "uint256"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "",
+                    "type": "uint256"
+                }
+            ],
+            "name": "reservationUnitOfProvider",
+            "outputs": [
+                {
+                    "internalType": "uint16",
+                    "name": "possibleGuestCount",
+                    "type": "uint16"
+                },
+                {
+                    "internalType": "bool",
+                    "name": "isCreated",
+                    "type": "bool"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "",
+                    "type": "uint256"
+                }
+            ],
+            "name": "reservationUnits",
+            "outputs": [
+                {
+                    "internalType": "uint16",
+                    "name": "possibleGuestCount",
+                    "type": "uint16"
+                },
+                {
+                    "internalType": "bool",
+                    "name": "isCreated",
+                    "type": "bool"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        }
+    ],
+    "metadata": "{\"compiler\":{\"version\":\"0.8.4+commit.c7e474f2\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"name\",\"type\":\"string\"}],\"name\":\"createProvider\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint16\",\"name\":\"guestCount\",\"type\":\"uint16\"}],\"name\":\"createReservationUnit\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getThePrice\",\"outputs\":[{\"internalType\":\"int256\",\"name\":\"\",\"type\":\"int256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"ownerOfProvider\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"providerOfOwner\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"id\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"name\",\"type\":\"string\"},{\"internalType\":\"bool\",\"name\":\"isCreated\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"providers\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"id\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"name\",\"type\":\"string\"},{\"internalType\":\"bool\",\"name\":\"isCreated\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"reservationUnitCountOfProvider\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"reservationUnitOfProvider\",\"outputs\":[{\"internalType\":\"uint16\",\"name\":\"possibleGuestCount\",\"type\":\"uint16\"},{\"internalType\":\"bool\",\"name\":\"isCreated\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"reservationUnits\",\"outputs\":[{\"internalType\":\"uint16\",\"name\":\"possibleGuestCount\",\"type\":\"uint16\"},{\"internalType\":\"bool\",\"name\":\"isCreated\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{\"constructor\":{\"notice\":\"Network: Kovan Aggregator: ETH/USD Address: 0x9326BFA02ADD2366b30bacB125260Af641031331\"},\"getThePrice()\":{\"notice\":\"Returns the latest price\"}},\"version\":1}},\"settings\":{\"compilationTarget\":{\"/home/sebastian/Documents/Dev/BlockFood/contracts/ReservationManager.sol\":\"ReservationManager\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"/home/sebastian/Documents/Dev/BlockFood/contracts/ReservationManager.sol\":{\"keccak256\":\"0x936923076abfecd5e093bb55e5b6f4307a1a7023a981dfd330709d74358f96b7\",\"urls\":[\"bzz-raw://3dd9765512dbc4393214954c8b5539ccf07825c04ad746614a4f8deebc2e1528\",\"dweb:/ipfs/QmeTacSLrKcMWNRQxVbaFMH5mybQ5VXX4nvfqL6HXFYd69\"]},\"/home/sebastian/Documents/Dev/BlockFood/node_modules/@chainlink/contracts/src/v0.6/interfaces/AggregatorV3Interface.sol\":{\"keccak256\":\"0x1862840d741dedb36e774534b877a13b5187555e3b78b8d2815f898b0dc02268\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://64a15f4349aea6e60703f581a6280b71d6adb35ee74d2f3c4f130a2adc3efee3\",\"dweb:/ipfs/QmdVoSQvGfJNPnjQsAs7ZN3ueWghzTa72jSqzhGiQNDpkL\"]}},\"version\":1}",
+    "bytecode": "608060405234801561001057600080fd5b50600080546001600160a01b031916739326bfa02add2366b30bacb125260af64103133117905561090e806100466000396000f3fe608060405234801561001057600080fd5b50600436106100935760003560e01c806350f3fc811161006657806350f3fc81146101335780636c1a77271461015557806381afe75a146101835780638c3c9a5514610196578063bcb16efc1461019e57600080fd5b80630472e2e0146100985780630504283d146100ca5780631a5ac8db146100df57806341764614146100f2575b600080fd5b6100ab6100a6366004610775565b6101cd565b6040805161ffff90931683529015156020830152015b60405180910390f35b6100dd6100d8366004610753565b6101fc565b005b6100dd6100ed3660046106a9565b61032e565b61011b610100366004610775565b6003602052600090815260409020546001600160a01b031681565b6040516001600160a01b0390911681526020016100c1565b610146610141366004610775565b610444565b6040516100c1939291906107dc565b610175610163366004610775565b60066020526000908152604090205481565b6040519081526020016100c1565b61014661019136600461067b565b610505565b610175610527565b6100ab6101ac366004610775565b60056020526000908152604090205461ffff81169062010000900460ff1682565b600281815481106101dd57600080fd5b60009182526020909120015461ffff8116915062010000900460ff1682565b3360009081526004602052604090206002015460ff1661021b57600080fd5b6040805180820190915261ffff8083168252600160208301818152600280548084018255600082815295517f405787fa12a823e0f2b7631cc41b3ba8828b3321ca811111fa75cd3aa3bb5ace909101805493511515620100000262ffffff199094169190951617919091179092559054610295919061083f565b9050600281815481106102b857634e487b7160e01b600052603260045260246000fd5b600091825260208083203384526004825260408085208054865260058452818620929094018054835461ffff19811661ffff9092169182178555915460ff62010000918290041615150262ffffff1990921617179091559154835260069052812080549161032583610891565b91905055505050565b6001805460408051606081018252828152602080820186815292820185905283850185556000949094528051600384027fb10e2d527612073b26eecdfd717e6a320cf44b4afac2b0732d9fcbe2b7fa0cf681019182559251805194959294859492936103be937fb10e2d527612073b26eecdfd717e6a320cf44b4afac2b0732d9fcbe2b7fa0cf7019201906105c3565b506040918201516002909101805491151560ff1990921691909117905560008381526003602090815282822080546001600160a01b031916339081179091558252600481529190208251815582820151805184936104239260018501929101906105c3565b50604091909101516002909101805460ff1916911515919091179055505050565b6001818154811061045457600080fd5b6000918252602090912060039091020180546001820180549193509061047990610856565b80601f01602080910402602001604051908101604052809291908181526020018280546104a590610856565b80156104f25780601f106104c7576101008083540402835291602001916104f2565b820191906000526020600020905b8154815290600101906020018083116104d557829003601f168201915b5050506002909301549192505060ff1683565b6004602052600090815260409020805460018201805491929161047990610856565b60008060008060008060008054906101000a90046001600160a01b03166001600160a01b031663feaf968c6040518163ffffffff1660e01b815260040160a06040518083038186803b15801561057c57600080fd5b505afa158015610590573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906105b4919061078d565b50919998505050505050505050565b8280546105cf90610856565b90600052602060002090601f0160209004810192826105f15760008555610637565b82601f1061060a57805160ff1916838001178555610637565b82800160010185558215610637579182015b8281111561063757825182559160200191906001019061061c565b50610643929150610647565b5090565b5b808211156106435760008155600101610648565b805169ffffffffffffffffffff8116811461067657600080fd5b919050565b60006020828403121561068c578081fd5b81356001600160a01b03811681146106a2578182fd5b9392505050565b6000602082840312156106ba578081fd5b813567ffffffffffffffff808211156106d1578283fd5b818401915084601f8301126106e4578283fd5b8135818111156106f6576106f66108c2565b604051601f8201601f19908116603f0116810190838211818310171561071e5761071e6108c2565b81604052828152876020848701011115610736578586fd5b826020860160208301379182016020019490945295945050505050565b600060208284031215610764578081fd5b813561ffff811681146106a2578182fd5b600060208284031215610786578081fd5b5035919050565b600080600080600060a086880312156107a4578081fd5b6107ad8661065c565b94506020860151935060408601519250606086015191506107d06080870161065c565b90509295509295909350565b838152600060206060818401528451806060850152825b8181101561080f578681018301518582016080015282016107f3565b818111156108205783608083870101525b5093151560408401525050601f91909101601f19160160800192915050565b600082821015610851576108516108ac565b500390565b600181811c9082168061086a57607f821691505b6020821081141561088b57634e487b7160e01b600052602260045260246000fd5b50919050565b60006000198214156108a5576108a56108ac565b5060010190565b634e487b7160e01b600052601160045260246000fd5b634e487b7160e01b600052604160045260246000fdfea2646970667358221220aa449679733dd75fea0879280f9194ed7e58abaed3ec985913a60c18c55d69cb64736f6c63430008040033",
+    "deployedBytecode": "608060405234801561001057600080fd5b50600436106100935760003560e01c806350f3fc811161006657806350f3fc81146101335780636c1a77271461015557806381afe75a146101835780638c3c9a5514610196578063bcb16efc1461019e57600080fd5b80630472e2e0146100985780630504283d146100ca5780631a5ac8db146100df57806341764614146100f2575b600080fd5b6100ab6100a6366004610775565b6101cd565b6040805161ffff90931683529015156020830152015b60405180910390f35b6100dd6100d8366004610753565b6101fc565b005b6100dd6100ed3660046106a9565b61032e565b61011b610100366004610775565b6003602052600090815260409020546001600160a01b031681565b6040516001600160a01b0390911681526020016100c1565b610146610141366004610775565b610444565b6040516100c1939291906107dc565b610175610163366004610775565b60066020526000908152604090205481565b6040519081526020016100c1565b61014661019136600461067b565b610505565b610175610527565b6100ab6101ac366004610775565b60056020526000908152604090205461ffff81169062010000900460ff1682565b600281815481106101dd57600080fd5b60009182526020909120015461ffff8116915062010000900460ff1682565b3360009081526004602052604090206002015460ff1661021b57600080fd5b6040805180820190915261ffff8083168252600160208301818152600280548084018255600082815295517f405787fa12a823e0f2b7631cc41b3ba8828b3321ca811111fa75cd3aa3bb5ace909101805493511515620100000262ffffff199094169190951617919091179092559054610295919061083f565b9050600281815481106102b857634e487b7160e01b600052603260045260246000fd5b600091825260208083203384526004825260408085208054865260058452818620929094018054835461ffff19811661ffff9092169182178555915460ff62010000918290041615150262ffffff1990921617179091559154835260069052812080549161032583610891565b91905055505050565b6001805460408051606081018252828152602080820186815292820185905283850185556000949094528051600384027fb10e2d527612073b26eecdfd717e6a320cf44b4afac2b0732d9fcbe2b7fa0cf681019182559251805194959294859492936103be937fb10e2d527612073b26eecdfd717e6a320cf44b4afac2b0732d9fcbe2b7fa0cf7019201906105c3565b506040918201516002909101805491151560ff1990921691909117905560008381526003602090815282822080546001600160a01b031916339081179091558252600481529190208251815582820151805184936104239260018501929101906105c3565b50604091909101516002909101805460ff1916911515919091179055505050565b6001818154811061045457600080fd5b6000918252602090912060039091020180546001820180549193509061047990610856565b80601f01602080910402602001604051908101604052809291908181526020018280546104a590610856565b80156104f25780601f106104c7576101008083540402835291602001916104f2565b820191906000526020600020905b8154815290600101906020018083116104d557829003601f168201915b5050506002909301549192505060ff1683565b6004602052600090815260409020805460018201805491929161047990610856565b60008060008060008060008054906101000a90046001600160a01b03166001600160a01b031663feaf968c6040518163ffffffff1660e01b815260040160a06040518083038186803b15801561057c57600080fd5b505afa158015610590573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906105b4919061078d565b50919998505050505050505050565b8280546105cf90610856565b90600052602060002090601f0160209004810192826105f15760008555610637565b82601f1061060a57805160ff1916838001178555610637565b82800160010185558215610637579182015b8281111561063757825182559160200191906001019061061c565b50610643929150610647565b5090565b5b808211156106435760008155600101610648565b805169ffffffffffffffffffff8116811461067657600080fd5b919050565b60006020828403121561068c578081fd5b81356001600160a01b03811681146106a2578182fd5b9392505050565b6000602082840312156106ba578081fd5b813567ffffffffffffffff808211156106d1578283fd5b818401915084601f8301126106e4578283fd5b8135818111156106f6576106f66108c2565b604051601f8201601f19908116603f0116810190838211818310171561071e5761071e6108c2565b81604052828152876020848701011115610736578586fd5b826020860160208301379182016020019490945295945050505050565b600060208284031215610764578081fd5b813561ffff811681146106a2578182fd5b600060208284031215610786578081fd5b5035919050565b600080600080600060a086880312156107a4578081fd5b6107ad8661065c565b94506020860151935060408601519250606086015191506107d06080870161065c565b90509295509295909350565b838152600060206060818401528451806060850152825b8181101561080f578681018301518582016080015282016107f3565b818111156108205783608083870101525b5093151560408401525050601f91909101601f19160160800192915050565b600082821015610851576108516108ac565b500390565b600181811c9082168061086a57607f821691505b6020821081141561088b57634e487b7160e01b600052602260045260246000fd5b50919050565b60006000198214156108a5576108a56108ac565b5060010190565b634e487b7160e01b600052601160045260246000fd5b634e487b7160e01b600052604160045260246000fdfea2646970667358221220aa449679733dd75fea0879280f9194ed7e58abaed3ec985913a60c18c55d69cb64736f6c63430008040033",
+    "sourceMap": "120:1930:0:-:0;;;906:112;;;;;;;;;-1:-1:-1;934:9:0;:77;;-1:-1:-1;;;;;;934:77:0;968:42;934:77;;;120:1930;;;;;;",
+    "deployedSourceMap": "120:1930:0:-:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;429:41;;;;;;:::i;:::-;;:::i;:::-;;;;3045:6:2;3033:19;;;3015:38;;3096:14;;3089:22;3084:2;3069:18;;3062:50;2988:18;429:41:0;;;;;;;;1314:402;;;;;;:::i;:::-;;:::i;:::-;;1024:284;;;;;;:::i;:::-;;:::i;498:48::-;;;;;;:::i;:::-;;;;;;;;;;;;-1:-1:-1;;;;;498:48:0;;;;;;-1:-1:-1;;;;;2625:32:2;;;2607:51;;2595:2;2580:18;498:48:0;2562:102:2;396:27:0;;;;;;:::i;:::-;;:::i;:::-;;;;;;;;;:::i;714:60::-;;;;;;:::i;:::-;;;;;;;;;;;;;;;;;2813:25:2;;;2801:2;2786:18;714:60:0;2768:76:2;552:52:0;;;;;;:::i;:::-;;:::i;1773:275::-;;;:::i;642:66::-;;;;;;:::i;:::-;;;;;;;;;;;;;;;;;;;;;;;429:41;;;;;;;;;;;;;;;;;;;;;;;;;;;-1:-1:-1;429:41:0;;;;;;:::o;1314:402::-;1409:10;1393:27;;;;:15;:27;;;;;:37;;;;;1385:46;;;;;;1464:33;;;;;;;;;;;;;;;1492:4;1464:33;;;;;;1442:16;:56;;;;;;;-1:-1:-1;1442:56:0;;;;;;;;;;;;;;;;;-1:-1:-1;;1442:56:0;;;;;;;;;;;;;;;1518:23;;:27;;1492:4;1518:27;:::i;:::-;1508:37;;1615:16;1632:2;1615:20;;;;;;-1:-1:-1;;;1615:20:0;;;;;;;;;;;;;;;;;1597:10;1581:27;;:15;:27;;;;;;:30;;1555:57;;:25;:57;;;;;1615:20;;;;1555:80;;;;-1:-1:-1;;1555:80:0;;;;;;;;;;;;;;;;;;;;;;;-1:-1:-1;;1555:80:0;;;;;;;;1676:30;;1645:62;;:30;:62;;;;:64;;;;;;:::i;:::-;;;;;;1314:402;;:::o;1024:284::-;1099:9;:16;;1152:24;;;;;;;;;;;;;;;;;;;;;;;;1186;;;;;1089:7;1186:24;;;;;;;;;;;;;;;;;;;1099:16;;1152:24;;;;1186;;;;;;;;;;:::i;:::-;-1:-1:-1;1186:24:0;;;;;;;;;;;;;;-1:-1:-1;;1186:24:0;;;;;;;;;;1221:19;;;:15;:19;;;;;;;:32;;-1:-1:-1;;;;;;1221:32:0;1243:10;1221:32;;;;;;1263:27;;:15;:27;;;;;:38;;;;;;;;;;1293:8;;1263:38;;1186:24;1263:38;;;;;;;:::i;:::-;-1:-1:-1;1263:38:0;;;;;;;;;;;;-1:-1:-1;;1263:38:0;;;;;;;;;;-1:-1:-1;;;1024:284:0:o;396:27::-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;-1:-1:-1;396:27:0;;;;:::i;:::-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::i;:::-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;-1:-1:-1;;;396:27:0;;;;;;;-1:-1:-1;;396:27:0;;;:::o;552:52::-;;;;;;;;;;;;;;;;;;;;;;;;:::i;1773:275::-;1817:3;1850:14;1878:9;1901:14;1929;1957:22;1992:9;;;;;;;;-1:-1:-1;;;;;1992:9:0;-1:-1:-1;;;;;1992:25:0;;:27;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::i;:::-;-1:-1:-1;1836:183:0;;1773:275;-1:-1:-1;;;;;;;;;1773:275:0:o;-1:-1:-1:-;;;;;;;:::i;:::-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::i;:::-;;;:::o;:::-;;;;;;;;;;;;;;;14:179:2;92:13;;145:22;134:34;;124:45;;114:2;;183:1;180;173:12;114:2;73:120;;;:::o;198:306::-;257:6;310:2;298:9;289:7;285:23;281:32;278:2;;;331:6;323;316:22;278:2;362:23;;-1:-1:-1;;;;;414:31:2;;404:42;;394:2;;465:6;457;450:22;394:2;493:5;268:236;-1:-1:-1;;;268:236:2:o;509:967::-;578:6;631:2;619:9;610:7;606:23;602:32;599:2;;;652:6;644;637:22;599:2;697:9;684:23;726:18;767:2;759:6;756:14;753:2;;;788:6;780;773:22;753:2;831:6;820:9;816:22;806:32;;876:7;869:4;865:2;861:13;857:27;847:2;;903:6;895;888:22;847:2;944;931:16;966:2;962;959:10;956:2;;;972:18;;:::i;:::-;1047:2;1041:9;1015:2;1101:13;;-1:-1:-1;;1097:22:2;;;1121:2;1093:31;1089:40;1077:53;;;1145:18;;;1165:22;;;1142:46;1139:2;;;1191:18;;:::i;:::-;1231:10;1227:2;1220:22;1266:2;1258:6;1251:18;1306:7;1301:2;1296;1292;1288:11;1284:20;1281:33;1278:2;;;1332:6;1324;1317:22;1278:2;1393;1388;1384;1380:11;1375:2;1367:6;1363:15;1350:46;1416:15;;;1433:2;1412:24;1405:40;;;;1420:6;589:887;-1:-1:-1;;;;;589:887:2:o;1481:292::-;1539:6;1592:2;1580:9;1571:7;1567:23;1563:32;1560:2;;;1613:6;1605;1598:22;1560:2;1657:9;1644:23;1707:6;1700:5;1696:18;1689:5;1686:29;1676:2;;1734:6;1726;1719:22;1778:190;1837:6;1890:2;1878:9;1869:7;1865:23;1861:32;1858:2;;;1911:6;1903;1896:22;1858:2;-1:-1:-1;1939:23:2;;1848:120;-1:-1:-1;1848:120:2:o;1973:483::-;2076:6;2084;2092;2100;2108;2161:3;2149:9;2140:7;2136:23;2132:33;2129:2;;;2183:6;2175;2168:22;2129:2;2211:39;2240:9;2211:39;:::i;:::-;2201:49;;2290:2;2279:9;2275:18;2269:25;2259:35;;2334:2;2323:9;2319:18;2313:25;2303:35;;2378:2;2367:9;2363:18;2357:25;2347:35;;2401:49;2445:3;2434:9;2430:19;2401:49;:::i;:::-;2391:59;;2119:337;;;;;;;;:::o;3305:758::-;3504:6;3493:9;3486:25;3467:4;3530:2;3568;3563;3552:9;3548:18;3541:30;3600:6;3594:13;3643:6;3638:2;3627:9;3623:18;3616:34;3668:4;3681:141;3695:6;3692:1;3689:13;3681:141;;;3791:14;;;3787:23;;3781:30;3756:17;;;3775:3;3752:27;3745:67;3710:10;;3681:141;;;3840:6;3837:1;3834:13;3831:2;;;3911:4;3905:3;3896:6;3885:9;3881:22;3877:32;3870:46;3831:2;-1:-1:-1;4041:14:2;;4034:22;4029:2;4014:18;;4007:50;-1:-1:-1;;3987:2:2;3966:15;;;;-1:-1:-1;;3962:29:2;3947:45;3994:3;3943:55;;3476:587;-1:-1:-1;;3476:587:2:o;4068:125::-;4108:4;4136:1;4133;4130:8;4127:2;;;4141:18;;:::i;:::-;-1:-1:-1;4178:9:2;;4117:76::o;4198:380::-;4277:1;4273:12;;;;4320;;;4341:2;;4395:4;4387:6;4383:17;4373:27;;4341:2;4448;4440:6;4437:14;4417:18;4414:38;4411:2;;;4494:10;4489:3;4485:20;4482:1;4475:31;4529:4;4526:1;4519:15;4557:4;4554:1;4547:15;4411:2;;4253:325;;;:::o;4583:135::-;4622:3;-1:-1:-1;;4643:17:2;;4640:2;;;4663:18;;:::i;:::-;-1:-1:-1;4710:1:2;4699:13;;4630:88::o;4723:127::-;4784:10;4779:3;4775:20;4772:1;4765:31;4815:4;4812:1;4805:15;4839:4;4836:1;4829:15;4855:127;4916:10;4911:3;4907:20;4904:1;4897:31;4947:4;4944:1;4937:15;4971:4;4968:1;4961:15",
+    "sourcePath": "/home/sebastian/Documents/Dev/BlockFood/contracts/ReservationManager.sol",
+    "compiler": {
+        "name": "solc",
+        "version": "0.8.4+commit.c7e474f2"
+    },
+    "ast": {
+        "absolutePath": "/home/sebastian/Documents/Dev/BlockFood/contracts/ReservationManager.sol",
+        "exportedSymbols": {
+            "AggregatorV3Interface": [
+                215
+            ],
+            "ReservationManager": [
+                169
+            ]
+        },
+        "id": 170,
+        "nodeType": "SourceUnit",
+        "nodes": [
+            {
+                "id": 1,
+                "literals": [
+                    "solidity",
+                    ">=",
+                    "0.8",
+                    ".0"
+                ],
+                "nodeType": "PragmaDirective",
+                "src": "0:24:0"
+            },
+            {
+                "absolutePath": "/home/sebastian/Documents/Dev/BlockFood/node_modules/@chainlink/contracts/src/v0.6/interfaces/AggregatorV3Interface.sol",
+                "file": "../node_modules/@chainlink/contracts/src/v0.6/interfaces/AggregatorV3Interface.sol",
+                "id": 2,
+                "nameLocation": "-1:-1:-1",
+                "nodeType": "ImportDirective",
+                "scope": 170,
+                "sourceUnit": 216,
+                "src": "26:92:0",
+                "symbolAliases": [],
+                "unitAlias": ""
+            },
+            {
+                "abstract": false,
+                "baseContracts": [],
+                "contractDependencies": [],
+                "contractKind": "contract",
+                "fullyImplemented": true,
+                "id": 169,
+                "linearizedBaseContracts": [
+                    169
+                ],
+                "name": "ReservationManager",
+                "nameLocation": "129:18:0",
+                "nodeType": "ContractDefinition",
+                "nodes": [
+                    {
+                        "constant": false,
+                        "id": 5,
+                        "mutability": "mutable",
+                        "name": "priceFeed",
+                        "nameLocation": "186:9:0",
+                        "nodeType": "VariableDeclaration",
+                        "scope": 169,
+                        "src": "155:40:0",
+                        "stateVariable": true,
+                        "storageLocation": "default",
+                        "typeDescriptions": {
+                            "typeIdentifier": "t_contract$_AggregatorV3Interface_$215",
+                            "typeString": "contract AggregatorV3Interface"
+                        },
+                        "typeName": {
+                            "id": 4,
+                            "nodeType": "UserDefinedTypeName",
+                            "pathNode": {
+                                "id": 3,
+                                "name": "AggregatorV3Interface",
+                                "nodeType": "IdentifierPath",
+                                "referencedDeclaration": 215,
+                                "src": "155:21:0"
+                            },
+                            "referencedDeclaration": 215,
+                            "src": "155:21:0",
+                            "typeDescriptions": {
+                                "typeIdentifier": "t_contract$_AggregatorV3Interface_$215",
+                                "typeString": "contract AggregatorV3Interface"
+                            }
+                        },
+                        "visibility": "internal"
+                    },
+                    {
+                        "canonicalName": "ReservationManager.Provider",
+                        "id": 12,
+                        "members": [
+                            {
+                                "constant": false,
+                                "id": 7,
+                                "mutability": "mutable",
+                                "name": "id",
+                                "nameLocation": "237:2:0",
+                                "nodeType": "VariableDeclaration",
+                                "scope": 12,
+                                "src": "232:7:0",
+                                "stateVariable": false,
+                                "storageLocation": "default",
+                                "typeDescriptions": {
+                                    "typeIdentifier": "t_uint256",
+                                    "typeString": "uint256"
+                                },
+                                "typeName": {
+                                    "id": 6,
+                                    "name": "uint",
+                                    "nodeType": "ElementaryTypeName",
+                                    "src": "232:4:0",
+                                    "typeDescriptions": {
+                                        "typeIdentifier": "t_uint256",
+                                        "typeString": "uint256"
+                                    }
+                                },
+                                "visibility": "internal"
+                            },
+                            {
+                                "constant": false,
+                                "id": 9,
+                                "mutability": "mutable",
+                                "name": "name",
+                                "nameLocation": "256:4:0",
+                                "nodeType": "VariableDeclaration",
+                                "scope": 12,
+                                "src": "249:11:0",
+                                "stateVariable": false,
+                                "storageLocation": "default",
+                                "typeDescriptions": {
+                                    "typeIdentifier": "t_string_storage_ptr",
+                                    "typeString": "string"
+                                },
+                                "typeName": {
+                                    "id": 8,
+                                    "name": "string",
+                                    "nodeType": "ElementaryTypeName",
+                                    "src": "249:6:0",
+                                    "typeDescriptions": {
+                                        "typeIdentifier": "t_string_storage_ptr",
+                                        "typeString": "string"
+                                    }
+                                },
+                                "visibility": "internal"
+                            },
+                            {
+                                "constant": false,
+                                "id": 11,
+                                "mutability": "mutable",
+                                "name": "isCreated",
+                                "nameLocation": "275:9:0",
+                                "nodeType": "VariableDeclaration",
+                                "scope": 12,
+                                "src": "270:14:0",
+                                "stateVariable": false,
+                                "storageLocation": "default",
+                                "typeDescriptions": {
+                                    "typeIdentifier": "t_bool",
+                                    "typeString": "bool"
+                                },
+                                "typeName": {
+                                    "id": 10,
+                                    "name": "bool",
+                                    "nodeType": "ElementaryTypeName",
+                                    "src": "270:4:0",
+                                    "typeDescriptions": {
+                                        "typeIdentifier": "t_bool",
+                                        "typeString": "bool"
+                                    }
+                                },
+                                "visibility": "internal"
+                            }
+                        ],
+                        "name": "Provider",
+                        "nameLocation": "209:8:0",
+                        "nodeType": "StructDefinition",
+                        "scope": 169,
+                        "src": "202:89:0",
+                        "visibility": "public"
+                    },
+                    {
+                        "canonicalName": "ReservationManager.ReservationUnit",
+                        "id": 17,
+                        "members": [
+                            {
+                                "constant": false,
+                                "id": 14,
+                                "mutability": "mutable",
+                                "name": "possibleGuestCount",
+                                "nameLocation": "341:18:0",
+                                "nodeType": "VariableDeclaration",
+                                "scope": 17,
+                                "src": "334:25:0",
+                                "stateVariable": false,
+                                "storageLocation": "default",
+                                "typeDescriptions": {
+                                    "typeIdentifier": "t_uint16",
+                                    "typeString": "uint16"
+                                },
+                                "typeName": {
+                                    "id": 13,
+                                    "name": "uint16",
+                                    "nodeType": "ElementaryTypeName",
+                                    "src": "334:6:0",
+                                    "typeDescriptions": {
+                                        "typeIdentifier": "t_uint16",
+                                        "typeString": "uint16"
+                                    }
+                                },
+                                "visibility": "internal"
+                            },
+                            {
+                                "constant": false,
+                                "id": 16,
+                                "mutability": "mutable",
+                                "name": "isCreated",
+                                "nameLocation": "374:9:0",
+                                "nodeType": "VariableDeclaration",
+                                "scope": 17,
+                                "src": "369:14:0",
+                                "stateVariable": false,
+                                "storageLocation": "default",
+                                "typeDescriptions": {
+                                    "typeIdentifier": "t_bool",
+                                    "typeString": "bool"
+                                },
+                                "typeName": {
+                                    "id": 15,
+                                    "name": "bool",
+                                    "nodeType": "ElementaryTypeName",
+                                    "src": "369:4:0",
+                                    "typeDescriptions": {
+                                        "typeIdentifier": "t_bool",
+                                        "typeString": "bool"
+                                    }
+                                },
+                                "visibility": "internal"
+                            }
+                        ],
+                        "name": "ReservationUnit",
+                        "nameLocation": "304:15:0",
+                        "nodeType": "StructDefinition",
+                        "scope": 169,
+                        "src": "297:93:0",
+                        "visibility": "public"
+                    },
+                    {
+                        "constant": false,
+                        "functionSelector": "50f3fc81",
+                        "id": 21,
+                        "mutability": "mutable",
+                        "name": "providers",
+                        "nameLocation": "414:9:0",
+                        "nodeType": "VariableDeclaration",
+                        "scope": 169,
+                        "src": "396:27:0",
+                        "stateVariable": true,
+                        "storageLocation": "default",
+                        "typeDescriptions": {
+                            "typeIdentifier": "t_array$_t_struct$_Provider_$12_storage_$dyn_storage",
+                            "typeString": "struct ReservationManager.Provider[]"
+                        },
+                        "typeName": {
+                            "baseType": {
+                                "id": 19,
+                                "nodeType": "UserDefinedTypeName",
+                                "pathNode": {
+                                    "id": 18,
+                                    "name": "Provider",
+                                    "nodeType": "IdentifierPath",
+                                    "referencedDeclaration": 12,
+                                    "src": "396:8:0"
+                                },
+                                "referencedDeclaration": 12,
+                                "src": "396:8:0",
+                                "typeDescriptions": {
+                                    "typeIdentifier": "t_struct$_Provider_$12_storage_ptr",
+                                    "typeString": "struct ReservationManager.Provider"
+                                }
+                            },
+                            "id": 20,
+                            "nodeType": "ArrayTypeName",
+                            "src": "396:10:0",
+                            "typeDescriptions": {
+                                "typeIdentifier": "t_array$_t_struct$_Provider_$12_storage_$dyn_storage_ptr",
+                                "typeString": "struct ReservationManager.Provider[]"
+                            }
+                        },
+                        "visibility": "public"
+                    },
+                    {
+                        "constant": false,
+                        "functionSelector": "0472e2e0",
+                        "id": 25,
+                        "mutability": "mutable",
+                        "name": "reservationUnits",
+                        "nameLocation": "454:16:0",
+                        "nodeType": "VariableDeclaration",
+                        "scope": 169,
+                        "src": "429:41:0",
+                        "stateVariable": true,
+                        "storageLocation": "default",
+                        "typeDescriptions": {
+                            "typeIdentifier": "t_array$_t_struct$_ReservationUnit_$17_storage_$dyn_storage",
+                            "typeString": "struct ReservationManager.ReservationUnit[]"
+                        },
+                        "typeName": {
+                            "baseType": {
+                                "id": 23,
+                                "nodeType": "UserDefinedTypeName",
+                                "pathNode": {
+                                    "id": 22,
+                                    "name": "ReservationUnit",
+                                    "nodeType": "IdentifierPath",
+                                    "referencedDeclaration": 17,
+                                    "src": "429:15:0"
+                                },
+                                "referencedDeclaration": 17,
+                                "src": "429:15:0",
+                                "typeDescriptions": {
+                                    "typeIdentifier": "t_struct$_ReservationUnit_$17_storage_ptr",
+                                    "typeString": "struct ReservationManager.ReservationUnit"
+                                }
+                            },
+                            "id": 24,
+                            "nodeType": "ArrayTypeName",
+                            "src": "429:17:0",
+                            "typeDescriptions": {
+                                "typeIdentifier": "t_array$_t_struct$_ReservationUnit_$17_storage_$dyn_storage_ptr",
+                                "typeString": "struct ReservationManager.ReservationUnit[]"
+                            }
+                        },
+                        "visibility": "public"
+                    },
+                    {
+                        "constant": false,
+                        "functionSelector": "41764614",
+                        "id": 29,
+                        "mutability": "mutable",
+                        "name": "ownerOfProvider",
+                        "nameLocation": "531:15:0",
+                        "nodeType": "VariableDeclaration",
+                        "scope": 169,
+                        "src": "498:48:0",
+                        "stateVariable": true,
+                        "storageLocation": "default",
+                        "typeDescriptions": {
+                            "typeIdentifier": "t_mapping$_t_uint256_$_t_address_$",
+                            "typeString": "mapping(uint256 => address)"
+                        },
+                        "typeName": {
+                            "id": 28,
+                            "keyType": {
+                                "id": 26,
+                                "name": "uint",
+                                "nodeType": "ElementaryTypeName",
+                                "src": "507:4:0",
+                                "typeDescriptions": {
+                                    "typeIdentifier": "t_uint256",
+                                    "typeString": "uint256"
+                                }
+                            },
+                            "nodeType": "Mapping",
+                            "src": "498:25:0",
+                            "typeDescriptions": {
+                                "typeIdentifier": "t_mapping$_t_uint256_$_t_address_$",
+                                "typeString": "mapping(uint256 => address)"
+                            },
+                            "valueType": {
+                                "id": 27,
+                                "name": "address",
+                                "nodeType": "ElementaryTypeName",
+                                "src": "515:7:0",
+                                "stateMutability": "nonpayable",
+                                "typeDescriptions": {
+                                    "typeIdentifier": "t_address",
+                                    "typeString": "address"
+                                }
+                            }
+                        },
+                        "visibility": "public"
+                    },
+                    {
+                        "constant": false,
+                        "functionSelector": "81afe75a",
+                        "id": 34,
+                        "mutability": "mutable",
+                        "name": "providerOfOwner",
+                        "nameLocation": "589:15:0",
+                        "nodeType": "VariableDeclaration",
+                        "scope": 169,
+                        "src": "552:52:0",
+                        "stateVariable": true,
+                        "storageLocation": "default",
+                        "typeDescriptions": {
+                            "typeIdentifier": "t_mapping$_t_address_$_t_struct$_Provider_$12_storage_$",
+                            "typeString": "mapping(address => struct ReservationManager.Provider)"
+                        },
+                        "typeName": {
+                            "id": 33,
+                            "keyType": {
+                                "id": 30,
+                                "name": "address",
+                                "nodeType": "ElementaryTypeName",
+                                "src": "561:7:0",
+                                "typeDescriptions": {
+                                    "typeIdentifier": "t_address",
+                                    "typeString": "address"
+                                }
+                            },
+                            "nodeType": "Mapping",
+                            "src": "552:29:0",
+                            "typeDescriptions": {
+                                "typeIdentifier": "t_mapping$_t_address_$_t_struct$_Provider_$12_storage_$",
+                                "typeString": "mapping(address => struct ReservationManager.Provider)"
+                            },
+                            "valueType": {
+                                "id": 32,
+                                "nodeType": "UserDefinedTypeName",
+                                "pathNode": {
+                                    "id": 31,
+                                    "name": "Provider",
+                                    "nodeType": "IdentifierPath",
+                                    "referencedDeclaration": 12,
+                                    "src": "572:8:0"
+                                },
+                                "referencedDeclaration": 12,
+                                "src": "572:8:0",
+                                "typeDescriptions": {
+                                    "typeIdentifier": "t_struct$_Provider_$12_storage_ptr",
+                                    "typeString": "struct ReservationManager.Provider"
+                                }
+                            }
+                        },
+                        "visibility": "public"
+                    },
+                    {
+                        "constant": false,
+                        "functionSelector": "bcb16efc",
+                        "id": 39,
+                        "mutability": "mutable",
+                        "name": "reservationUnitOfProvider",
+                        "nameLocation": "683:25:0",
+                        "nodeType": "VariableDeclaration",
+                        "scope": 169,
+                        "src": "642:66:0",
+                        "stateVariable": true,
+                        "storageLocation": "default",
+                        "typeDescriptions": {
+                            "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_ReservationUnit_$17_storage_$",
+                            "typeString": "mapping(uint256 => struct ReservationManager.ReservationUnit)"
+                        },
+                        "typeName": {
+                            "id": 38,
+                            "keyType": {
+                                "id": 35,
+                                "name": "uint",
+                                "nodeType": "ElementaryTypeName",
+                                "src": "651:4:0",
+                                "typeDescriptions": {
+                                    "typeIdentifier": "t_uint256",
+                                    "typeString": "uint256"
+                                }
+                            },
+                            "nodeType": "Mapping",
+                            "src": "642:33:0",
+                            "typeDescriptions": {
+                                "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_ReservationUnit_$17_storage_$",
+                                "typeString": "mapping(uint256 => struct ReservationManager.ReservationUnit)"
+                            },
+                            "valueType": {
+                                "id": 37,
+                                "nodeType": "UserDefinedTypeName",
+                                "pathNode": {
+                                    "id": 36,
+                                    "name": "ReservationUnit",
+                                    "nodeType": "IdentifierPath",
+                                    "referencedDeclaration": 17,
+                                    "src": "659:15:0"
+                                },
+                                "referencedDeclaration": 17,
+                                "src": "659:15:0",
+                                "typeDescriptions": {
+                                    "typeIdentifier": "t_struct$_ReservationUnit_$17_storage_ptr",
+                                    "typeString": "struct ReservationManager.ReservationUnit"
+                                }
+                            }
+                        },
+                        "visibility": "public"
+                    },
+                    {
+                        "constant": false,
+                        "functionSelector": "6c1a7727",
+                        "id": 43,
+                        "mutability": "mutable",
+                        "name": "reservationUnitCountOfProvider",
+                        "nameLocation": "744:30:0",
+                        "nodeType": "VariableDeclaration",
+                        "scope": 169,
+                        "src": "714:60:0",
+                        "stateVariable": true,
+                        "storageLocation": "default",
+                        "typeDescriptions": {
+                            "typeIdentifier": "t_mapping$_t_uint256_$_t_uint256_$",
+                            "typeString": "mapping(uint256 => uint256)"
+                        },
+                        "typeName": {
+                            "id": 42,
+                            "keyType": {
+                                "id": 40,
+                                "name": "uint",
+                                "nodeType": "ElementaryTypeName",
+                                "src": "723:4:0",
+                                "typeDescriptions": {
+                                    "typeIdentifier": "t_uint256",
+                                    "typeString": "uint256"
+                                }
+                            },
+                            "nodeType": "Mapping",
+                            "src": "714:22:0",
+                            "typeDescriptions": {
+                                "typeIdentifier": "t_mapping$_t_uint256_$_t_uint256_$",
+                                "typeString": "mapping(uint256 => uint256)"
+                            },
+                            "valueType": {
+                                "id": 41,
+                                "name": "uint",
+                                "nodeType": "ElementaryTypeName",
+                                "src": "731:4:0",
+                                "typeDescriptions": {
+                                    "typeIdentifier": "t_uint256",
+                                    "typeString": "uint256"
+                                }
+                            }
+                        },
+                        "visibility": "public"
+                    },
+                    {
+                        "body": {
+                            "id": 53,
+                            "nodeType": "Block",
+                            "src": "924:94:0",
+                            "statements": [
+                                {
+                                    "expression": {
+                                        "id": 51,
+                                        "isConstant": false,
+                                        "isLValue": false,
+                                        "isPure": false,
+                                        "lValueRequested": false,
+                                        "leftHandSide": {
+                                            "id": 47,
+                                            "name": "priceFeed",
+                                            "nodeType": "Identifier",
+                                            "overloadedDeclarations": [],
+                                            "referencedDeclaration": 5,
+                                            "src": "934:9:0",
+                                            "typeDescriptions": {
+                                                "typeIdentifier": "t_contract$_AggregatorV3Interface_$215",
+                                                "typeString": "contract AggregatorV3Interface"
+                                            }
+                                        },
+                                        "nodeType": "Assignment",
+                                        "operator": "=",
+                                        "rightHandSide": {
+                                            "arguments": [
+                                                {
+                                                    "hexValue": "307839333236424641303241444432333636623330626163423132353236304166363431303331333331",
+                                                    "id": 49,
+                                                    "isConstant": false,
+                                                    "isLValue": false,
+                                                    "isPure": true,
+                                                    "kind": "number",
+                                                    "lValueRequested": false,
+                                                    "nodeType": "Literal",
+                                                    "src": "968:42:0",
+                                                    "typeDescriptions": {
+                                                        "typeIdentifier": "t_address",
+                                                        "typeString": "address"
+                                                    },
+                                                    "value": "0x9326BFA02ADD2366b30bacB125260Af641031331"
+                                                }
+                                            ],
+                                            "expression": {
+                                                "argumentTypes": [
+                                                    {
+                                                        "typeIdentifier": "t_address",
+                                                        "typeString": "address"
+                                                    }
+                                                ],
+                                                "id": 48,
+                                                "name": "AggregatorV3Interface",
+                                                "nodeType": "Identifier",
+                                                "overloadedDeclarations": [],
+                                                "referencedDeclaration": 215,
+                                                "src": "946:21:0",
+                                                "typeDescriptions": {
+                                                    "typeIdentifier": "t_type$_t_contract$_AggregatorV3Interface_$215_$",
+                                                    "typeString": "type(contract AggregatorV3Interface)"
+                                                }
+                                            },
+                                            "id": 50,
+                                            "isConstant": false,
+                                            "isLValue": false,
+                                            "isPure": true,
+                                            "kind": "typeConversion",
+                                            "lValueRequested": false,
+                                            "names": [],
+                                            "nodeType": "FunctionCall",
+                                            "src": "946:65:0",
+                                            "tryCall": false,
+                                            "typeDescriptions": {
+                                                "typeIdentifier": "t_contract$_AggregatorV3Interface_$215",
+                                                "typeString": "contract AggregatorV3Interface"
+                                            }
+                                        },
+                                        "src": "934:77:0",
+                                        "typeDescriptions": {
+                                            "typeIdentifier": "t_contract$_AggregatorV3Interface_$215",
+                                            "typeString": "contract AggregatorV3Interface"
+                                        }
+                                    },
+                                    "id": 52,
+                                    "nodeType": "ExpressionStatement",
+                                    "src": "934:77:0"
+                                }
+                            ]
+                        },
+                        "documentation": {
+                            "id": 44,
+                            "nodeType": "StructuredDocumentation",
+                            "src": "782:119:0",
+                            "text": " Network: Kovan\n Aggregator: ETH/USD\n Address: 0x9326BFA02ADD2366b30bacB125260Af641031331"
+                        },
+                        "id": 54,
+                        "implemented": true,
+                        "kind": "constructor",
+                        "modifiers": [],
+                        "name": "",
+                        "nameLocation": "-1:-1:-1",
+                        "nodeType": "FunctionDefinition",
+                        "parameters": {
+                            "id": 45,
+                            "nodeType": "ParameterList",
+                            "parameters": [],
+                            "src": "917:2:0"
+                        },
+                        "returnParameters": {
+                            "id": 46,
+                            "nodeType": "ParameterList",
+                            "parameters": [],
+                            "src": "924:0:0"
+                        },
+                        "scope": 169,
+                        "src": "906:112:0",
+                        "stateMutability": "nonpayable",
+                        "virtual": false,
+                        "visibility": "public"
+                    },
+                    {
+                        "body": {
+                            "id": 93,
+                            "nodeType": "Block",
+                            "src": "1079:229:0",
+                            "statements": [
+                                {
+                                    "assignments": [
+                                        60
+                                    ],
+                                    "declarations": [
+                                        {
+                                            "constant": false,
+                                            "id": 60,
+                                            "mutability": "mutable",
+                                            "name": "id",
+                                            "nameLocation": "1094:2:0",
+                                            "nodeType": "VariableDeclaration",
+                                            "scope": 93,
+                                            "src": "1089:7:0",
+                                            "stateVariable": false,
+                                            "storageLocation": "default",
+                                            "typeDescriptions": {
+                                                "typeIdentifier": "t_uint256",
+                                                "typeString": "uint256"
+                                            },
+                                            "typeName": {
+                                                "id": 59,
+                                                "name": "uint",
+                                                "nodeType": "ElementaryTypeName",
+                                                "src": "1089:4:0",
+                                                "typeDescriptions": {
+                                                    "typeIdentifier": "t_uint256",
+                                                    "typeString": "uint256"
+                                                }
+                                            },
+                                            "visibility": "internal"
+                                        }
+                                    ],
+                                    "id": 63,
+                                    "initialValue": {
+                                        "expression": {
+                                            "id": 61,
+                                            "name": "providers",
+                                            "nodeType": "Identifier",
+                                            "overloadedDeclarations": [],
+                                            "referencedDeclaration": 21,
+                                            "src": "1099:9:0",
+                                            "typeDescriptions": {
+                                                "typeIdentifier": "t_array$_t_struct$_Provider_$12_storage_$dyn_storage",
+                                                "typeString": "struct ReservationManager.Provider storage ref[] storage ref"
+                                            }
+                                        },
+                                        "id": 62,
+                                        "isConstant": false,
+                                        "isLValue": false,
+                                        "isPure": false,
+                                        "lValueRequested": false,
+                                        "memberName": "length",
+                                        "nodeType": "MemberAccess",
+                                        "src": "1099:16:0",
+                                        "typeDescriptions": {
+                                            "typeIdentifier": "t_uint256",
+                                            "typeString": "uint256"
+                                        }
+                                    },
+                                    "nodeType": "VariableDeclarationStatement",
+                                    "src": "1089:26:0"
+                                },
+                                {
+                                    "assignments": [
+                                        66
+                                    ],
+                                    "declarations": [
+                                        {
+                                            "constant": false,
+                                            "id": 66,
+                                            "mutability": "mutable",
+                                            "name": "provider",
+                                            "nameLocation": "1141:8:0",
+                                            "nodeType": "VariableDeclaration",
+                                            "scope": 93,
+                                            "src": "1125:24:0",
+                                            "stateVariable": false,
+                                            "storageLocation": "memory",
+                                            "typeDescriptions": {
+                                                "typeIdentifier": "t_struct$_Provider_$12_memory_ptr",
+                                                "typeString": "struct ReservationManager.Provider"
+                                            },
+                                            "typeName": {
+                                                "id": 65,
+                                                "nodeType": "UserDefinedTypeName",
+                                                "pathNode": {
+                                                    "id": 64,
+                                                    "name": "Provider",
+                                                    "nodeType": "IdentifierPath",
+                                                    "referencedDeclaration": 12,
+                                                    "src": "1125:8:0"
+                                                },
+                                                "referencedDeclaration": 12,
+                                                "src": "1125:8:0",
+                                                "typeDescriptions": {
+                                                    "typeIdentifier": "t_struct$_Provider_$12_storage_ptr",
+                                                    "typeString": "struct ReservationManager.Provider"
+                                                }
+                                            },
+                                            "visibility": "internal"
+                                        }
+                                    ],
+                                    "id": 72,
+                                    "initialValue": {
+                                        "arguments": [
+                                            {
+                                                "id": 68,
+                                                "name": "id",
+                                                "nodeType": "Identifier",
+                                                "overloadedDeclarations": [],
+                                                "referencedDeclaration": 60,
+                                                "src": "1161:2:0",
+                                                "typeDescriptions": {
+                                                    "typeIdentifier": "t_uint256",
+                                                    "typeString": "uint256"
+                                                }
+                                            },
+                                            {
+                                                "id": 69,
+                                                "name": "name",
+                                                "nodeType": "Identifier",
+                                                "overloadedDeclarations": [],
+                                                "referencedDeclaration": 56,
+                                                "src": "1165:4:0",
+                                                "typeDescriptions": {
+                                                    "typeIdentifier": "t_string_memory_ptr",
+                                                    "typeString": "string memory"
+                                                }
+                                            },
+                                            {
+                                                "hexValue": "74727565",
+                                                "id": 70,
+                                                "isConstant": false,
+                                                "isLValue": false,
+                                                "isPure": true,
+                                                "kind": "bool",
+                                                "lValueRequested": false,
+                                                "nodeType": "Literal",
+                                                "src": "1171:4:0",
+                                                "typeDescriptions": {
+                                                    "typeIdentifier": "t_bool",
+                                                    "typeString": "bool"
+                                                },
+                                                "value": "true"
+                                            }
+                                        ],
+                                        "expression": {
+                                            "argumentTypes": [
+                                                {
+                                                    "typeIdentifier": "t_uint256",
+                                                    "typeString": "uint256"
+                                                },
+                                                {
+                                                    "typeIdentifier": "t_string_memory_ptr",
+                                                    "typeString": "string memory"
+                                                },
+                                                {
+                                                    "typeIdentifier": "t_bool",
+                                                    "typeString": "bool"
+                                                }
+                                            ],
+                                            "id": 67,
+                                            "name": "Provider",
+                                            "nodeType": "Identifier",
+                                            "overloadedDeclarations": [],
+                                            "referencedDeclaration": 12,
+                                            "src": "1152:8:0",
+                                            "typeDescriptions": {
+                                                "typeIdentifier": "t_type$_t_struct$_Provider_$12_storage_ptr_$",
+                                                "typeString": "type(struct ReservationManager.Provider storage pointer)"
+                                            }
+                                        },
+                                        "id": 71,
+                                        "isConstant": false,
+                                        "isLValue": false,
+                                        "isPure": false,
+                                        "kind": "structConstructorCall",
+                                        "lValueRequested": false,
+                                        "names": [],
+                                        "nodeType": "FunctionCall",
+                                        "src": "1152:24:0",
+                                        "tryCall": false,
+                                        "typeDescriptions": {
+                                            "typeIdentifier": "t_struct$_Provider_$12_memory_ptr",
+                                            "typeString": "struct ReservationManager.Provider memory"
+                                        }
+                                    },
+                                    "nodeType": "VariableDeclarationStatement",
+                                    "src": "1125:51:0"
+                                },
+                                {
+                                    "expression": {
+                                        "arguments": [
+                                            {
+                                                "id": 76,
+                                                "name": "provider",
+                                                "nodeType": "Identifier",
+                                                "overloadedDeclarations": [],
+                                                "referencedDeclaration": 66,
+                                                "src": "1201:8:0",
+                                                "typeDescriptions": {
+                                                    "typeIdentifier": "t_struct$_Provider_$12_memory_ptr",
+                                                    "typeString": "struct ReservationManager.Provider memory"
+                                                }
+                                            }
+                                        ],
+                                        "expression": {
+                                            "argumentTypes": [
+                                                {
+                                                    "typeIdentifier": "t_struct$_Provider_$12_memory_ptr",
+                                                    "typeString": "struct ReservationManager.Provider memory"
+                                                }
+                                            ],
+                                            "expression": {
+                                                "id": 73,
+                                                "name": "providers",
+                                                "nodeType": "Identifier",
+                                                "overloadedDeclarations": [],
+                                                "referencedDeclaration": 21,
+                                                "src": "1186:9:0",
+                                                "typeDescriptions": {
+                                                    "typeIdentifier": "t_array$_t_struct$_Provider_$12_storage_$dyn_storage",
+                                                    "typeString": "struct ReservationManager.Provider storage ref[] storage ref"
+                                                }
+                                            },
+                                            "id": 75,
+                                            "isConstant": false,
+                                            "isLValue": false,
+                                            "isPure": false,
+                                            "lValueRequested": false,
+                                            "memberName": "push",
+                                            "nodeType": "MemberAccess",
+                                            "src": "1186:14:0",
+                                            "typeDescriptions": {
+                                                "typeIdentifier": "t_function_arraypush_nonpayable$_t_array$_t_struct$_Provider_$12_storage_$dyn_storage_ptr_$_t_struct$_Provider_$12_storage_$returns$__$bound_to$_t_array$_t_struct$_Provider_$12_storage_$dyn_storage_ptr_$",
+                                                "typeString": "function (struct ReservationManager.Provider storage ref[] storage pointer,struct ReservationManager.Provider storage ref)"
+                                            }
+                                        },
+                                        "id": 77,
+                                        "isConstant": false,
+                                        "isLValue": false,
+                                        "isPure": false,
+                                        "kind": "functionCall",
+                                        "lValueRequested": false,
+                                        "names": [],
+                                        "nodeType": "FunctionCall",
+                                        "src": "1186:24:0",
+                                        "tryCall": false,
+                                        "typeDescriptions": {
+                                            "typeIdentifier": "t_tuple$__$",
+                                            "typeString": "tuple()"
+                                        }
+                                    },
+                                    "id": 78,
+                                    "nodeType": "ExpressionStatement",
+                                    "src": "1186:24:0"
+                                },
+                                {
+                                    "expression": {
+                                        "id": 84,
+                                        "isConstant": false,
+                                        "isLValue": false,
+                                        "isPure": false,
+                                        "lValueRequested": false,
+                                        "leftHandSide": {
+                                            "baseExpression": {
+                                                "id": 79,
+                                                "name": "ownerOfProvider",
+                                                "nodeType": "Identifier",
+                                                "overloadedDeclarations": [],
+                                                "referencedDeclaration": 29,
+                                                "src": "1221:15:0",
+                                                "typeDescriptions": {
+                                                    "typeIdentifier": "t_mapping$_t_uint256_$_t_address_$",
+                                                    "typeString": "mapping(uint256 => address)"
+                                                }
+                                            },
+                                            "id": 81,
+                                            "indexExpression": {
+                                                "id": 80,
+                                                "name": "id",
+                                                "nodeType": "Identifier",
+                                                "overloadedDeclarations": [],
+                                                "referencedDeclaration": 60,
+                                                "src": "1237:2:0",
+                                                "typeDescriptions": {
+                                                    "typeIdentifier": "t_uint256",
+                                                    "typeString": "uint256"
+                                                }
+                                            },
+                                            "isConstant": false,
+                                            "isLValue": true,
+                                            "isPure": false,
+                                            "lValueRequested": true,
+                                            "nodeType": "IndexAccess",
+                                            "src": "1221:19:0",
+                                            "typeDescriptions": {
+                                                "typeIdentifier": "t_address",
+                                                "typeString": "address"
+                                            }
+                                        },
+                                        "nodeType": "Assignment",
+                                        "operator": "=",
+                                        "rightHandSide": {
+                                            "expression": {
+                                                "id": 82,
+                                                "name": "msg",
+                                                "nodeType": "Identifier",
+                                                "overloadedDeclarations": [],
+                                                "referencedDeclaration": 4294967281,
+                                                "src": "1243:3:0",
+                                                "typeDescriptions": {
+                                                    "typeIdentifier": "t_magic_message",
+                                                    "typeString": "msg"
+                                                }
+                                            },
+                                            "id": 83,
+                                            "isConstant": false,
+                                            "isLValue": false,
+                                            "isPure": false,
+                                            "lValueRequested": false,
+                                            "memberName": "sender",
+                                            "nodeType": "MemberAccess",
+                                            "src": "1243:10:0",
+                                            "typeDescriptions": {
+                                                "typeIdentifier": "t_address",
+                                                "typeString": "address"
+                                            }
+                                        },
+                                        "src": "1221:32:0",
+                                        "typeDescriptions": {
+                                            "typeIdentifier": "t_address",
+                                            "typeString": "address"
+                                        }
+                                    },
+                                    "id": 85,
+                                    "nodeType": "ExpressionStatement",
+                                    "src": "1221:32:0"
+                                },
+                                {
+                                    "expression": {
+                                        "id": 91,
+                                        "isConstant": false,
+                                        "isLValue": false,
+                                        "isPure": false,
+                                        "lValueRequested": false,
+                                        "leftHandSide": {
+                                            "baseExpression": {
+                                                "id": 86,
+                                                "name": "providerOfOwner",
+                                                "nodeType": "Identifier",
+                                                "overloadedDeclarations": [],
+                                                "referencedDeclaration": 34,
+                                                "src": "1263:15:0",
+                                                "typeDescriptions": {
+                                                    "typeIdentifier": "t_mapping$_t_address_$_t_struct$_Provider_$12_storage_$",
+                                                    "typeString": "mapping(address => struct ReservationManager.Provider storage ref)"
+                                                }
+                                            },
+                                            "id": 89,
+                                            "indexExpression": {
+                                                "expression": {
+                                                    "id": 87,
+                                                    "name": "msg",
+                                                    "nodeType": "Identifier",
+                                                    "overloadedDeclarations": [],
+                                                    "referencedDeclaration": 4294967281,
+                                                    "src": "1279:3:0",
+                                                    "typeDescriptions": {
+                                                        "typeIdentifier": "t_magic_message",
+                                                        "typeString": "msg"
+                                                    }
+                                                },
+                                                "id": 88,
+                                                "isConstant": false,
+                                                "isLValue": false,
+                                                "isPure": false,
+                                                "lValueRequested": false,
+                                                "memberName": "sender",
+                                                "nodeType": "MemberAccess",
+                                                "src": "1279:10:0",
+                                                "typeDescriptions": {
+                                                    "typeIdentifier": "t_address",
+                                                    "typeString": "address"
+                                                }
+                                            },
+                                            "isConstant": false,
+                                            "isLValue": true,
+                                            "isPure": false,
+                                            "lValueRequested": true,
+                                            "nodeType": "IndexAccess",
+                                            "src": "1263:27:0",
+                                            "typeDescriptions": {
+                                                "typeIdentifier": "t_struct$_Provider_$12_storage",
+                                                "typeString": "struct ReservationManager.Provider storage ref"
+                                            }
+                                        },
+                                        "nodeType": "Assignment",
+                                        "operator": "=",
+                                        "rightHandSide": {
+                                            "id": 90,
+                                            "name": "provider",
+                                            "nodeType": "Identifier",
+                                            "overloadedDeclarations": [],
+                                            "referencedDeclaration": 66,
+                                            "src": "1293:8:0",
+                                            "typeDescriptions": {
+                                                "typeIdentifier": "t_struct$_Provider_$12_memory_ptr",
+                                                "typeString": "struct ReservationManager.Provider memory"
+                                            }
+                                        },
+                                        "src": "1263:38:0",
+                                        "typeDescriptions": {
+                                            "typeIdentifier": "t_struct$_Provider_$12_storage",
+                                            "typeString": "struct ReservationManager.Provider storage ref"
+                                        }
+                                    },
+                                    "id": 92,
+                                    "nodeType": "ExpressionStatement",
+                                    "src": "1263:38:0"
+                                }
+                            ]
+                        },
+                        "functionSelector": "1a5ac8db",
+                        "id": 94,
+                        "implemented": true,
+                        "kind": "function",
+                        "modifiers": [],
+                        "name": "createProvider",
+                        "nameLocation": "1033:14:0",
+                        "nodeType": "FunctionDefinition",
+                        "parameters": {
+                            "id": 57,
+                            "nodeType": "ParameterList",
+                            "parameters": [
+                                {
+                                    "constant": false,
+                                    "id": 56,
+                                    "mutability": "mutable",
+                                    "name": "name",
+                                    "nameLocation": "1062:4:0",
+                                    "nodeType": "VariableDeclaration",
+                                    "scope": 94,
+                                    "src": "1048:18:0",
+                                    "stateVariable": false,
+                                    "storageLocation": "memory",
+                                    "typeDescriptions": {
+                                        "typeIdentifier": "t_string_memory_ptr",
+                                        "typeString": "string"
+                                    },
+                                    "typeName": {
+                                        "id": 55,
+                                        "name": "string",
+                                        "nodeType": "ElementaryTypeName",
+                                        "src": "1048:6:0",
+                                        "typeDescriptions": {
+                                            "typeIdentifier": "t_string_storage_ptr",
+                                            "typeString": "string"
+                                        }
+                                    },
+                                    "visibility": "internal"
+                                }
+                            ],
+                            "src": "1047:20:0"
+                        },
+                        "returnParameters": {
+                            "id": 58,
+                            "nodeType": "ParameterList",
+                            "parameters": [],
+                            "src": "1079:0:0"
+                        },
+                        "scope": 169,
+                        "src": "1024:284:0",
+                        "stateMutability": "nonpayable",
+                        "virtual": false,
+                        "visibility": "public"
+                    },
+                    {
+                        "body": {
+                            "id": 144,
+                            "nodeType": "Block",
+                            "src": "1375:341:0",
+                            "statements": [
+                                {
+                                    "expression": {
+                                        "arguments": [
+                                            {
+                                                "expression": {
+                                                    "baseExpression": {
+                                                        "id": 100,
+                                                        "name": "providerOfOwner",
+                                                        "nodeType": "Identifier",
+                                                        "overloadedDeclarations": [],
+                                                        "referencedDeclaration": 34,
+                                                        "src": "1393:15:0",
+                                                        "typeDescriptions": {
+                                                            "typeIdentifier": "t_mapping$_t_address_$_t_struct$_Provider_$12_storage_$",
+                                                            "typeString": "mapping(address => struct ReservationManager.Provider storage ref)"
+                                                        }
+                                                    },
+                                                    "id": 103,
+                                                    "indexExpression": {
+                                                        "expression": {
+                                                            "id": 101,
+                                                            "name": "msg",
+                                                            "nodeType": "Identifier",
+                                                            "overloadedDeclarations": [],
+                                                            "referencedDeclaration": 4294967281,
+                                                            "src": "1409:3:0",
+                                                            "typeDescriptions": {
+                                                                "typeIdentifier": "t_magic_message",
+                                                                "typeString": "msg"
+                                                            }
+                                                        },
+                                                        "id": 102,
+                                                        "isConstant": false,
+                                                        "isLValue": false,
+                                                        "isPure": false,
+                                                        "lValueRequested": false,
+                                                        "memberName": "sender",
+                                                        "nodeType": "MemberAccess",
+                                                        "src": "1409:10:0",
+                                                        "typeDescriptions": {
+                                                            "typeIdentifier": "t_address",
+                                                            "typeString": "address"
+                                                        }
+                                                    },
+                                                    "isConstant": false,
+                                                    "isLValue": true,
+                                                    "isPure": false,
+                                                    "lValueRequested": false,
+                                                    "nodeType": "IndexAccess",
+                                                    "src": "1393:27:0",
+                                                    "typeDescriptions": {
+                                                        "typeIdentifier": "t_struct$_Provider_$12_storage",
+                                                        "typeString": "struct ReservationManager.Provider storage ref"
+                                                    }
+                                                },
+                                                "id": 104,
+                                                "isConstant": false,
+                                                "isLValue": true,
+                                                "isPure": false,
+                                                "lValueRequested": false,
+                                                "memberName": "isCreated",
+                                                "nodeType": "MemberAccess",
+                                                "referencedDeclaration": 11,
+                                                "src": "1393:37:0",
+                                                "typeDescriptions": {
+                                                    "typeIdentifier": "t_bool",
+                                                    "typeString": "bool"
+                                                }
+                                            }
+                                        ],
+                                        "expression": {
+                                            "argumentTypes": [
+                                                {
+                                                    "typeIdentifier": "t_bool",
+                                                    "typeString": "bool"
+                                                }
+                                            ],
+                                            "id": 99,
+                                            "name": "require",
+                                            "nodeType": "Identifier",
+                                            "overloadedDeclarations": [
+                                                4294967278,
+                                                4294967278
+                                            ],
+                                            "referencedDeclaration": 4294967278,
+                                            "src": "1385:7:0",
+                                            "typeDescriptions": {
+                                                "typeIdentifier": "t_function_require_pure$_t_bool_$returns$__$",
+                                                "typeString": "function (bool) pure"
+                                            }
+                                        },
+                                        "id": 105,
+                                        "isConstant": false,
+                                        "isLValue": false,
+                                        "isPure": false,
+                                        "kind": "functionCall",
+                                        "lValueRequested": false,
+                                        "names": [],
+                                        "nodeType": "FunctionCall",
+                                        "src": "1385:46:0",
+                                        "tryCall": false,
+                                        "typeDescriptions": {
+                                            "typeIdentifier": "t_tuple$__$",
+                                            "typeString": "tuple()"
+                                        }
+                                    },
+                                    "id": 106,
+                                    "nodeType": "ExpressionStatement",
+                                    "src": "1385:46:0"
+                                },
+                                {
+                                    "expression": {
+                                        "arguments": [
+                                            {
+                                                "arguments": [
+                                                    {
+                                                        "id": 111,
+                                                        "name": "guestCount",
+                                                        "nodeType": "Identifier",
+                                                        "overloadedDeclarations": [],
+                                                        "referencedDeclaration": 96,
+                                                        "src": "1480:10:0",
+                                                        "typeDescriptions": {
+                                                            "typeIdentifier": "t_uint16",
+                                                            "typeString": "uint16"
+                                                        }
+                                                    },
+                                                    {
+                                                        "hexValue": "74727565",
+                                                        "id": 112,
+                                                        "isConstant": false,
+                                                        "isLValue": false,
+                                                        "isPure": true,
+                                                        "kind": "bool",
+                                                        "lValueRequested": false,
+                                                        "nodeType": "Literal",
+                                                        "src": "1492:4:0",
+                                                        "typeDescriptions": {
+                                                            "typeIdentifier": "t_bool",
+                                                            "typeString": "bool"
+                                                        },
+                                                        "value": "true"
+                                                    }
+                                                ],
+                                                "expression": {
+                                                    "argumentTypes": [
+                                                        {
+                                                            "typeIdentifier": "t_uint16",
+                                                            "typeString": "uint16"
+                                                        },
+                                                        {
+                                                            "typeIdentifier": "t_bool",
+                                                            "typeString": "bool"
+                                                        }
+                                                    ],
+                                                    "id": 110,
+                                                    "name": "ReservationUnit",
+                                                    "nodeType": "Identifier",
+                                                    "overloadedDeclarations": [],
+                                                    "referencedDeclaration": 17,
+                                                    "src": "1464:15:0",
+                                                    "typeDescriptions": {
+                                                        "typeIdentifier": "t_type$_t_struct$_ReservationUnit_$17_storage_ptr_$",
+                                                        "typeString": "type(struct ReservationManager.ReservationUnit storage pointer)"
+                                                    }
+                                                },
+                                                "id": 113,
+                                                "isConstant": false,
+                                                "isLValue": false,
+                                                "isPure": false,
+                                                "kind": "structConstructorCall",
+                                                "lValueRequested": false,
+                                                "names": [],
+                                                "nodeType": "FunctionCall",
+                                                "src": "1464:33:0",
+                                                "tryCall": false,
+                                                "typeDescriptions": {
+                                                    "typeIdentifier": "t_struct$_ReservationUnit_$17_memory_ptr",
+                                                    "typeString": "struct ReservationManager.ReservationUnit memory"
+                                                }
+                                            }
+                                        ],
+                                        "expression": {
+                                            "argumentTypes": [
+                                                {
+                                                    "typeIdentifier": "t_struct$_ReservationUnit_$17_memory_ptr",
+                                                    "typeString": "struct ReservationManager.ReservationUnit memory"
+                                                }
+                                            ],
+                                            "expression": {
+                                                "id": 107,
+                                                "name": "reservationUnits",
+                                                "nodeType": "Identifier",
+                                                "overloadedDeclarations": [],
+                                                "referencedDeclaration": 25,
+                                                "src": "1442:16:0",
+                                                "typeDescriptions": {
+                                                    "typeIdentifier": "t_array$_t_struct$_ReservationUnit_$17_storage_$dyn_storage",
+                                                    "typeString": "struct ReservationManager.ReservationUnit storage ref[] storage ref"
+                                                }
+                                            },
+                                            "id": 109,
+                                            "isConstant": false,
+                                            "isLValue": false,
+                                            "isPure": false,
+                                            "lValueRequested": false,
+                                            "memberName": "push",
+                                            "nodeType": "MemberAccess",
+                                            "src": "1442:21:0",
+                                            "typeDescriptions": {
+                                                "typeIdentifier": "t_function_arraypush_nonpayable$_t_array$_t_struct$_ReservationUnit_$17_storage_$dyn_storage_ptr_$_t_struct$_ReservationUnit_$17_storage_$returns$__$bound_to$_t_array$_t_struct$_ReservationUnit_$17_storage_$dyn_storage_ptr_$",
+                                                "typeString": "function (struct ReservationManager.ReservationUnit storage ref[] storage pointer,struct ReservationManager.ReservationUnit storage ref)"
+                                            }
+                                        },
+                                        "id": 114,
+                                        "isConstant": false,
+                                        "isLValue": false,
+                                        "isPure": false,
+                                        "kind": "functionCall",
+                                        "lValueRequested": false,
+                                        "names": [],
+                                        "nodeType": "FunctionCall",
+                                        "src": "1442:56:0",
+                                        "tryCall": false,
+                                        "typeDescriptions": {
+                                            "typeIdentifier": "t_tuple$__$",
+                                            "typeString": "tuple()"
+                                        }
+                                    },
+                                    "id": 115,
+                                    "nodeType": "ExpressionStatement",
+                                    "src": "1442:56:0"
+                                },
+                                {
+                                    "assignments": [
+                                        117
+                                    ],
+                                    "declarations": [
+                                        {
+                                            "constant": false,
+                                            "id": 117,
+                                            "mutability": "mutable",
+                                            "name": "id",
+                                            "nameLocation": "1513:2:0",
+                                            "nodeType": "VariableDeclaration",
+                                            "scope": 144,
+                                            "src": "1508:7:0",
+                                            "stateVariable": false,
+                                            "storageLocation": "default",
+                                            "typeDescriptions": {
+                                                "typeIdentifier": "t_uint256",
+                                                "typeString": "uint256"
+                                            },
+                                            "typeName": {
+                                                "id": 116,
+                                                "name": "uint",
+                                                "nodeType": "ElementaryTypeName",
+                                                "src": "1508:4:0",
+                                                "typeDescriptions": {
+                                                    "typeIdentifier": "t_uint256",
+                                                    "typeString": "uint256"
+                                                }
+                                            },
+                                            "visibility": "internal"
+                                        }
+                                    ],
+                                    "id": 122,
+                                    "initialValue": {
+                                        "commonType": {
+                                            "typeIdentifier": "t_uint256",
+                                            "typeString": "uint256"
+                                        },
+                                        "id": 121,
+                                        "isConstant": false,
+                                        "isLValue": false,
+                                        "isPure": false,
+                                        "lValueRequested": false,
+                                        "leftExpression": {
+                                            "expression": {
+                                                "id": 118,
+                                                "name": "reservationUnits",
+                                                "nodeType": "Identifier",
+                                                "overloadedDeclarations": [],
+                                                "referencedDeclaration": 25,
+                                                "src": "1518:16:0",
+                                                "typeDescriptions": {
+                                                    "typeIdentifier": "t_array$_t_struct$_ReservationUnit_$17_storage_$dyn_storage",
+                                                    "typeString": "struct ReservationManager.ReservationUnit storage ref[] storage ref"
+                                                }
+                                            },
+                                            "id": 119,
+                                            "isConstant": false,
+                                            "isLValue": false,
+                                            "isPure": false,
+                                            "lValueRequested": false,
+                                            "memberName": "length",
+                                            "nodeType": "MemberAccess",
+                                            "src": "1518:23:0",
+                                            "typeDescriptions": {
+                                                "typeIdentifier": "t_uint256",
+                                                "typeString": "uint256"
+                                            }
+                                        },
+                                        "nodeType": "BinaryOperation",
+                                        "operator": "-",
+                                        "rightExpression": {
+                                            "hexValue": "31",
+                                            "id": 120,
+                                            "isConstant": false,
+                                            "isLValue": false,
+                                            "isPure": true,
+                                            "kind": "number",
+                                            "lValueRequested": false,
+                                            "nodeType": "Literal",
+                                            "src": "1544:1:0",
+                                            "typeDescriptions": {
+                                                "typeIdentifier": "t_rational_1_by_1",
+                                                "typeString": "int_const 1"
+                                            },
+                                            "value": "1"
+                                        },
+                                        "src": "1518:27:0",
+                                        "typeDescriptions": {
+                                            "typeIdentifier": "t_uint256",
+                                            "typeString": "uint256"
+                                        }
+                                    },
+                                    "nodeType": "VariableDeclarationStatement",
+                                    "src": "1508:37:0"
+                                },
+                                {
+                                    "expression": {
+                                        "id": 133,
+                                        "isConstant": false,
+                                        "isLValue": false,
+                                        "isPure": false,
+                                        "lValueRequested": false,
+                                        "leftHandSide": {
+                                            "baseExpression": {
+                                                "id": 123,
+                                                "name": "reservationUnitOfProvider",
+                                                "nodeType": "Identifier",
+                                                "overloadedDeclarations": [],
+                                                "referencedDeclaration": 39,
+                                                "src": "1555:25:0",
+                                                "typeDescriptions": {
+                                                    "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_ReservationUnit_$17_storage_$",
+                                                    "typeString": "mapping(uint256 => struct ReservationManager.ReservationUnit storage ref)"
+                                                }
+                                            },
+                                            "id": 129,
+                                            "indexExpression": {
+                                                "expression": {
+                                                    "baseExpression": {
+                                                        "id": 124,
+                                                        "name": "providerOfOwner",
+                                                        "nodeType": "Identifier",
+                                                        "overloadedDeclarations": [],
+                                                        "referencedDeclaration": 34,
+                                                        "src": "1581:15:0",
+                                                        "typeDescriptions": {
+                                                            "typeIdentifier": "t_mapping$_t_address_$_t_struct$_Provider_$12_storage_$",
+                                                            "typeString": "mapping(address => struct ReservationManager.Provider storage ref)"
+                                                        }
+                                                    },
+                                                    "id": 127,
+                                                    "indexExpression": {
+                                                        "expression": {
+                                                            "id": 125,
+                                                            "name": "msg",
+                                                            "nodeType": "Identifier",
+                                                            "overloadedDeclarations": [],
+                                                            "referencedDeclaration": 4294967281,
+                                                            "src": "1597:3:0",
+                                                            "typeDescriptions": {
+                                                                "typeIdentifier": "t_magic_message",
+                                                                "typeString": "msg"
+                                                            }
+                                                        },
+                                                        "id": 126,
+                                                        "isConstant": false,
+                                                        "isLValue": false,
+                                                        "isPure": false,
+                                                        "lValueRequested": false,
+                                                        "memberName": "sender",
+                                                        "nodeType": "MemberAccess",
+                                                        "src": "1597:10:0",
+                                                        "typeDescriptions": {
+                                                            "typeIdentifier": "t_address",
+                                                            "typeString": "address"
+                                                        }
+                                                    },
+                                                    "isConstant": false,
+                                                    "isLValue": true,
+                                                    "isPure": false,
+                                                    "lValueRequested": false,
+                                                    "nodeType": "IndexAccess",
+                                                    "src": "1581:27:0",
+                                                    "typeDescriptions": {
+                                                        "typeIdentifier": "t_struct$_Provider_$12_storage",
+                                                        "typeString": "struct ReservationManager.Provider storage ref"
+                                                    }
+                                                },
+                                                "id": 128,
+                                                "isConstant": false,
+                                                "isLValue": true,
+                                                "isPure": false,
+                                                "lValueRequested": false,
+                                                "memberName": "id",
+                                                "nodeType": "MemberAccess",
+                                                "referencedDeclaration": 7,
+                                                "src": "1581:30:0",
+                                                "typeDescriptions": {
+                                                    "typeIdentifier": "t_uint256",
+                                                    "typeString": "uint256"
+                                                }
+                                            },
+                                            "isConstant": false,
+                                            "isLValue": true,
+                                            "isPure": false,
+                                            "lValueRequested": true,
+                                            "nodeType": "IndexAccess",
+                                            "src": "1555:57:0",
+                                            "typeDescriptions": {
+                                                "typeIdentifier": "t_struct$_ReservationUnit_$17_storage",
+                                                "typeString": "struct ReservationManager.ReservationUnit storage ref"
+                                            }
+                                        },
+                                        "nodeType": "Assignment",
+                                        "operator": "=",
+                                        "rightHandSide": {
+                                            "baseExpression": {
+                                                "id": 130,
+                                                "name": "reservationUnits",
+                                                "nodeType": "Identifier",
+                                                "overloadedDeclarations": [],
+                                                "referencedDeclaration": 25,
+                                                "src": "1615:16:0",
+                                                "typeDescriptions": {
+                                                    "typeIdentifier": "t_array$_t_struct$_ReservationUnit_$17_storage_$dyn_storage",
+                                                    "typeString": "struct ReservationManager.ReservationUnit storage ref[] storage ref"
+                                                }
+                                            },
+                                            "id": 132,
+                                            "indexExpression": {
+                                                "id": 131,
+                                                "name": "id",
+                                                "nodeType": "Identifier",
+                                                "overloadedDeclarations": [],
+                                                "referencedDeclaration": 117,
+                                                "src": "1632:2:0",
+                                                "typeDescriptions": {
+                                                    "typeIdentifier": "t_uint256",
+                                                    "typeString": "uint256"
+                                                }
+                                            },
+                                            "isConstant": false,
+                                            "isLValue": true,
+                                            "isPure": false,
+                                            "lValueRequested": false,
+                                            "nodeType": "IndexAccess",
+                                            "src": "1615:20:0",
+                                            "typeDescriptions": {
+                                                "typeIdentifier": "t_struct$_ReservationUnit_$17_storage",
+                                                "typeString": "struct ReservationManager.ReservationUnit storage ref"
+                                            }
+                                        },
+                                        "src": "1555:80:0",
+                                        "typeDescriptions": {
+                                            "typeIdentifier": "t_struct$_ReservationUnit_$17_storage",
+                                            "typeString": "struct ReservationManager.ReservationUnit storage ref"
+                                        }
+                                    },
+                                    "id": 134,
+                                    "nodeType": "ExpressionStatement",
+                                    "src": "1555:80:0"
+                                },
+                                {
+                                    "expression": {
+                                        "id": 142,
+                                        "isConstant": false,
+                                        "isLValue": false,
+                                        "isPure": false,
+                                        "lValueRequested": false,
+                                        "nodeType": "UnaryOperation",
+                                        "operator": "++",
+                                        "prefix": false,
+                                        "src": "1645:64:0",
+                                        "subExpression": {
+                                            "baseExpression": {
+                                                "id": 135,
+                                                "name": "reservationUnitCountOfProvider",
+                                                "nodeType": "Identifier",
+                                                "overloadedDeclarations": [],
+                                                "referencedDeclaration": 43,
+                                                "src": "1645:30:0",
+                                                "typeDescriptions": {
+                                                    "typeIdentifier": "t_mapping$_t_uint256_$_t_uint256_$",
+                                                    "typeString": "mapping(uint256 => uint256)"
+                                                }
+                                            },
+                                            "id": 141,
+                                            "indexExpression": {
+                                                "expression": {
+                                                    "baseExpression": {
+                                                        "id": 136,
+                                                        "name": "providerOfOwner",
+                                                        "nodeType": "Identifier",
+                                                        "overloadedDeclarations": [],
+                                                        "referencedDeclaration": 34,
+                                                        "src": "1676:15:0",
+                                                        "typeDescriptions": {
+                                                            "typeIdentifier": "t_mapping$_t_address_$_t_struct$_Provider_$12_storage_$",
+                                                            "typeString": "mapping(address => struct ReservationManager.Provider storage ref)"
+                                                        }
+                                                    },
+                                                    "id": 139,
+                                                    "indexExpression": {
+                                                        "expression": {
+                                                            "id": 137,
+                                                            "name": "msg",
+                                                            "nodeType": "Identifier",
+                                                            "overloadedDeclarations": [],
+                                                            "referencedDeclaration": 4294967281,
+                                                            "src": "1692:3:0",
+                                                            "typeDescriptions": {
+                                                                "typeIdentifier": "t_magic_message",
+                                                                "typeString": "msg"
+                                                            }
+                                                        },
+                                                        "id": 138,
+                                                        "isConstant": false,
+                                                        "isLValue": false,
+                                                        "isPure": false,
+                                                        "lValueRequested": false,
+                                                        "memberName": "sender",
+                                                        "nodeType": "MemberAccess",
+                                                        "src": "1692:10:0",
+                                                        "typeDescriptions": {
+                                                            "typeIdentifier": "t_address",
+                                                            "typeString": "address"
+                                                        }
+                                                    },
+                                                    "isConstant": false,
+                                                    "isLValue": true,
+                                                    "isPure": false,
+                                                    "lValueRequested": false,
+                                                    "nodeType": "IndexAccess",
+                                                    "src": "1676:27:0",
+                                                    "typeDescriptions": {
+                                                        "typeIdentifier": "t_struct$_Provider_$12_storage",
+                                                        "typeString": "struct ReservationManager.Provider storage ref"
+                                                    }
+                                                },
+                                                "id": 140,
+                                                "isConstant": false,
+                                                "isLValue": true,
+                                                "isPure": false,
+                                                "lValueRequested": false,
+                                                "memberName": "id",
+                                                "nodeType": "MemberAccess",
+                                                "referencedDeclaration": 7,
+                                                "src": "1676:30:0",
+                                                "typeDescriptions": {
+                                                    "typeIdentifier": "t_uint256",
+                                                    "typeString": "uint256"
+                                                }
+                                            },
+                                            "isConstant": false,
+                                            "isLValue": true,
+                                            "isPure": false,
+                                            "lValueRequested": true,
+                                            "nodeType": "IndexAccess",
+                                            "src": "1645:62:0",
+                                            "typeDescriptions": {
+                                                "typeIdentifier": "t_uint256",
+                                                "typeString": "uint256"
+                                            }
+                                        },
+                                        "typeDescriptions": {
+                                            "typeIdentifier": "t_uint256",
+                                            "typeString": "uint256"
+                                        }
+                                    },
+                                    "id": 143,
+                                    "nodeType": "ExpressionStatement",
+                                    "src": "1645:64:0"
+                                }
+                            ]
+                        },
+                        "functionSelector": "0504283d",
+                        "id": 145,
+                        "implemented": true,
+                        "kind": "function",
+                        "modifiers": [],
+                        "name": "createReservationUnit",
+                        "nameLocation": "1323:21:0",
+                        "nodeType": "FunctionDefinition",
+                        "parameters": {
+                            "id": 97,
+                            "nodeType": "ParameterList",
+                            "parameters": [
+                                {
+                                    "constant": false,
+                                    "id": 96,
+                                    "mutability": "mutable",
+                                    "name": "guestCount",
+                                    "nameLocation": "1352:10:0",
+                                    "nodeType": "VariableDeclaration",
+                                    "scope": 145,
+                                    "src": "1345:17:0",
+                                    "stateVariable": false,
+                                    "storageLocation": "default",
+                                    "typeDescriptions": {
+                                        "typeIdentifier": "t_uint16",
+                                        "typeString": "uint16"
+                                    },
+                                    "typeName": {
+                                        "id": 95,
+                                        "name": "uint16",
+                                        "nodeType": "ElementaryTypeName",
+                                        "src": "1345:6:0",
+                                        "typeDescriptions": {
+                                            "typeIdentifier": "t_uint16",
+                                            "typeString": "uint16"
+                                        }
+                                    },
+                                    "visibility": "internal"
+                                }
+                            ],
+                            "src": "1344:19:0"
+                        },
+                        "returnParameters": {
+                            "id": 98,
+                            "nodeType": "ParameterList",
+                            "parameters": [],
+                            "src": "1375:0:0"
+                        },
+                        "scope": 169,
+                        "src": "1314:402:0",
+                        "stateMutability": "nonpayable",
+                        "virtual": false,
+                        "visibility": "public"
+                    },
+                    {
+                        "body": {
+                            "id": 167,
+                            "nodeType": "Block",
+                            "src": "1826:222:0",
+                            "statements": [
+                                {
+                                    "assignments": [
+                                        152,
+                                        154,
+                                        156,
+                                        158,
+                                        160
+                                    ],
+                                    "declarations": [
+                                        {
+                                            "constant": false,
+                                            "id": 152,
+                                            "mutability": "mutable",
+                                            "name": "roundID",
+                                            "nameLocation": "1857:7:0",
+                                            "nodeType": "VariableDeclaration",
+                                            "scope": 167,
+                                            "src": "1850:14:0",
+                                            "stateVariable": false,
+                                            "storageLocation": "default",
+                                            "typeDescriptions": {
+                                                "typeIdentifier": "t_uint80",
+                                                "typeString": "uint80"
+                                            },
+                                            "typeName": {
+                                                "id": 151,
+                                                "name": "uint80",
+                                                "nodeType": "ElementaryTypeName",
+                                                "src": "1850:6:0",
+                                                "typeDescriptions": {
+                                                    "typeIdentifier": "t_uint80",
+                                                    "typeString": "uint80"
+                                                }
+                                            },
+                                            "visibility": "internal"
+                                        },
+                                        {
+                                            "constant": false,
+                                            "id": 154,
+                                            "mutability": "mutable",
+                                            "name": "price",
+                                            "nameLocation": "1882:5:0",
+                                            "nodeType": "VariableDeclaration",
+                                            "scope": 167,
+                                            "src": "1878:9:0",
+                                            "stateVariable": false,
+                                            "storageLocation": "default",
+                                            "typeDescriptions": {
+                                                "typeIdentifier": "t_int256",
+                                                "typeString": "int256"
+                                            },
+                                            "typeName": {
+                                                "id": 153,
+                                                "name": "int",
+                                                "nodeType": "ElementaryTypeName",
+                                                "src": "1878:3:0",
+                                                "typeDescriptions": {
+                                                    "typeIdentifier": "t_int256",
+                                                    "typeString": "int256"
+                                                }
+                                            },
+                                            "visibility": "internal"
+                                        },
+                                        {
+                                            "constant": false,
+                                            "id": 156,
+                                            "mutability": "mutable",
+                                            "name": "startedAt",
+                                            "nameLocation": "1906:9:0",
+                                            "nodeType": "VariableDeclaration",
+                                            "scope": 167,
+                                            "src": "1901:14:0",
+                                            "stateVariable": false,
+                                            "storageLocation": "default",
+                                            "typeDescriptions": {
+                                                "typeIdentifier": "t_uint256",
+                                                "typeString": "uint256"
+                                            },
+                                            "typeName": {
+                                                "id": 155,
+                                                "name": "uint",
+                                                "nodeType": "ElementaryTypeName",
+                                                "src": "1901:4:0",
+                                                "typeDescriptions": {
+                                                    "typeIdentifier": "t_uint256",
+                                                    "typeString": "uint256"
+                                                }
+                                            },
+                                            "visibility": "internal"
+                                        },
+                                        {
+                                            "constant": false,
+                                            "id": 158,
+                                            "mutability": "mutable",
+                                            "name": "timeStamp",
+                                            "nameLocation": "1934:9:0",
+                                            "nodeType": "VariableDeclaration",
+                                            "scope": 167,
+                                            "src": "1929:14:0",
+                                            "stateVariable": false,
+                                            "storageLocation": "default",
+                                            "typeDescriptions": {
+                                                "typeIdentifier": "t_uint256",
+                                                "typeString": "uint256"
+                                            },
+                                            "typeName": {
+                                                "id": 157,
+                                                "name": "uint",
+                                                "nodeType": "ElementaryTypeName",
+                                                "src": "1929:4:0",
+                                                "typeDescriptions": {
+                                                    "typeIdentifier": "t_uint256",
+                                                    "typeString": "uint256"
+                                                }
+                                            },
+                                            "visibility": "internal"
+                                        },
+                                        {
+                                            "constant": false,
+                                            "id": 160,
+                                            "mutability": "mutable",
+                                            "name": "answeredInRound",
+                                            "nameLocation": "1964:15:0",
+                                            "nodeType": "VariableDeclaration",
+                                            "scope": 167,
+                                            "src": "1957:22:0",
+                                            "stateVariable": false,
+                                            "storageLocation": "default",
+                                            "typeDescriptions": {
+                                                "typeIdentifier": "t_uint80",
+                                                "typeString": "uint80"
+                                            },
+                                            "typeName": {
+                                                "id": 159,
+                                                "name": "uint80",
+                                                "nodeType": "ElementaryTypeName",
+                                                "src": "1957:6:0",
+                                                "typeDescriptions": {
+                                                    "typeIdentifier": "t_uint80",
+                                                    "typeString": "uint80"
+                                                }
+                                            },
+                                            "visibility": "internal"
+                                        }
+                                    ],
+                                    "id": 164,
+                                    "initialValue": {
+                                        "arguments": [],
+                                        "expression": {
+                                            "argumentTypes": [],
+                                            "expression": {
+                                                "id": 161,
+                                                "name": "priceFeed",
+                                                "nodeType": "Identifier",
+                                                "overloadedDeclarations": [],
+                                                "referencedDeclaration": 5,
+                                                "src": "1992:9:0",
+                                                "typeDescriptions": {
+                                                    "typeIdentifier": "t_contract$_AggregatorV3Interface_$215",
+                                                    "typeString": "contract AggregatorV3Interface"
+                                                }
+                                            },
+                                            "id": 162,
+                                            "isConstant": false,
+                                            "isLValue": false,
+                                            "isPure": false,
+                                            "lValueRequested": false,
+                                            "memberName": "latestRoundData",
+                                            "nodeType": "MemberAccess",
+                                            "referencedDeclaration": 214,
+                                            "src": "1992:25:0",
+                                            "typeDescriptions": {
+                                                "typeIdentifier": "t_function_external_view$__$returns$_t_uint80_$_t_int256_$_t_uint256_$_t_uint256_$_t_uint80_$",
+                                                "typeString": "function () view external returns (uint80,int256,uint256,uint256,uint80)"
+                                            }
+                                        },
+                                        "id": 163,
+                                        "isConstant": false,
+                                        "isLValue": false,
+                                        "isPure": false,
+                                        "kind": "functionCall",
+                                        "lValueRequested": false,
+                                        "names": [],
+                                        "nodeType": "FunctionCall",
+                                        "src": "1992:27:0",
+                                        "tryCall": false,
+                                        "typeDescriptions": {
+                                            "typeIdentifier": "t_tuple$_t_uint80_$_t_int256_$_t_uint256_$_t_uint256_$_t_uint80_$",
+                                            "typeString": "tuple(uint80,int256,uint256,uint256,uint80)"
+                                        }
+                                    },
+                                    "nodeType": "VariableDeclarationStatement",
+                                    "src": "1836:183:0"
+                                },
+                                {
+                                    "expression": {
+                                        "id": 165,
+                                        "name": "price",
+                                        "nodeType": "Identifier",
+                                        "overloadedDeclarations": [],
+                                        "referencedDeclaration": 154,
+                                        "src": "2036:5:0",
+                                        "typeDescriptions": {
+                                            "typeIdentifier": "t_int256",
+                                            "typeString": "int256"
+                                        }
+                                    },
+                                    "functionReturnParameters": 150,
+                                    "id": 166,
+                                    "nodeType": "Return",
+                                    "src": "2029:12:0"
+                                }
+                            ]
+                        },
+                        "documentation": {
+                            "id": 146,
+                            "nodeType": "StructuredDocumentation",
+                            "src": "1725:43:0",
+                            "text": " Returns the latest price"
+                        },
+                        "functionSelector": "8c3c9a55",
+                        "id": 168,
+                        "implemented": true,
+                        "kind": "function",
+                        "modifiers": [],
+                        "name": "getThePrice",
+                        "nameLocation": "1782:11:0",
+                        "nodeType": "FunctionDefinition",
+                        "parameters": {
+                            "id": 147,
+                            "nodeType": "ParameterList",
+                            "parameters": [],
+                            "src": "1793:2:0"
+                        },
+                        "returnParameters": {
+                            "id": 150,
+                            "nodeType": "ParameterList",
+                            "parameters": [
+                                {
+                                    "constant": false,
+                                    "id": 149,
+                                    "mutability": "mutable",
+                                    "name": "",
+                                    "nameLocation": "-1:-1:-1",
+                                    "nodeType": "VariableDeclaration",
+                                    "scope": 168,
+                                    "src": "1817:3:0",
+                                    "stateVariable": false,
+                                    "storageLocation": "default",
+                                    "typeDescriptions": {
+                                        "typeIdentifier": "t_int256",
+                                        "typeString": "int256"
+                                    },
+                                    "typeName": {
+                                        "id": 148,
+                                        "name": "int",
+                                        "nodeType": "ElementaryTypeName",
+                                        "src": "1817:3:0",
+                                        "typeDescriptions": {
+                                            "typeIdentifier": "t_int256",
+                                            "typeString": "int256"
+                                        }
+                                    },
+                                    "visibility": "internal"
+                                }
+                            ],
+                            "src": "1816:5:0"
+                        },
+                        "scope": 169,
+                        "src": "1773:275:0",
+                        "stateMutability": "view",
+                        "virtual": false,
+                        "visibility": "public"
+                    }
+                ],
+                "scope": 170,
+                "src": "120:1930:0",
+                "usedErrors": []
+            }
+        ],
+        "src": "0:2051:0"
+    },
+    "functionHashes": {
+        "createProvider(string)": "1a5ac8db",
+        "createReservationUnit(uint16)": "0504283d",
+        "getThePrice()": "8c3c9a55",
+        "ownerOfProvider(uint256)": "41764614",
+        "providerOfOwner(address)": "81afe75a",
+        "providers(uint256)": "50f3fc81",
+        "reservationUnitCountOfProvider(uint256)": "6c1a7727",
+        "reservationUnitOfProvider(uint256)": "bcb16efc",
+        "reservationUnits(uint256)": "0472e2e0"
+    },
+    "gasEstimates": {
+        "creation": {
+            "codeDepositCost": "463600",
+            "executionCost": "21335",
+            "totalCost": "484935"
+        },
+        "external": {
+            "createProvider(string)": "infinite",
+            "createReservationUnit(uint16)": "109935",
+            "getThePrice()": "infinite",
+            "ownerOfProvider(uint256)": "1244",
+            "providerOfOwner(address)": "infinite",
+            "providers(uint256)": "infinite",
+            "reservationUnitCountOfProvider(uint256)": "1160",
+            "reservationUnitOfProvider(uint256)": "1277",
+            "reservationUnits(uint256)": "2024"
+        }
+    }
+}
