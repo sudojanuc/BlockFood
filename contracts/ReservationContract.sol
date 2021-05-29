@@ -18,6 +18,6 @@ contract ReservationContract
     function createReservation() external payable
     {
         require(msg.value >= publicLock.keyPrice());
-        publicLock.purchase(publicLock.keyPrice(), msg.sender, msg.sender, "0x00");
+        publicLock.purchase(publicLock.keyPrice(), msg.sender, msg.sender, "0x00").value(msg.value)(msg.sender);
     }
 }

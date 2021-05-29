@@ -37,4 +37,13 @@ export class ReservationComponent implements OnInit {
     }
   }
 
+  createReservation(){
+    console.log(this.selected);
+    if(!this.selected){
+      alert('Please select a Table');
+      return;
+    }
+    this.contractService.createReservation(this.selected);
+  }
+
 }

@@ -5,7 +5,9 @@
 export const environment = {
   production: false,
   network: 'Kovan',
-  address: '0x80651894BA59EFe325Ac52892DC4be8782Ec52cD',
+  address2: '0xDAD7e793CCdcd4435BF6A3Ab7f220AfDB9Ed1a7A',
+  abi2: [{"inputs":[],"payable":false,"stateMutability":"nonpayable","type":"constructor"},{"constant":false,"inputs":[{"internalType":"uint256","name":"reservationUnitId","type":"uint256"}],"name":"createReservation","outputs":[],"payable":true,"stateMutability":"payable","type":"function"},{"constant":true,"inputs":[],"name":"getKeyPrice","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"getReservations","outputs":[{"components":[{"internalType":"uint256","name":"id","type":"uint256"},{"internalType":"bool","name":"isCreated","type":"bool"}],"internalType":"struct ReservationContract.Reservation[]","name":"","type":"tuple[]"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"getReservationsOfOwner","outputs":[{"components":[{"internalType":"uint256","name":"id","type":"uint256"},{"internalType":"bool","name":"isCreated","type":"bool"}],"internalType":"struct ReservationContract.Reservation[]","name":"","type":"tuple[]"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"internalType":"uint256","name":"reservationUnitId","type":"uint256"}],"name":"getReservationsOfUnit","outputs":[{"components":[{"internalType":"uint256","name":"id","type":"uint256"},{"internalType":"bool","name":"isCreated","type":"bool"}],"internalType":"struct ReservationContract.Reservation[]","name":"","type":"tuple[]"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"internalType":"uint256","name":"reservationId","type":"uint256"},{"internalType":"uint256","name":"checkInKey","type":"uint256"}],"name":"refundReservation","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"}],
+  address: '0xEb5F8D3007e1241629Df2891Fe32a7CaBff158B1',
   "abi": [
     {
       "anonymous": false,
