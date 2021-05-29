@@ -1,0 +1,28 @@
+<h1>Reservation for restaurant {{restaurant.name}}</h1>
+<mat-divider class=""></mat-divider>
+<div class="marginTop">
+<mat-form-field>
+    <input matInput [matDatepicker]="picker" placeholder="Choose a date">
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker #picker></mat-datepicker>
+</mat-form-field>
+<div>
+    <span>Choose a time</span>
+<input matInput placeholder="Choose a time" type="time" style="width: 90px;margin-left: 20px;">
+</div>
+</div>
+<mat-divider class="marginTop"></mat-divider>
+Select a table
+<div class="tableWrapper">
+    <div *ngFor=" let table of tables">
+        <mat-card class="table" [style.background]="getColor(table)" style="background-color: forestgreen;" (click)="selected = table">
+            <mat-card-title>Table</mat-card-title>
+            <mat-card-content style="margin-top: 20%;">
+                <div>Chairs: {{table.possibleGuestCount}}</div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</div>
+<mat-card-actions>
+    <button mat-flat-button color="primary" class="marginTop" >Save</button>
+</mat-card-actions>

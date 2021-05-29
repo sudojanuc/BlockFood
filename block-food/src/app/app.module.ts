@@ -20,6 +20,11 @@ import {MatInputModule} from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
 import {MatDividerModule} from '@angular/material/divider';
 import { UserComponent } from './user/user.component';
+import {MatDialogModule} from '@angular/material/dialog';
+import { ReservationComponent } from './reservation/reservation.component';
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+
 
 
 export function enableWeb3Provider(provider : any) {
@@ -34,7 +39,8 @@ export function enableWeb3Provider(provider : any) {
     NavComponent,
     HomeComponent,
     RestaurantComponent,
-    UserComponent
+    UserComponent,
+    ReservationComponent
   ],
   imports: [
     BrowserModule,
@@ -50,7 +56,10 @@ export function enableWeb3Provider(provider : any) {
     MatFormFieldModule,
     MatInputModule ,
     FormsModule,
-    MatDividerModule
+    MatDividerModule,
+    MatDialogModule,
+    MatDatepickerModule,
+    MatNativeDateModule 
   ],
   providers: [
     {
@@ -58,7 +67,8 @@ export function enableWeb3Provider(provider : any) {
       useFactory: enableWeb3Provider,
       deps: [WEB3PROVIDER],
       multi: true
-    }
+    },
+    MatDatepickerModule
   ],
   bootstrap: [AppComponent]
 })
