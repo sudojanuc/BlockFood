@@ -59,6 +59,11 @@ contract ReservationManager
         return providers;
     }
 
+    function getCurrentProvider() public view returns(Provider memory)
+    {
+        return providerOfOwner[msg.sender];
+    }
+
     function getReservationUnits() public view returns(ReservationUnit[] memory)
     {
         return reservationUnits;
