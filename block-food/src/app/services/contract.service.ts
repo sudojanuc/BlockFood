@@ -9,43 +9,47 @@ declare const window: any;
   providedIn: 'root'
 })
 export class ContractService {
-
+  
   public address: any;
   private contract: any;
   private provider: any;
-
+  
   constructor(@Inject(WEB3PROVIDER) private web3Provider: any) {
     this.provider = new ethers.providers.Web3Provider(window.ethereum);
     this.createContract();
   }
-
+  
   private createContract() {
     // The ERC-20 Contract ABI, which is a common contract interface
     // for tokens (this is the Human-Readable ABI format)
     const daiAbi = environment.abi;
     const daiAddress = environment.address;
-
+    
     // The Contract object
     this.contract = new ethers.Contract(daiAddress, daiAbi, this.provider);
     this.contract = this.contract.connect(this.provider.getSigner());
   }
-
+  
   public createRestaurant(name:string){
     this.contract.functions.createProvider(name); 
   }
-
+  
   public getRestaurant():Promise<Restaurant[]>{
     return this.contract.functions.getCurrentProvider(); 
+  
   }
-
+  getAllRestaurents(): Promise<[Restaurant[]]> {
+    return this.contract.functions.getProviders();
+  }
+  
   public getMyTables(restaurant:Restaurant):Promise<[Table[]]>{
     return this.contract.functions.getReservationUnitsOfProvider(restaurant.id); 
   }
-
+  
   saveTable(guestCount: number) {
     this.contract.functions.createReservationUnit(guestCount); 
   }
-
+  
 }
 
 
@@ -56,9 +60,9 @@ export class ContractService {
 
 
 // private dostuff(){
-//   // let provider = new ethers.providers.BaseProvider(environment.network);
-//   console.log(window.ethereum);
-//   const provider = new ethers.providers.Web3Provider(window.ethereum);
+  //   // let provider = new ethers.providers.BaseProvider(environment.network);
+  //   console.log(window.ethereum);
+  //   const provider = new ethers.providers.Web3Provider(window.ethereum);
 //   provider.ready.then(res => {
 //     this.address = window.ethereum.selectedAddress;
 //        // You can also use an ENS name for the contract address

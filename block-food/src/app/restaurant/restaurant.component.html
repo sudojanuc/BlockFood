@@ -1,6 +1,6 @@
 <div class="wrapper" color="primary">
     <div *ngIf="isLoading">loading...</div>
-    <mat-card *ngIf="!restaurant && !isLoading" class="card">
+    <mat-card *ngIf="!restaurant && !isLoading" class="card marginTop">
         <mat-card-title>Create a new Restaurant</mat-card-title>
         <mat-card-content style="margin-top: 20%;">
             <mat-form-field appearance="fill">
@@ -12,36 +12,41 @@
             <button mat-flat-button color="primary" (click)="saveRestaurant()">Save</button>
         </mat-card-actions>
     </mat-card>
-    <div *ngIf="restaurant" class="card">
+    <div *ngIf="restaurant" class="card marginTop restaurant">
         <mat-card>
             <mat-card-title>Your Restaurant</mat-card-title>
-            <mat-card-content style="margin-top: 20%;">
+            <mat-card-content style="margin-top: 5%;">
                 <div>name: {{restaurant.name}}</div>
             </mat-card-content>
         </mat-card>
 
-        <mat-divider></mat-divider>
+        <mat-divider class="marginTop"></mat-divider>
 
-        <div *ngFor=" let table of tables">
-            <mat-card>
-                <mat-card-title>Table</mat-card-title>
-                <mat-card-content style="margin-top: 20%;">
-                    <div>name: {{table.possibleGuestCount}}</div>
+        <div class="tableWrapper marginTop">
+            <div *ngFor=" let table of tables">
+                <mat-card class="table">
+                    <mat-card-title>Table</mat-card-title>
+                    <mat-card-content style="margin-top: 20%;">
+                        <div>Chairs: {{table.possibleGuestCount}}</div>
+                    </mat-card-content>
+                </mat-card>
+            </div>
+        </div>
+        <mat-divider class="marginTop"></mat-divider>
+
+        <div class="marginTop">
+            <mat-card class="card newTable">
+                <mat-card-title>Create a new Table</mat-card-title>
+                <mat-card-content style="margin-top: 5%;">
+                    <mat-form-field appearance="fill">
+                        <mat-label>Amount of chairs</mat-label>
+                        <input matInput [(ngModel)]="chairs">
+                    </mat-form-field>
                 </mat-card-content>
+                <mat-card-actions>
+                    <button mat-flat-button color="primary" (click)="saveTable()">Save</button>
+                </mat-card-actions>
             </mat-card>
         </div>
-
-        <mat-card class="card">
-            <mat-card-title>Create a new Table</mat-card-title>
-            <mat-card-content style="margin-top: 20%;">
-                <mat-form-field appearance="fill">
-                    <mat-label>Amount of chairs</mat-label>
-                    <input matInput [(ngModel)]="chairs">
-                </mat-form-field>
-            </mat-card-content>
-            <mat-card-actions>
-                <button mat-flat-button color="primary" (click)="saveTable()">Save</button>
-            </mat-card-actions>
-        </mat-card>
     </div>
 </div>
