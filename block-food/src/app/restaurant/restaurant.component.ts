@@ -10,7 +10,8 @@ export interface Restaurant{
 export interface Table{
   id: string,
   possibleGuestCount: number,
-  isCreated : boolean
+  isCreated : boolean,
+  reservationCount: number
 }
 
 @Component({
@@ -29,22 +30,11 @@ export class RestaurantComponent implements OnInit {
 
   ngOnInit(): void {
     this.getRestaurant();
-
-    console.log(this.tables);
-    this.tables.push(      {
-      id: '1',
-      possibleGuestCount: 2222222,
-      isCreated: true
-    });
     
-this.contractService.contract.on('NewReservationUnit', (fromAddress: any, _toAddress: any, value: any, event: any) =>{
+  this.contractService.contract.on('NewReservationUnit', (fromAddress: any, _toAddress: any, value: any, event: any) =>{
     if(fromAddress == this.contractService.address){
       this.tables = [...this.tables,      
-        {
-          id:event.id, 
-          possibleGuestCount: event.possibleGuestCount,
-          isCreated: event.isCreated
-        }
+        event
     ];
     }
   });

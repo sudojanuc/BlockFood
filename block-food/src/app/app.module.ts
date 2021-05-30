@@ -24,6 +24,9 @@ import {MatDialogModule} from '@angular/material/dialog';
 import { ReservationComponent } from './reservation/reservation.component';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
+import { ReservationStatusComponent } from './reservation-status/reservation-status.component';
+import {MatTableModule} from '@angular/material/table';
+
 
 
 
@@ -40,7 +43,8 @@ export function enableWeb3Provider(provider : any) {
     HomeComponent,
     RestaurantComponent,
     UserComponent,
-    ReservationComponent
+    ReservationComponent,
+    ReservationStatusComponent
   ],
   imports: [
     BrowserModule,
@@ -59,7 +63,8 @@ export function enableWeb3Provider(provider : any) {
     MatDividerModule,
     MatDialogModule,
     MatDatepickerModule,
-    MatNativeDateModule 
+    MatNativeDateModule,
+    MatTableModule
   ],
   providers: [
     {

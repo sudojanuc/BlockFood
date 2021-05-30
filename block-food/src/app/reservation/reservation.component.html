@@ -15,7 +15,13 @@
 Select a table
 <div class="tableWrapper">
     <div *ngFor=" let table of tables">
-        <mat-card class="table" [style.background]="getColor(table)" style="background-color: forestgreen;" (click)="selected = table">
+        <mat-card *ngIf="table.reservationCount == 0 || !table.reservationCount" class="table clickable" [style.background]="getColor(table)" style="background-color: forestgreen;" (click)="selected = table">
+            <mat-card-title>Table</mat-card-title>
+            <mat-card-content style="margin-top: 20%;">
+                <div>Chairs: {{table.possibleGuestCount}}</div>
+            </mat-card-content>
+        </mat-card>
+        <mat-card *ngIf="table.reservationCount > 0" class="table" style="background-color: red;" >
             <mat-card-title>Table</mat-card-title>
             <mat-card-content style="margin-top: 20%;">
                 <div>Chairs: {{table.possibleGuestCount}}</div>
