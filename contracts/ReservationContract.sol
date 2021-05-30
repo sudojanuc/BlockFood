@@ -26,10 +26,11 @@ contract ReservationContract
     mapping (address => uint) private reservationCountOfOwner;
     mapping (uint => Reservation) private reservationIdOfReservation;
     mapping (uint => uint) private reservationCountOfUnit;
+    mapping (uint => uint) private unitOfReservation;
 
     constructor() public{
         publicLock = IPublicLock(0x9D3BAd7746Df8941d88377f65edE7f5F42c88e1b);
-        reservationManager = ReservationManager(0x991C282c6E2b6D4c274F77EB0423761F89830AD6);
+        reservationManager = ReservationManager(0xdB2A95eca18bE780B4b954D4582580cFe51ac21C);
     }
 
     function refundReservation(uint reservationId, uint checkInKey) external
@@ -39,6 +40,7 @@ contract ReservationContract
         publicLock.setKeyManagerOf(tokenId, address(this));
         publicLock.cancelAndRefund(tokenId);
         delete reservations[reservationId];
+        reservationManager.decreaseUnitReservationCount(unitOfReservation[reservationId]);
     }
 
     function withdrawReservationFee(uint reservationId) public
@@ -64,6 +66,8 @@ contract ReservationContract
         reservationIdOfReservation[id] = reservations[id];
         reservationsOfOwner[id] = msg.sender;
         reservationCountOfOwner[msg.sender]++;
+
+        unitOfReservation[id] = reservationUnitId;
     }
 
     function generateRandomCheckInKey(uint id) private pure returns (uint) {
