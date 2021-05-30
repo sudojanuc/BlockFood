@@ -1,5 +1,5 @@
-const ReservationContract = artifacts.require("ReservationContract");
+const Reservation = artifacts.require("Reservation");
 
 module.exports = function (deployer) {
-  deployer.deploy(ReservationContract);
+  deployer.deploy(Reservation);
 };
