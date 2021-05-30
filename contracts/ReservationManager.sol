@@ -69,9 +69,14 @@ contract ReservationManager
         return providers;
     }
 
-    function increaseUnitReservationCount(uint unitId) external
+    function increaseUnitReservationCount(uint unitId) public
     {
         reservationUnits[unitId].reservationCount++;
+    }
+
+    function decreaseUnitReservationCount(uint unitId) public
+    {
+        reservationUnits[unitId].reservationCount--;
     }
 
     function getCurrentProvider() public view returns(Provider memory)
