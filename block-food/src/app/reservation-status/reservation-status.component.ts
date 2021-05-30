@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit } from '@angular/core';
 import { ContractService } from '../services/contract.service';
 
 @Component({
@@ -13,20 +13,26 @@ export class ReservationStatusComponent implements OnInit {
 ];
   dataSource = [
   ];
-  code = '';
 
-  constructor(private contractService : ContractService) { }
+  constructor(private contractService : ContractService, 
+    private elRef:ElementRef) { }
 
   ngOnInit(): void {
     this.contractService.getMyReservations().then(res =>{
-      this.dataSource = res;
-      console.log(this.dataSource[0]);
-      
+      this.dataSource = res.filter((v:any) => v.isCreated );
+      this.dataSource.forEach((res:any) => {
+        console.log('id: ', res.id.toString());
+        console.log('key: ', res.checkInKey.toString());
+
+      }
+        )
     });
   }
 
   checkin(id:any){
-    this.contractService.checkin(id, this.code);
+    let code = this.elRef.nativeElement.querySelector('#id' + id).value;
+    
+    this.contractService.checkin(id, code);
   }
 
 }
