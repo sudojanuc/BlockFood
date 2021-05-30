@@ -16,6 +16,7 @@ contract ReservationManager
     {
         uint id;
         uint16 possibleGuestCount;
+        uint reservationCount;
         bool isCreated;
     }
 
@@ -56,7 +57,7 @@ contract ReservationManager
 
         uint id = reservationUnits.length;
 
-        reservationUnits.push(ReservationUnit(id, guestCount, true));
+        reservationUnits.push(ReservationUnit(id, guestCount, 0, true));
         reservationUnitOfProvider[id] = providerOfOwner[msg.sender].id;
         reservationUnitCountOfProvider[providerOfOwner[msg.sender].id]++;
 
@@ -66,6 +67,11 @@ contract ReservationManager
     function getProviders() public view returns(Provider[] memory)
     {
         return providers;
+    }
+
+    function increaseUnitReservationCount(uint unitId) external
+    {
+        reservationUnits[unitId].reservationCount++;
     }
 
     function getCurrentProvider() public view returns(Provider memory)
@@ -90,5 +96,11 @@ contract ReservationManager
                 ru[count++] = reservationUnits[i];
         }
         return ru;
+    }
+
+    function getProviderOfUnit(uint id) public view returns(Provider memory)
+    {
+
+        return providers[reservationUnitOfProvider[id]];
     }
 }
