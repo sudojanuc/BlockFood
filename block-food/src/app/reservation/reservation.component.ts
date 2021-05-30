@@ -21,33 +21,48 @@ export class ReservationComponent implements OnInit {
     private contractService: ContractService
   ) {
     this.restaurant = data.restaurant;
-   }
+  }
 
   ngOnInit(): void {
-    this.contractService.getMyTables(this.restaurant)
-                        .then(tables => { this.tables = tables[0] 
-                                        console.log(tables);
-                                        });
+    this.loadTables();
+    this.contractService.contract2.on('CreateReservation', (fromAddress: any, table: any) => {
+      console.log('CreateReservation');
+      console.log(table);
+
+      if (fromAddress == this.contractService.address) {
+        this.loadTables();
+      }
+    });
 
   }
 
-  getColor(table: Table): string{
+  loadTables(){
+    this.contractService.getMyTables(this.restaurant)
+      .then(tables => {
+        this.tables = tables[0]
+        console.log(tables);
+      });
+  }
+
+  getColor(table: Table): string {
     // console.log(table);
-    
-    if(this.selected == table) {
+
+    if (this.selected == table) {
       return 'forestgreen';
-    } else{
+    } else {
       return 'darkgreen';
     }
   }
 
-  createReservation(){
+  createReservation() {
     console.log(this.selected);
-    if(!this.selected){
+    if (!this.selected) {
       alert('Please select a Table');
       return;
     }
     this.contractService.createReservation(this.selected);
+
+
   }
 
 }
