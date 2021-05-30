@@ -31,17 +31,22 @@ export class RestaurantComponent implements OnInit {
   ngOnInit(): void {
     this.getRestaurant();
     
-  this.contractService.contract.on('NewReservationUnit', (fromAddress: any, _toAddress: any, value: any, event: any) =>{
+  this.contractService.contract.on('NewReservationUnit', (fromAddress: any, tables: any) =>{
     if(fromAddress == this.contractService.address){
+      console.log(this.tables);
+      if(this.tables.length == 0){
+        this.tables = [tables];
+      } else {
       this.tables = [...this.tables,      
-        event
-    ];
+        tables
+    ];}
     }
   });
 
-  this.contractService.contract.on('NewProvider', (fromAddress: any, _toAddress: any, value: any, event: any) =>{
+  this.contractService.contract.on('NewProvider', (fromAddress: any, restaurant: any) =>{
+  
     if(fromAddress == this.contractService.address){
-      this.restaurant = event;
+      this.restaurant = restaurant;
     }
   });
 

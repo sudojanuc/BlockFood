@@ -18,6 +18,19 @@ export class ReservationStatusComponent implements OnInit {
     private elRef:ElementRef) { }
 
   ngOnInit(): void {
+    this.getReservations();
+    this.contractService.contract2.on('RefundReservation', (fromAddress: any, reservation: any) =>{
+      console.log('refund');
+      console.log(reservation);
+      
+      
+      if(fromAddress == this.contractService.address){
+        this.getReservations();
+      }
+    });
+  }
+
+  getReservations(){
     this.contractService.getMyReservations().then(res =>{
       this.dataSource = res.filter((v:any) => v.isCreated );
       this.dataSource.forEach((res:any) => {

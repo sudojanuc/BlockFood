@@ -12,7 +12,7 @@ export class ContractService {
   
   public address: any;
   public contract: any;
-  private contract2: any;
+  public contract2: any;
   public provider: any;
   
   constructor(@Inject(WEB3PROVIDER) private web3Provider: any) {
