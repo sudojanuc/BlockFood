@@ -10,7 +10,8 @@ export interface Restaurant{
 export interface Table{
   id: string,
   possibleGuestCount: number,
-  isCreated : boolean
+  isCreated : boolean,
+  reservationCount: number
 }
 
 @Component({
@@ -23,14 +24,29 @@ export class RestaurantComponent implements OnInit {
   name:string = '';
   restaurant: Restaurant | undefined| any;
   chairs:number = 0;
-  $tables: Promise<Table[]> | undefined;
   tables: Table[] = [];
   isLoading:boolean = true;
 
 
   ngOnInit(): void {
     this.getRestaurant();
-  }
+    
+  this.contractService.contract.on('NewReservationUnit', (fromAddress: any, _toAddress: any, value: any, event: any) =>{
+    if(fromAddress == this.contractService.address){
+      this.tables = [...this.tables,      
+        event
+    ];
+    }
+  });
+
+  this.contractService.contract.on('NewProvider', (fromAddress: any, _toAddress: any, value: any, event: any) =>{
+    if(fromAddress == this.contractService.address){
+      this.restaurant = event;
+    }
+  });
+
+}
+   
 
   public saveRestaurant(){
     this.contractService.createRestaurant(this.name);
@@ -43,9 +59,9 @@ export class RestaurantComponent implements OnInit {
   public async getRestaurant(){
     this.contractService.getRestaurant()
                         .then(restaurants => this.restaurant = restaurants[0].isCreated ? restaurants[0] : undefined )
-                        .catch(err => this.restaurant = undefined)
+                        .catch(_err => this.restaurant = undefined)
                         .finally(() =>{
-                          this.getTables();
+                          if(this.restaurant)this.getTables();
                           this.isLoading = false; 
                         }
                         );
@@ -62,3 +78,4 @@ export class RestaurantComponent implements OnInit {
   }
 
 }
+
