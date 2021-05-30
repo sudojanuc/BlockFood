@@ -81,7 +81,7 @@ export class ContractService {
   }
   
   checkin(id:any,code:any) {
-    this.contract2.refundReservation(id,code);
+    this.contract2.refundReservation(id,code,  {gasLimit : 30000} );
   }
 
 }
