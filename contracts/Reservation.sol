@@ -4,12 +4,12 @@ pragma solidity >=0.5.0;
 pragma experimental ABIEncoderV2;
 
 import "./IPublicLock.sol";
-import "./ReservationManager.sol";
+import "./ReservationProvider.sol";
 
-contract ReservationContract
+contract Reservation
 {
     IPublicLock internal publicLock;
-    ReservationManager internal reservationManager;
+    ReservationProvider internal reservationProvider;
 
     struct Reservation
     {
@@ -21,6 +21,9 @@ contract ReservationContract
 
     Reservation[] private reservations;
 
+    event CreateReservation(address owner, Reservation reservation);
+    event RefundReservation(address owner, Reservation reservation);
+
     mapping (uint => uint) private reservationsOfUnit;
     mapping (uint => address) private reservationsOfOwner;
     mapping (address => uint) private reservationCountOfOwner;
@@ -30,7 +33,7 @@ contract ReservationContract
 
     constructor() public{
         publicLock = IPublicLock(0x9D3BAd7746Df8941d88377f65edE7f5F42c88e1b);
-        reservationManager = ReservationManager(0xdB2A95eca18bE780B4b954D4582580cFe51ac21C);
+        reservationProvider = ReservationProvider(0xFaDe2d70699edadBD9e673d25B47eE9A05F971B2);
     }
 
     function refundReservation(uint reservationId, uint checkInKey) external
@@ -39,14 +42,17 @@ contract ReservationContract
         uint tokenId = publicLock.getTokenIdFor(msg.sender);
         publicLock.setKeyManagerOf(tokenId, address(this));
         publicLock.cancelAndRefund(tokenId);
+
+        emit RefundReservation(msg.sender, reservations[reservationId]);
+
         delete reservations[reservationId];
-        reservationManager.decreaseUnitReservationCount(unitOfReservation[reservationId]);
+        reservationProvider.decreaseUnitReservationCount(unitOfReservation[reservationId]);
     }
 
-    function withdrawReservationFee(uint reservationId) public
+    /*function withdrawReservationFee(uint reservationId) public
     {
         //publicLock.withdraw(msg.sed, publicLock.keyPrice());
-    }
+    }*/
 
     function createReservation(uint reservationUnitId) external payable
     {
@@ -56,18 +62,20 @@ contract ReservationContract
         Reservation memory reservation = Reservation(
             id,
             generateRandomCheckInKey(block.number),
-            reservationManager.getProviderOfUnit(reservationUnitId).name,
+            reservationProvider.getProviderOfUnit(reservationUnitId).name,
             true);
         reservations.push(reservation);
         reservationsOfUnit[id] = reservationUnitId;
         reservationCountOfUnit[reservationUnitId]++;
-        reservationManager.increaseUnitReservationCount(reservationUnitId);
+        reservationProvider.increaseUnitReservationCount(reservationUnitId);
 
         reservationIdOfReservation[id] = reservations[id];
         reservationsOfOwner[id] = msg.sender;
         reservationCountOfOwner[msg.sender]++;
 
         unitOfReservation[id] = reservationUnitId;
+
+        emit CreateReservation(msg.sender, reservations[id]);
     }
 
     function generateRandomCheckInKey(uint id) private pure returns (uint) {

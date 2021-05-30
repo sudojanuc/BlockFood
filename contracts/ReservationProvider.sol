@@ -3,7 +3,7 @@
 pragma solidity >=0.5.0;
 pragma experimental ABIEncoderV2;
 
-contract ReservationManager
+contract ReservationProvider
 {
     struct Provider
     {
@@ -21,7 +21,7 @@ contract ReservationManager
     }
 
     event NewProvider(address owner, Provider provider);
-    event NewReservationUnit(address owner, uint providerId, string providerName, ReservationUnit reservationUnit);
+    event NewReservationUnit(address owner, ReservationUnit reservationUnit);
 
     Provider[] private providers;
     ReservationUnit[] private reservationUnits;
@@ -48,7 +48,7 @@ contract ReservationManager
         providerOfOwner[msg.sender] = provider;
         providerOfId[id] = provider;
 
-        emit NewProvider(msg.sender, provider);
+        emit NewProvider(msg.sender, providers[id]);
     }
 
     function createReservationUnit(uint16 guestCount) public
@@ -61,7 +61,7 @@ contract ReservationManager
         reservationUnitOfProvider[id] = providerOfOwner[msg.sender].id;
         reservationUnitCountOfProvider[providerOfOwner[msg.sender].id]++;
 
-        emit NewReservationUnit(msg.sender, providerOfOwner[msg.sender].id, providerOfOwner[msg.sender].name, reservationUnits[id]);
+        emit NewReservationUnit(msg.sender, reservationUnits[id]);
     }
 
     function getProviders() public view returns(Provider[] memory)
