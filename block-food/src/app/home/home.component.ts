@@ -15,8 +15,6 @@ export class HomeComponent implements OnInit {
   }
 
   setMode(mode:string){
-    console.log(mode);
-    
     this.changeModeEvent.emit(mode);
   }
 

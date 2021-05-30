@@ -20,7 +20,12 @@ export class ReservationStatusComponent implements OnInit {
   ngOnInit(): void {
     this.contractService.getMyReservations().then(res =>{
       this.dataSource = res.filter((v:any) => v.isCreated );
-      console.log(this.dataSource[0]);
+      this.dataSource.forEach((res:any) => {
+        console.log('id: ', res.id.toString());
+        console.log('key: ', res.checkInKey.toString());
+
+      }
+        )
     });
   }
 
