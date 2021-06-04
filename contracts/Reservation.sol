@@ -1,123 +1,149 @@
 // SPDX-License-Identifier: MIT
-
 pragma solidity >=0.5.0;
-pragma experimental ABIEncoderV2;
 
+import "./Owned.sol";
+import "./Unit.sol";
 import "./IPublicLock.sol";
-import "./ReservationProvider.sol";
 
-contract Reservation
-{
-    IPublicLock internal publicLock;
-    ReservationProvider internal reservationProvider;
+contract Reservation is Owned {
+    struct ReservationStruct {
+        uint256 reservationListPointer; // needed to delete a "Many"
+        bytes32 unitKey; // many has exactly one "One"
+        bytes32[] reservationKeys;
+        mapping(bytes32 => uint256) reservationKeyPointers;
+        //custom data
+        uint256 checkInKey;
+    }
 
-    struct Reservation
+    event LogNewReservation(
+        address sender,
+        bytes32 reservationId,
+        bytes32 unitId
+    );
+    event LogNewReservation(address sender, bytes32 reservationId, bytes unitId);
+    event LogReservationDeleted(address sender, bytes32 reservationId);
+    event LogPurchaseReservation(address sender, bytes32 reservationId);
+    event LogRefundReservation(address sender, bytes32 reservationId);
+
+    Unit internal unit;
+    IPublicLock internal lock;
+
+    mapping(bytes32 => ReservationStruct) public reservationStructs;
+    bytes32[] public reservationList;
+
+    constructor() public {
+        unit = Unit(address(0));
+        lock = IPublicLock(address(0));
+    }
+
+    function setUnitAddress(address adr) external {
+        unit = Unit(adr);
+    }
+
+    function setLockAddress(address payable adr) external {
+        lock = IPublicLock(adr);
+    }
+
+    function getReservationCount()
+        external
+        view
+        returns (uint256 reservationCount)
     {
-        uint id;
-        uint checkInKey;
-        string providerName;
-        bool isCreated;
+        return reservationList.length;
     }
 
-    Reservation[] private reservations;
-
-    event CreateReservation(address owner, Reservation reservation);
-    event RefundReservation(address owner, Reservation reservation);
-
-    mapping (uint => uint) private reservationsOfUnit;
-    mapping (uint => address) private reservationsOfOwner;
-    mapping (address => uint) private reservationCountOfOwner;
-    mapping (uint => Reservation) private reservationIdOfReservation;
-    mapping (uint => uint) private reservationCountOfUnit;
-    mapping (uint => uint) private unitOfReservation;
-
-    constructor() public{
-        publicLock = IPublicLock(0x9D3BAd7746Df8941d88377f65edE7f5F42c88e1b);
-        reservationProvider = ReservationProvider(0xFaDe2d70699edadBD9e673d25B47eE9A05F971B2);
-    }
-
-    function refundReservation(uint reservationId, uint checkInKey) external
+    function isReservation(bytes32 reservationId)
+        public
+        view
+        returns (bool isIndeed)
     {
-        require(reservationIdOfReservation[reservationId].checkInKey == checkInKey);
-        uint tokenId = publicLock.getTokenIdFor(msg.sender);
-        publicLock.setKeyManagerOf(tokenId, address(this));
-        publicLock.cancelAndRefund(tokenId);
-
-        emit RefundReservation(msg.sender, reservations[reservationId]);
-
-        delete reservations[reservationId];
-        reservationProvider.decreaseUnitReservationCount(unitOfReservation[reservationId]);
+        if (reservationList.length == 0) return false;
+        return
+            reservationList[
+                reservationStructs[reservationId].reservationListPointer
+            ] == reservationId;
     }
 
-    /*function withdrawReservationFee(uint reservationId) public
+    function createReservation(bytes32 reservationId, bytes32 unitId)
+        external
+        payable
+        onlyOwner
+        returns (bool success)
     {
-        //publicLock.withdraw(msg.sed, publicLock.keyPrice());
-    }*/
+        require(!unit.isUnit(unitId));
+        require(isReservation(reservationId)); // duplicate key prohibited
+        require(purchaseReservation(reservationId));
 
-    function createReservation(uint reservationUnitId) external payable
+        reservationList.push(reservationId);
+        reservationStructs[reservationId].reservationListPointer =
+            reservationList.length -
+            1;
+        reservationStructs[reservationId].unitKey = unitId;
+        reservationStructs[reservationId].checkInKey = generateRandomCheckInKey(
+            block.number + uint(unitId)
+        );
+
+        // We also maintain a list of "Many" that refer to the "One", so ...
+        unit.addReservation(unitId, reservationId);
+        emit LogNewReservation(msg.sender, reservationId, unitId);
+        return true;
+    }
+
+    function deleteReservation(bytes32 reservationId)
+        public
+        onlyOwner
+        returns (bool success)
     {
-        require(msg.value >= publicLock.keyPrice());
-        publicLock.purchase.value(msg.value)(publicLock.keyPrice(), msg.sender, address(0), '0x00');
-        uint id = reservations.length;
-        Reservation memory reservation = Reservation(
-            id,
-            generateRandomCheckInKey(block.number),
-            reservationProvider.getProviderOfUnit(reservationUnitId).name,
-            true);
-        reservations.push(reservation);
-        reservationsOfUnit[id] = reservationUnitId;
-        reservationCountOfUnit[reservationUnitId]++;
-        reservationProvider.increaseUnitReservationCount(reservationUnitId);
+        require(!isReservation(reservationId));
 
-        reservationIdOfReservation[id] = reservations[id];
-        reservationsOfOwner[id] = msg.sender;
-        reservationCountOfOwner[msg.sender]++;
+        // delete from the Many table
+        uint256 rowToDelete =
+            reservationStructs[reservationId].reservationListPointer;
+        bytes32 keyToMove = reservationList[reservationList.length - 1];
+        reservationList[rowToDelete] = keyToMove;
+        reservationStructs[reservationId].reservationListPointer = rowToDelete;
+        reservationList.pop();
 
-        unitOfReservation[id] = reservationUnitId;
-
-        emit CreateReservation(msg.sender, reservations[id]);
+        // we ALSO have to delete this key from the list in the ONE
+        bytes32 unitId = reservationStructs[reservationId].unitKey;
+        unit.removeReservation(unitId, reservationId);
+        emit LogReservationDeleted(msg.sender, reservationId);
+        return true;
     }
 
-    function generateRandomCheckInKey(uint id) private pure returns (uint) {
-        uint rand = uint(keccak256(abi.encodePacked(id)));
-        return rand % 10**8;
-    }
-
-    function getReservationsOfUnit(uint reservationUnitId) external view returns(Reservation[] memory)
+    function purchaseReservation(bytes32 reservationId)
+        internal
+        returns (bool)
     {
-
-        Reservation[] memory res = new Reservation[](reservationCountOfUnit[reservationUnitId]);
-        uint count = 0;
-
-        for(uint i = 0; i < reservations.length; i++)
-        {
-            if(reservationsOfUnit[i] == reservationUnitId)
-            {
-                res[count++] = reservations[i];
-            }
-        }
-        return res;
+        require(msg.value >= lock.keyPrice());
+        lock.purchase.value(msg.value)(
+            lock.keyPrice(),
+            msg.sender,
+            address(0),
+            "0x00"
+        );
+        emit LogPurchaseReservation(msg.sender, reservationId);
+        return true;
     }
 
-    function getReservations() external view returns (Reservation[] memory)
+    function refundReservation(bytes32 reservationId, uint checkInKey)
+        external
     {
-        return reservations;
+        require(reservationStructs[reservationId].checkInKey == checkInKey);
+        uint256 tokenId = lock.getTokenIdFor(msg.sender);
+        lock.setKeyManagerOf(tokenId, address(this));
+        lock.cancelAndRefund(tokenId);
+
+        deleteReservation(reservationId);
+
+        emit LogRefundReservation(msg.sender, reservationId);
     }
 
-    function getReservationsOfOwner() external view returns (Reservation[] memory)
+    function generateRandomCheckInKey(uint256 id)
+        private
+        pure
+        returns (uint256)
     {
-        Reservation[] memory res = new Reservation[](reservationCountOfOwner[msg.sender]);
-        uint count = 0;
-        for (uint i = 0; i < reservations.length; i++)
-        {
-            if(reservationsOfOwner[i] == msg.sender)
-            {
-                res[count++] = reservations[i];
-            }
-        }
-
-        return res;
+        return uint256(keccak256(abi.encodePacked(id))) % 10**8;
     }
-
-    function getKeyPrice() external view returns (uint) { return publicLock.keyPrice(); }
 }
