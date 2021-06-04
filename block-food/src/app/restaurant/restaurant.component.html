@@ -1,6 +1,6 @@
 <div class="wrapper" color="primary">
     <div *ngIf="isLoading">loading...</div>
-    <mat-card *ngIf="!restaurant && !isLoading" class="card marginTop">
+    <mat-card *ngIf="!( myRestaurant$ | async) && !isLoading" class="card marginTop">
         <mat-card-title>Create a new Restaurant</mat-card-title>
         <mat-card-content style="margin-top: 20%;">
             <mat-form-field appearance="fill">
@@ -12,7 +12,7 @@
             <button mat-flat-button color="primary" (click)="saveRestaurant()">Save</button>
         </mat-card-actions>
     </mat-card>
-    <div *ngIf="restaurant" class="card marginTop restaurant">
+    <div *ngIf="myRestaurant$ | async" class="card marginTop restaurant">
         <mat-card>
             <mat-card-title>Your Restaurant</mat-card-title>
             <mat-card-content style="margin-top: 5%;">

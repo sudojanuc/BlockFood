@@ -1,5 +1,5 @@
 <div class="">
-    <div *ngFor=" let restaurant of restaurants" (click)="openReservation(restaurant)">
+    <div *ngFor=" let restaurant of restaurants$ | async" (click)="openReservation(restaurant)">
         <mat-card class="restaurant">
             <mat-card-title>Restaurant</mat-card-title>
             <mat-card-content>
