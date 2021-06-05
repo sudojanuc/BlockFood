@@ -38,18 +38,18 @@ contract Provider is Owned {
     function getProviderUnitCount(bytes32 providerId)
         public
         view
-        returns (uint manyCount)
+        returns (uint providerCount)
     {
-        require(!isProvider(providerId));
+        require(isProvider(providerId), "PROVIDER_DOES_NOT_EXIST");
         return providerStructs[providerId].unitKeys.length;
     }
 
     function getProviderUnitAtIndex(bytes32 providerId, uint row)
         public
         view
-        returns (bytes32 manyKey)
+        returns (bytes32 unitKey)
     {
-        require(!isProvider(providerId));
+        require(isProvider(providerId), "PROVIDER_DOES_NOT_EXIST");
         return providerStructs[providerId].unitKeys[row];
     }
 
@@ -58,12 +58,12 @@ contract Provider is Owned {
         onlyOwner
         returns (bool success)
     {
-        require(isProvider(providerId)); // duplicate key prohibited
+        require(!isProvider(providerId), "DUPLICATE_PROVIDER_KEY"); // duplicate key prohibited
         providerList.push(providerId);
         providerStructs[providerId].providerListPointer =
             providerList.length -
             1;
-        //LogNewOne(msg.sender, providerId);
+        emit LogNewProvider(msg.sender, providerId);
         return true;
     }
 
@@ -72,15 +72,16 @@ contract Provider is Owned {
         onlyOwner
         returns (bool succes)
     {
-        require(!isProvider(providerId));
+        require(isProvider(providerId), "PROVIDER_DOES_NOT_EXIST");
         // the following would break referential integrity
-        require(providerStructs[providerId].unitKeys.length > 0);
+        require(providerStructs[providerId].unitKeys.length <= 0, "LENGTH_UNIT_KEYS_GREATER_THAN_ZERO");
         uint rowToDelete = providerStructs[providerId].providerListPointer;
         bytes32 keyToMove = providerList[providerList.length - 1];
         providerList[rowToDelete] = keyToMove;
         providerStructs[keyToMove].providerListPointer = rowToDelete;
         providerList.pop();
-        //LogOneDeleted(msg.sender, providerId);
+
+        emit LogProviderDeleted(msg.sender, providerId);
         return true;
     }
 

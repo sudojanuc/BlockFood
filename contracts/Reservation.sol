@@ -7,8 +7,8 @@ import "./IPublicLock.sol";
 
 contract Reservation is Owned {
     struct ReservationStruct {
-        uint256 reservationListPointer; // needed to delete a "Many"
-        bytes32 unitKey; // many has exactly one "One"
+        uint256 reservationListPointer;
+        bytes32 unitKey;
         bytes32[] reservationKeys;
         mapping(bytes32 => uint256) reservationKeyPointers;
         //custom data
@@ -20,7 +20,11 @@ contract Reservation is Owned {
         bytes32 reservationId,
         bytes32 unitId
     );
-    event LogNewReservation(address sender, bytes32 reservationId, bytes unitId);
+    event LogNewReservation(
+        address sender,
+        bytes32 reservationId,
+        bytes unitId
+    );
     event LogReservationDeleted(address sender, bytes32 reservationId);
     event LogPurchaseReservation(address sender, bytes32 reservationId);
     event LogRefundReservation(address sender, bytes32 reservationId);
@@ -36,11 +40,11 @@ contract Reservation is Owned {
         lock = IPublicLock(address(0));
     }
 
-    function setUnitAddress(address adr) external {
+    function setUnitAddress(address adr) external onlyOwner {
         unit = Unit(adr);
     }
 
-    function setLockAddress(address payable adr) external {
+    function setLockAddress(address payable adr) external onlyOwner {
         lock = IPublicLock(adr);
     }
 
@@ -70,9 +74,9 @@ contract Reservation is Owned {
         onlyOwner
         returns (bool success)
     {
-        require(!unit.isUnit(unitId));
-        require(isReservation(reservationId)); // duplicate key prohibited
-        require(purchaseReservation(reservationId));
+        require(unit.isUnit(unitId), "UNIT_DOES_NOT_EXIST");
+        require(!isReservation(reservationId), "DUPLICATE_RESERVATION_KEY"); // duplicate key prohibited
+        require(purchaseReservation(reservationId), "PURCHASE_FAILED");
 
         reservationList.push(reservationId);
         reservationStructs[reservationId].reservationListPointer =
@@ -80,10 +84,9 @@ contract Reservation is Owned {
             1;
         reservationStructs[reservationId].unitKey = unitId;
         reservationStructs[reservationId].checkInKey = generateRandomCheckInKey(
-            block.number + uint(unitId)
+            block.number + uint256(unitId)
         );
 
-        // We also maintain a list of "Many" that refer to the "One", so ...
         unit.addReservation(unitId, reservationId);
         emit LogNewReservation(msg.sender, reservationId, unitId);
         return true;
@@ -94,9 +97,9 @@ contract Reservation is Owned {
         onlyOwner
         returns (bool success)
     {
-        require(!isReservation(reservationId));
+        require(isReservation(reservationId), "RESERVATION_DOES_NOT_EXIST");
 
-        // delete from the Many table
+        // delete from table
         uint256 rowToDelete =
             reservationStructs[reservationId].reservationListPointer;
         bytes32 keyToMove = reservationList[reservationList.length - 1];
@@ -104,7 +107,6 @@ contract Reservation is Owned {
         reservationStructs[reservationId].reservationListPointer = rowToDelete;
         reservationList.pop();
 
-        // we ALSO have to delete this key from the list in the ONE
         bytes32 unitId = reservationStructs[reservationId].unitKey;
         unit.removeReservation(unitId, reservationId);
         emit LogReservationDeleted(msg.sender, reservationId);
@@ -115,7 +117,7 @@ contract Reservation is Owned {
         internal
         returns (bool)
     {
-        require(msg.value >= lock.keyPrice());
+        require(msg.value >= lock.keyPrice(), "VALUE_TOO_SMALL");
         lock.purchase.value(msg.value)(
             lock.keyPrice(),
             msg.sender,
@@ -126,10 +128,10 @@ contract Reservation is Owned {
         return true;
     }
 
-    function refundReservation(bytes32 reservationId, uint checkInKey)
+    function refundReservation(bytes32 reservationId, uint256 checkInKey)
         external
     {
-        require(reservationStructs[reservationId].checkInKey == checkInKey);
+        require(reservationStructs[reservationId].checkInKey == checkInKey, "CHECK_IN_KEY_WRONG");
         uint256 tokenId = lock.getTokenIdFor(msg.sender);
         lock.setKeyManagerOf(tokenId, address(this));
         lock.cancelAndRefund(tokenId);

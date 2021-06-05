@@ -6,8 +6,8 @@ import "./Provider.sol";
 
 contract Unit is Owned {
     struct UnitStruct {
-        uint256 unitListPointer; // needed to delete a "Many"
-        bytes32 providerKey; // many has exactly one "One"
+        uint256 unitListPointer;
+        bytes32 providerKey;
         bytes32[] reservationKeys;
         mapping(bytes32 => uint256) reservationKeyPointers;
         //custom data
@@ -26,7 +26,7 @@ contract Unit is Owned {
         provider = Provider(address(0));
     }
 
-    function setProviderAddress(address adr) external {
+    function setProviderAddress(address adr) external onlyOwner {
         provider = Provider(adr);
     }
 
@@ -44,16 +44,15 @@ contract Unit is Owned {
         bytes32 providerId,
         uint16 guestCount
     ) external onlyOwner returns (bool success) {
-        require(!provider.isProvider(providerId));
-        require(isUnit(unitId)); // duplicate key prohibited
-        require(guestCount > 0);
+        require(provider.isProvider(providerId), "PROVIDER_DOES_NOT_EXIST");
+        require(!isUnit(unitId), "DUPLICATE_UNIT_KEY"); // duplicate key prohibited
+        require(guestCount > 0, "GUEST_COUNT_IMPLAUSIBLE");
 
         unitList.push(unitId);
         unitStructs[unitId].unitListPointer = unitList.length - 1;
         unitStructs[unitId].providerKey = providerId;
         unitStructs[unitId].guestCount = guestCount;
 
-        // We also maintain a list of "Many" that refer to the "One", so ...
         provider.addUnit(providerId, unitId);
         emit LogNewUnit(msg.sender, unitId, providerId);
         return true;
@@ -64,16 +63,15 @@ contract Unit is Owned {
         onlyOwner
         returns (bool success)
     {
-        require(!isUnit(unitId));
+        require(isUnit(unitId), "UNIT_DOES_NOT_EXIST");
 
-        // delete from the Many table
+        // delete from table
         uint256 rowToDelete = unitStructs[unitId].unitListPointer;
         bytes32 keyToMove = unitList[unitList.length - 1];
         unitList[rowToDelete] = keyToMove;
         unitStructs[unitId].unitListPointer = rowToDelete;
         unitList.pop();
 
-        // we ALSO have to delete this key from the list in the ONE
         bytes32 providerId = unitStructs[unitId].providerKey;
         provider.removeUnit(providerId, unitId);
         emit LogUnitDeleted(msg.sender, unitId);
