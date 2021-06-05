@@ -20,9 +20,9 @@ interface IUnit {
 
     function getAllUnits() external view returns (UnitStruct[] memory);
 
-    function createUnit(bytes32 providerId, uint16 guestCount)
+    function createUnit(address sender, bytes32 providerId, uint16 guestCount)
         external
         returns (bool);
 
-    function deleteUnit(bytes32 unitId) external returns (bool);
+    function deleteUnit(address sender, bytes32 unitId) external returns (bool);
 }

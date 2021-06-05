@@ -2,8 +2,6 @@
 pragma solidity 0.5.17;
 pragma experimental ABIEncoderV2;
 
-import "./IOwner.sol";
-
 interface IProvider {
     struct ProviderStruct {
         bytes32 providerId;
@@ -14,6 +12,11 @@ interface IProvider {
     function getProviderCount() external view returns (uint256);
 
     function isProvider(bytes32 providerId) external view returns (bool);
+
+    function isProviderOwner(address sender, bytes32 providerId)
+        external
+        view
+        returns (bool);
 
     function getProviderUnitCount(bytes32 providerId)
         external
@@ -27,7 +30,9 @@ interface IProvider {
 
     function getAllProviders() external view returns (ProviderStruct[] memory);
 
-    function createProvider(string calldata name) external returns (bool);
+    function createProvider(address sender, string calldata name)
+        external
+        returns (bool);
 
     function deleteProvider(bytes32 providerId) external returns (bool);
 }

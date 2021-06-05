@@ -9,7 +9,7 @@ import "./Owned.sol";
 import "./Unit.sol";
 
 contract Reservation is IReservation, Owned {
-    uint counter;
+    uint256 counter;
 
     struct ReservationInternalStruct {
         uint256 reservationListPointer;
@@ -51,19 +51,11 @@ contract Reservation is IReservation, Owned {
         lock = IPublicLock(adr);
     }
 
-    function getReservationCount()
-        public
-        view
-        returns (uint256)
-    {
+    function getReservationCount() public view returns (uint256) {
         return reservationList.length;
     }
 
-    function isReservation(bytes32 reservationId)
-        public
-        view
-        returns (bool)
-    {
+    function isReservation(bytes32 reservationId) public view returns (bool) {
         if (reservationList.length == 0) return false;
         return
             reservationList[
@@ -87,23 +79,22 @@ contract Reservation is IReservation, Owned {
         return array;
     }
 
-    function createReservation(bytes32 unitId)
+    function createReservation(address sender, bytes32 unitId)
         external
         returns (bool)
     {
-        require(createReservation(bytes32(counter++), unitId));
+        require(createReservation(sender, bytes32(counter++), unitId));
         return true;
     }
 
-    function createReservation(bytes32 reservationId, bytes32 unitId)
-        public
-        payable
-        onlyOwner
-        returns (bool)
-    {
+    function createReservation(
+        address sender,
+        bytes32 reservationId,
+        bytes32 unitId
+    ) public payable returns (bool) {
         require(unit.isUnit(unitId), "UNIT_DOES_NOT_EXIST");
         require(!isReservation(reservationId), "DUPLICATE_RESERVATION_KEY"); // duplicate key prohibited
-        require(purchaseReservation(reservationId), "PURCHASE_FAILED");
+        require(purchaseReservation(sender, reservationId), "PURCHASE_FAILED");
 
         reservationList.push(reservationId);
         reservationStructs[reservationId].reservationListPointer =
@@ -115,15 +106,11 @@ contract Reservation is IReservation, Owned {
         );
 
         unit.addReservation(unitId, reservationId);
-        emit LogNewReservation(msg.sender, reservationId, unitId);
+        emit LogNewReservation(sender, reservationId, unitId);
         return true;
     }
 
-    function deleteReservation(bytes32 reservationId)
-        public
-        onlyOwner
-        returns (bool)
-    {
+    function deleteReservation(bytes32 reservationId) public returns (bool) {
         require(isReservation(reservationId), "RESERVATION_DOES_NOT_EXIST");
 
         // delete from table
@@ -140,14 +127,14 @@ contract Reservation is IReservation, Owned {
         return true;
     }
 
-    function purchaseReservation(bytes32 reservationId)
+    function purchaseReservation(address sender, bytes32 reservationId)
         internal
         returns (bool)
     {
         require(msg.value >= lock.keyPrice(), "VALUE_TOO_SMALL");
         lock.purchase.value(msg.value)(
             lock.keyPrice(),
-            msg.sender,
+            sender,
             address(0),
             "0x00"
         );
@@ -155,20 +142,22 @@ contract Reservation is IReservation, Owned {
         return true;
     }
 
-    function refundReservation(bytes32 reservationId, uint256 checkInKey)
-        external returns (bool)
-    {
+    function refundReservation(
+        address sender,
+        bytes32 reservationId,
+        uint256 checkInKey
+    ) external returns (bool) {
         require(
             reservationStructs[reservationId].checkInKey == checkInKey,
             "CHECK_IN_KEY_WRONG"
         );
-        uint256 tokenId = lock.getTokenIdFor(msg.sender);
+        uint256 tokenId = lock.getTokenIdFor(sender);
         lock.setKeyManagerOf(tokenId, address(this));
         lock.cancelAndRefund(tokenId);
 
         deleteReservation(reservationId);
 
-        emit LogRefundReservation(msg.sender, reservationId);
+        emit LogRefundReservation(sender, reservationId);
 
         return true;
     }

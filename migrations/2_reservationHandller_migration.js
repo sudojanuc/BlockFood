@@ -9,6 +9,6 @@ module.exports = function (deployer) {
   }).then(function(){
     return deployer.deploy(Reservation,Unit.address)
   }).then(function() {
-    return deployer.deploy(ReservationHandler,Reservation.address, Unit.address, Provider.address);
+    return deployer.deploy(ReservationHandler,Provider.address, Unit.address, Reservation.address );
   });
 }

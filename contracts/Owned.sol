@@ -3,7 +3,7 @@ pragma solidity >=0.5.17 <0.9.0;
 
 import "./IOwner.sol";
 
-contract Owned is IOwner{
+contract Owned is IOwner {
     address public owner;
     address public remote;
 
@@ -12,14 +12,13 @@ contract Owned is IOwner{
             owner == msg.sender ||
                 address(this) == msg.sender ||
                 remote == msg.sender,
-            "NOT_OWNER"
+            "NOT_OWNER needed"
         );
         _;
     }
 
     constructor() public {
         owner = msg.sender;
-        remote = address(this);
     }
 
     function addRemote(address adr) public {

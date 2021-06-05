@@ -57,23 +57,24 @@ contract Unit is IUnit, Owned {
         return array;
     }
 
-    function createUnit(bytes32 providerId, uint16 guestCount)
+    function createUnit(address sender, bytes32 providerId, uint16 guestCount)
         external
         returns (bool)
     {
-        require(createUnit(bytes32(counter++), providerId, guestCount));
+        require(createUnit(sender, bytes32(counter++), providerId, guestCount));
         return true;
     }
 
     function createUnit(
+        address sender,
         bytes32 unitId,
         bytes32 providerId,
         uint16 guestCount
-    ) public onlyOwner returns (bool) {
+    ) public returns (bool) {
         require(provider.isProvider(providerId), "PROVIDER_DOES_NOT_EXIST");
         require(!isUnit(unitId), "DUPLICATE_UNIT_KEY"); // duplicate key prohibited
         require(guestCount > 0, "GUEST_COUNT_IMPLAUSIBLE");
-        require(provider.isProviderOwner(providerId), "NOT_OWNER");
+        require(provider.isProviderOwner(sender, providerId), "NOT_OWNER");
 
         unitList.push(unitId);
         unitStructs[unitId].unitListPointer = unitList.length - 1;
@@ -81,14 +82,14 @@ contract Unit is IUnit, Owned {
         unitStructs[unitId].guestCount = guestCount;
 
         provider.addUnit(providerId, unitId);
-        emit LogNewUnit(msg.sender, unitId, providerId);
+        emit LogNewUnit(sender, unitId, providerId);
         return true;
     }
 
-    function deleteUnit(bytes32 unitId) external onlyOwner returns (bool) {
+    function deleteUnit(address sender, bytes32 unitId) external returns (bool) {
         require(isUnit(unitId), "UNIT_DOES_NOT_EXIST");
         require(
-            provider.isProviderOwner(unitStructs[unitId].providerKey),
+            provider.isProviderOwner(sender, unitStructs[unitId].providerKey),
             "NOT_OWNER"
         );
 
@@ -101,7 +102,7 @@ contract Unit is IUnit, Owned {
 
         bytes32 providerId = unitStructs[unitId].providerKey;
         provider.removeUnit(providerId, unitId);
-        emit LogUnitDeleted(msg.sender, unitId);
+        emit LogUnitDeleted(sender, unitId);
         return true;
     }
 

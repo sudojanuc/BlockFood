@@ -6,8 +6,9 @@ import "./Owned.sol";
 import "./IProvider.sol";
 import "./IUnit.sol";
 import "./IReservation.sol";
+import "./IReservationHandler.sol";
 
-contract ReservationHandler is Owned, IProvider, IUnit, IReservation {
+contract ReservationHandler is Owned, IReservationHandler {
     IProvider internal provider;
     IUnit internal unit;
     IReservation internal reservation;
@@ -37,6 +38,10 @@ contract ReservationHandler is Owned, IProvider, IUnit, IReservation {
         return provider.isProvider(providerId);
     }
 
+    function isProviderOwner(bytes32 providerId) public view returns (bool) {
+        return provider.isProviderOwner(msg.sender, providerId);
+    }
+
     function getProviderUnitCount(bytes32 providerId)
         external
         view
@@ -53,12 +58,16 @@ contract ReservationHandler is Owned, IProvider, IUnit, IReservation {
         return provider.getProviderUnitAtIndex(providerId, row);
     }
 
-    function getAllProviders() external view returns (ProviderStruct[] memory) {
+    function getAllProviders()
+        external
+        view
+        returns (IProvider.ProviderStruct[] memory)
+    {
         return provider.getAllProviders();
     }
 
     function createProvider(string calldata name) external returns (bool) {
-        return (provider.createProvider(name));
+        return (provider.createProvider(msg.sender, name));
     }
 
     function deleteProvider(bytes32 providerId) external returns (bool) {
@@ -80,7 +89,7 @@ contract ReservationHandler is Owned, IProvider, IUnit, IReservation {
         return unit.isUnit(unitId);
     }
 
-    function getAllUnits() external view returns (UnitStruct[] memory) {
+    function getAllUnits() external view returns (IUnit.UnitStruct[] memory) {
         return unit.getAllUnits();
     }
 
@@ -88,11 +97,11 @@ contract ReservationHandler is Owned, IProvider, IUnit, IReservation {
         external
         returns (bool)
     {
-        return (unit.createUnit(providerId, guestCount));
+        return (unit.createUnit(0x0d5900731140977cd80b7Bd2DCE9cEc93F8a176B, providerId, guestCount));
     }
 
     function deleteUnit(bytes32 unitId) external returns (bool) {
-        return (unit.deleteUnit(unitId));
+        return (unit.deleteUnit(msg.sender, unitId));
     }
 
     //reservation methodes
@@ -111,13 +120,13 @@ contract ReservationHandler is Owned, IProvider, IUnit, IReservation {
     function getAllReservations()
         external
         view
-        returns (ReservationStruct[] memory)
+        returns (IReservation.ReservationStruct[] memory)
     {
         return reservation.getAllReservations();
     }
 
     function createReservation(bytes32 unitId) external returns (bool) {
-        return (reservation.createReservation(unitId));
+        return (reservation.createReservation(msg.sender, unitId));
     }
 
     function deleteReservation(bytes32 reservationId) external returns (bool) {
@@ -128,6 +137,8 @@ contract ReservationHandler is Owned, IProvider, IUnit, IReservation {
         external
         returns (bool)
     {
-        return (reservation.refundReservation(reservationId, checkInKey));
+        return (
+            reservation.refundReservation(msg.sender, reservationId, checkInKey)
+        );
     }
 }

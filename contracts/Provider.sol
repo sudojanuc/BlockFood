@@ -23,7 +23,7 @@ contract Provider is IProvider, Owned {
     mapping(bytes32 => ProviderInternalStruct) public providerStructs;
     bytes32[] public providerList;
 
-    constructor() Owned() public {}
+    constructor() public {}
 
     function getProviderCount() external view returns (uint256) {
         return providerList.length;
@@ -38,6 +38,14 @@ contract Provider is IProvider, Owned {
 
     function isProviderOwner(bytes32 providerId) public view returns (bool) {
         return msg.sender == providerStructs[providerId].owner;
+    }
+
+    function isProviderOwner(address sender, bytes32 providerId)
+        public
+        view
+        returns (bool)
+    {
+        return sender == providerStructs[providerId].owner;
     }
 
     function getProviderUnitCount(bytes32 providerId)
@@ -70,23 +78,31 @@ contract Provider is IProvider, Owned {
         return array;
     }
 
-    function createProvider(string calldata name) external returns (bool) {
-        require(createProvider(bytes32(counter++), name));
+    function createProvider(address sender, string calldata name)
+        external
+        returns (bool)
+    {
+        require(remote == msg.sender, "NOT_REMOTE_CALL");
+        require(
+            createProvider(sender, bytes32(counter++), name),
+            "CREATE_PROVIDER_FAILED"
+        );
         return true;
     }
 
-    function createProvider(bytes32 providerId, string memory name)
-        public
-        returns (bool)
-    {
+    function createProvider(
+        address sender,
+        bytes32 providerId,
+        string memory name
+    ) internal returns (bool) {
         require(!isProvider(providerId), "DUPLICATE_PROVIDER_KEY"); // duplicate key prohibited
         providerList.push(providerId);
         providerStructs[providerId].providerListPointer =
             providerList.length -
             1;
         providerStructs[providerId].name = name;
-        providerStructs[providerId].owner = msg.sender;
-        emit LogNewProvider(msg.sender, providerId);
+        providerStructs[providerId].owner = sender;
+        emit LogNewProvider(sender, providerId);
         return true;
     }
 
