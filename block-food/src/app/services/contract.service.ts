@@ -57,7 +57,7 @@ export class ContractService {
     return this.contract.functions.getCurrentProvider(); 
     
   }
-  getAllRestaurents(): Promise<[Restaurant[]]> {
+  getAllRestaurents(): Promise<Restaurant[]> {
     console.log(this.contract);
     
     return this.contract.getAllProviders({gasLimit : 3000000});

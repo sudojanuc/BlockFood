@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { select, Store } from '@ngrx/store';
-import { fetchMyRestaurantType, setMyRestaurant } from '../ngrx/restaurant.actions';
-import { selectMyRestaurant, selectRestaurants } from '../ngrx/restaurant.reducer';
+import { fetchMyRestaurantType, setMyRestaurant } from '../ngrx/app.actions';
+import { selectMyRestaurant, selectRestaurants } from '../ngrx/app.reducer';
 import { ContractService } from '../services/contract.service';
 
 export interface Restaurant {

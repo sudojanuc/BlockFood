@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { select, Store } from '@ngrx/store';
-import { fetchRestaurantsType, setRestaurants } from '../ngrx/restaurant.actions';
-import { selectRestaurants } from '../ngrx/restaurant.reducer';
+import { fetchRestaurantsType, setRestaurants } from '../ngrx/app.actions';
+import { selectRestaurants } from '../ngrx/app.reducer';
 // import { selectRestaurants } from '../ngrx/restautant.reducer';
 import { ReservationComponent } from '../reservation/reservation.component';
 import { Restaurant } from '../restaurant/restaurant.component';
@@ -25,11 +25,13 @@ export class UserComponent implements OnInit {
 
   ngOnInit(): void {
     this.contractService.getAllRestaurents()
-                        .then(res => console.log(res))
-    // this.store.dispatch({type: fetchRestaurantsType});
+                        .then(res => console.log(res[0]))
+    this.store.dispatch({type: fetchRestaurantsType});
   }
 
   openReservation(restaurant: Restaurant) {
+    console.log(restaurant);
+    
     this.dialog.open(ReservationComponent, {
       width: '70%',
       data: { restaurant: restaurant }

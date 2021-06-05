@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { setMyRestaurant } from './ngrx/restaurant.actions';
+import { setMyRestaurant } from './ngrx/app.actions';
 import { ContractService } from './services/contract.service';
 // import { Contract, ethers, Wallet } from 'ethers';
 // import { from, of } from 'rxjs';

@@ -1,21 +1,23 @@
 import { createSelector, createFeatureSelector, createReducer, on } from "@ngrx/store";
 import { AppState } from "./app.state";
 import { Restaurant } from "../restaurant/restaurant.component";
-import { setMyRestaurant, setRestaurants } from "./restaurant.actions";
+import { setRestaurants } from "./app.actions";
 
-export type RestaurantStateType = {restaurants : ReadonlyArray<Restaurant>, myRestaurant : Restaurant | undefined };
+export type RestaurantStateType = 
+{restaurants : ReadonlyArray<Restaurant>, 
+  // myRestaurant : Restaurant | undefined 
+};
 
 export const initialState: RestaurantStateType = 
 {
- restaurants : [],
- myRestaurant: undefined
+ restaurants : []
+//  myRestaurant: undefined
 }
 ;
 
 export const restaurantsReducer = createReducer(
   initialState,
   on(setRestaurants, (state, { restaurants }) => ({...state, restaurants: [...restaurants]})),
-  on(setMyRestaurant, (state, { restaurant }) => ({...state, myRestaurant: restaurant})),
 
 );
 
@@ -24,7 +26,7 @@ export const selectRestaurants = createSelector<any,any,any>(
   (restaurants: {restaurants : ReadonlyArray<Restaurant> }) => restaurants.restaurants
 );
 
-export const selectMyRestaurant = createSelector<any,any,any>(
-  (state: AppState) => state.restaurants,
-  (restaurants: RestaurantStateType) => restaurants.myRestaurant
-);
+// export const selectMyRestaurant = createSelector<any,any,any>(
+//   (state: AppState) => state.restaurants,
+//   (restaurants: RestaurantStateType) => restaurants.myRestaurant
+// );
