@@ -27,8 +27,8 @@ contract Unit is IUnit, Owned {
     mapping(bytes32 => UnitInternalStruct) public unitStructs;
     bytes32[] public unitList;
 
-    constructor() public {
-        provider = Provider(address(0));
+    constructor(address adr) public {
+        provider = Provider(adr);
     }
 
     function setProviderAddress(address adr) external onlyOwner {
@@ -73,6 +73,7 @@ contract Unit is IUnit, Owned {
         require(provider.isProvider(providerId), "PROVIDER_DOES_NOT_EXIST");
         require(!isUnit(unitId), "DUPLICATE_UNIT_KEY"); // duplicate key prohibited
         require(guestCount > 0, "GUEST_COUNT_IMPLAUSIBLE");
+        require(provider.isProviderOwner(providerId), "NOT_OWNER");
 
         unitList.push(unitId);
         unitStructs[unitId].unitListPointer = unitList.length - 1;
@@ -84,12 +85,12 @@ contract Unit is IUnit, Owned {
         return true;
     }
 
-    function deleteUnit(bytes32 unitId)
-        external
-        onlyOwner
-        returns (bool)
-    {
+    function deleteUnit(bytes32 unitId) external onlyOwner returns (bool) {
         require(isUnit(unitId), "UNIT_DOES_NOT_EXIST");
+        require(
+            provider.isProviderOwner(unitStructs[unitId].providerKey),
+            "NOT_OWNER"
+        );
 
         // delete from table
         uint256 rowToDelete = unitStructs[unitId].unitListPointer;

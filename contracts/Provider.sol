@@ -9,6 +9,7 @@ contract Provider is IProvider, Owned {
     uint256 counter = 0;
 
     struct ProviderInternalStruct {
+        address owner;
         uint256 providerListPointer; // needed to delete a "Provider"
         bytes32[] unitKeys;
         mapping(bytes32 => uint256) unitKeyPointers;
@@ -22,6 +23,8 @@ contract Provider is IProvider, Owned {
     mapping(bytes32 => ProviderInternalStruct) public providerStructs;
     bytes32[] public providerList;
 
+    constructor() Owned() public {}
+
     function getProviderCount() external view returns (uint256) {
         return providerList.length;
     }
@@ -31,6 +34,10 @@ contract Provider is IProvider, Owned {
         return
             providerList[providerStructs[providerId].providerListPointer] ==
             providerId;
+    }
+
+    function isProviderOwner(bytes32 providerId) public view returns (bool) {
+        return msg.sender == providerStructs[providerId].owner;
     }
 
     function getProviderUnitCount(bytes32 providerId)
@@ -70,7 +77,6 @@ contract Provider is IProvider, Owned {
 
     function createProvider(bytes32 providerId, string memory name)
         public
-        onlyOwner
         returns (bool)
     {
         require(!isProvider(providerId), "DUPLICATE_PROVIDER_KEY"); // duplicate key prohibited
@@ -79,16 +85,14 @@ contract Provider is IProvider, Owned {
             providerList.length -
             1;
         providerStructs[providerId].name = name;
+        providerStructs[providerId].owner = msg.sender;
         emit LogNewProvider(msg.sender, providerId);
         return true;
     }
 
-    function deleteProvider(bytes32 providerId)
-        external
-        onlyOwner
-        returns (bool)
-    {
+    function deleteProvider(bytes32 providerId) external returns (bool) {
         require(isProvider(providerId), "PROVIDER_DOES_NOT_EXIST");
+        require(isProviderOwner(providerId), "NOT_OWNER");
         // the following would break referential integrity
         require(
             providerStructs[providerId].unitKeys.length <= 0,
@@ -105,6 +109,7 @@ contract Provider is IProvider, Owned {
     }
 
     function addUnit(bytes32 providerId, bytes32 unitId) public {
+        require(isProviderOwner(providerId), "NOT_OWNER");
         providerStructs[providerId].unitKeys.push(unitId);
         providerStructs[providerId].unitKeyPointers[unitId] =
             providerStructs[providerId].unitKeys.length -
@@ -112,6 +117,7 @@ contract Provider is IProvider, Owned {
     }
 
     function removeUnit(bytes32 providerId, bytes32 unitId) public {
+        require(isProviderOwner(providerId), "NOT_OWNER");
         uint256 rowToDelete =
             providerStructs[providerId].unitKeyPointers[unitId];
         bytes32 keyToMove =

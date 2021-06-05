@@ -12,15 +12,21 @@ contract ReservationHandler is Owned, IProvider, IUnit, IReservation {
     IUnit internal unit;
     IReservation internal reservation;
 
-    constructor() public {
-        provider = IProvider(address(0));
-        unit = IUnit(address(0));
-        reservation = IReservation(address(0));
+    constructor(
+        address adrProvider,
+        address adrUnit,
+        address adrReservation
+    ) public {
+        provider = IProvider(adrProvider);
+        unit = IUnit(adrUnit);
+        reservation = IReservation(adrReservation);
     }
 
     //provider methodes
     function setProviderAddress(address adr) external onlyOwner {
+        require(address(unit) != address(0), "SET_UNIT_FIRST");
         provider = IProvider(adr);
+        unit.setProviderAddress(adr);
     }
 
     function getProviderCount() external view returns (uint256) {
@@ -61,7 +67,9 @@ contract ReservationHandler is Owned, IProvider, IUnit, IReservation {
 
     //unit methodes
     function setUnitAddress(address adr) external onlyOwner {
+        require(address(reservation) != address(0), "SET_RESERVATION_FIRST");
         unit = IUnit(adr);
+        reservation.setUnitAddress(adr);
     }
 
     function getUnitCount() external view returns (uint256) {
@@ -80,11 +88,11 @@ contract ReservationHandler is Owned, IProvider, IUnit, IReservation {
         external
         returns (bool)
     {
-        return(unit.createUnit(providerId, guestCount));
+        return (unit.createUnit(providerId, guestCount));
     }
 
     function deleteUnit(bytes32 unitId) external returns (bool) {
-        return(unit.deleteUnit(unitId));
+        return (unit.deleteUnit(unitId));
     }
 
     //reservation methodes

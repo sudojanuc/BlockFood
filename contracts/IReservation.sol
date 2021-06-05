@@ -8,6 +8,8 @@ interface IReservation {
         bytes32 unitKey;
     }
 
+    function setUnitAddress(address adr) external;
+
     function getReservationCount() external view returns (uint256);
 
     function isReservation(bytes32 reservationId) external view returns (bool);

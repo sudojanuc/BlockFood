@@ -38,9 +38,9 @@ contract Reservation is IReservation, Owned {
     mapping(bytes32 => ReservationInternalStruct) public reservationStructs;
     bytes32[] public reservationList;
 
-    constructor() public {
-        unit = Unit(address(0));
-        lock = IPublicLock(address(0));
+    constructor(address adrUnit) public {
+        unit = Unit(adrUnit);
+        lock = IPublicLock(0x2D7Fa4dbdF5E7bfBC87523396aFfD6d38c9520fa);
     }
 
     function setUnitAddress(address adr) external onlyOwner {

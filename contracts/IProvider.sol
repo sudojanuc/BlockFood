@@ -2,6 +2,8 @@
 pragma solidity 0.5.17;
 pragma experimental ABIEncoderV2;
 
+import "./IOwner.sol";
+
 interface IProvider {
     struct ProviderStruct {
         bytes32 providerId;
