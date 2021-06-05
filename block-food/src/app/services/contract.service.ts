@@ -22,9 +22,9 @@ export class ContractService {
     let daiAddress = environment.address;
     this.contract = this.createContract(daiAbi, daiAddress);
     
-    let daiAbi2 = environment.abi2;
-    let daiAddress2 = environment.address2;
-    this.contract2 = this.createContract(daiAbi2,daiAddress2);
+    // let daiAbi2 = environment.abi2;
+    // let daiAddress2 = environment.address2;
+    // this.contract2 = this.createContract(daiAbi2,daiAddress2);
     
     this.provider.getSigner()
     .getAddress()
@@ -58,7 +58,9 @@ export class ContractService {
     
   }
   getAllRestaurents(): Promise<[Restaurant[]]> {
-    return this.contract.functions.getProviders();
+    console.log(this.contract);
+    
+    return this.contract.getAllProviders({gasLimit : 3000000});
   }
   
   public getMyTables(restaurant:Restaurant):Promise<[Table[]]>{

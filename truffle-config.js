@@ -68,6 +68,24 @@ module.exports = {
     network_id: 4,
     skipDryRun: true     // Skip dry run before migrations? (default: false for public nets )
     },
+    xDai: {
+      provider: () => new HDWalletProvider(mnemonic, 'wss://rpc.xdaichain.com/wss'),
+      network_id: 100,
+      confirmations: 2,
+      gas: 50000000,
+      gasPrice: 10000000000,
+      skipDryRun: true
+    },
+    matic: {
+      provider: () => new HDWalletProvider(mnemonic, `wss://rpc-mumbai.maticvigil.com/ws`),
+      network_id: 80001,
+      confirmations: 2,
+      timeoutBlocks: 200,
+      skipDryRun: true,
+      gas: 200000,
+      gasPrice: 10000000000,
+      timeoutBlocks: 5000
+    },
     // Useful for private networks
     // private: {
     // provider: () => new HDWalletProvider(mnemonic, `https://network.io`),
@@ -104,5 +122,8 @@ module.exports = {
 
   db: {
     enabled: false
+  },
+  etherscan: {
+    apiKey: "0x297a9db1739cfefb75de53f0c7d00139f92250e4"
   }
 };

@@ -8,7 +8,8 @@ export const setRestaurants = createAction(
 
     export const setMyRestaurant = createAction(
         '[Restaurant] set my restaurant',
-        props<{ restaurants: Restaurant }>()
+        props<{ restaurant: Restaurant }>()
         );
     
     export const fetchRestaurantsType = '[Restaurant] fetch restaurants';
+    export const fetchMyRestaurantType = '[Restaurant] fetch my restaurant';

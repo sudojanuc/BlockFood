@@ -14,7 +14,7 @@ import { ContractService } from '../services/contract.service';
   styleUrls: ['./user.component.scss']
 })
 export class UserComponent implements OnInit {
-  restaurants: Restaurant[] = [];
+  // restaurants: Restaurant[] = [];
   restaurants$ = this.store.pipe(select(selectRestaurants));
 
 
@@ -24,7 +24,9 @@ export class UserComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.store.dispatch({type: fetchRestaurantsType});
+    this.contractService.getAllRestaurents()
+                        .then(res => console.log(res))
+    // this.store.dispatch({type: fetchRestaurantsType});
   }
 
   openReservation(restaurant: Restaurant) {

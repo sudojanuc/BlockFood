@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { select, Store } from '@ngrx/store';
+import { fetchMyRestaurantType, setMyRestaurant } from '../ngrx/restaurant.actions';
 import { selectMyRestaurant, selectRestaurants } from '../ngrx/restaurant.reducer';
 import { ContractService } from '../services/contract.service';
 
@@ -23,7 +24,6 @@ export interface Table {
 })
 export class RestaurantComponent implements OnInit {
   name: string = '';
-  restaurant: Restaurant | undefined | any;
   chairs: number = 0;
   tables: Table[] = [];
   isLoading: boolean = true;
@@ -35,6 +35,7 @@ export class RestaurantComponent implements OnInit {
 
   ngOnInit(): void {
     this.getRestaurant();
+    this.store.dispatch({type: fetchMyRestaurantType});
 
     this.contractService.contract.on('NewReservationUnit', (fromAddress: any, tables: any) => {
       if (fromAddress == this.contractService.address) {
@@ -52,12 +53,11 @@ export class RestaurantComponent implements OnInit {
     this.contractService.contract.on('NewProvider', (fromAddress: any, restaurant: any) => {
 
       if (fromAddress == this.contractService.address) {
-        this.restaurant = restaurant;
+        this.store.dispatch(setMyRestaurant({restaurant: restaurant}))
       }
     });
 
   }
-
 
   public saveRestaurant() {
     this.contractService.createRestaurant(this.name);
@@ -68,14 +68,7 @@ export class RestaurantComponent implements OnInit {
   }
 
   public async getRestaurant() {
-    this.contractService.getRestaurant()
-      .then(restaurants => this.restaurant = restaurants[0].isCreated ? restaurants[0] : undefined)
-      .catch(_err => this.restaurant = undefined)
-      .finally(() => {
-        if (this.restaurant) this.getTables();
-        this.isLoading = false;
-      }
-      );
+ 
 
   }
 
@@ -83,8 +76,8 @@ export class RestaurantComponent implements OnInit {
     //  this.$tables =  this.contractService.getMyTables(this.restaurant);
     //                       // .then(tables => console.log(tables));
 
-    this.contractService.getMyTables(this.restaurant)
-      .then(tables => this.tables = tables[0]);
+    // this.contractService.getMyTables(this.restaurant)
+      // .then(tables => this.tables = tables[0]);
 
   }
 
