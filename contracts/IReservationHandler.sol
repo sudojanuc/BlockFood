@@ -45,7 +45,7 @@ interface IReservationHandler {
         view
         returns (IReservation.ReservationStruct[] memory);
 
-    function createReservation(bytes32 unitId) external returns (bool);
+    function createReservation(bytes32 unitId) external payable returns (bool);
 
     function deleteReservation(bytes32 reservationId) external returns (bool);
 

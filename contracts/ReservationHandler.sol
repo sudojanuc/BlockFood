@@ -71,7 +71,7 @@ contract ReservationHandler is Owned, IReservationHandler {
     }
 
     function deleteProvider(bytes32 providerId) external returns (bool) {
-        return (provider.deleteProvider(providerId));
+        return (provider.deleteProvider(msg.sender, providerId));
     }
 
     //unit methodes
@@ -97,7 +97,7 @@ contract ReservationHandler is Owned, IReservationHandler {
         external
         returns (bool)
     {
-        return (unit.createUnit(0x0d5900731140977cd80b7Bd2DCE9cEc93F8a176B, providerId, guestCount));
+        return (unit.createUnit(msg.sender, providerId, guestCount));
     }
 
     function deleteUnit(bytes32 unitId) external returns (bool) {
@@ -125,12 +125,12 @@ contract ReservationHandler is Owned, IReservationHandler {
         return reservation.getAllReservations();
     }
 
-    function createReservation(bytes32 unitId) external returns (bool) {
-        return (reservation.createReservation(msg.sender, unitId));
+    function createReservation(bytes32 unitId) external payable returns (bool) {
+        return (reservation.createReservation.value(msg.value)(msg.sender, unitId));
     }
 
     function deleteReservation(bytes32 reservationId) external returns (bool) {
-        return (reservation.deleteReservation(reservationId));
+        return (reservation.deleteReservation(msg.sender, reservationId));
     }
 
     function refundReservation(bytes32 reservationId, uint256 checkInKey)

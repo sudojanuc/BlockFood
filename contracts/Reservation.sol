@@ -41,6 +41,7 @@ contract Reservation is IReservation, Owned {
     constructor(address adrUnit) public {
         unit = Unit(adrUnit);
         lock = IPublicLock(0x2D7Fa4dbdF5E7bfBC87523396aFfD6d38c9520fa);
+        //lock.updateRefundPenalty(1000, 0);
     }
 
     function setUnitAddress(address adr) external onlyOwner {
@@ -80,7 +81,8 @@ contract Reservation is IReservation, Owned {
     }
 
     function createReservation(address sender, bytes32 unitId)
-        external
+        public
+        payable
         returns (bool)
     {
         require(createReservation(sender, bytes32(counter++), unitId));
@@ -91,7 +93,7 @@ contract Reservation is IReservation, Owned {
         address sender,
         bytes32 reservationId,
         bytes32 unitId
-    ) public payable returns (bool) {
+    ) public returns (bool) {
         require(unit.isUnit(unitId), "UNIT_DOES_NOT_EXIST");
         require(!isReservation(reservationId), "DUPLICATE_RESERVATION_KEY"); // duplicate key prohibited
         require(purchaseReservation(sender, reservationId), "PURCHASE_FAILED");
@@ -110,7 +112,10 @@ contract Reservation is IReservation, Owned {
         return true;
     }
 
-    function deleteReservation(bytes32 reservationId) public returns (bool) {
+    function deleteReservation(address sender, bytes32 reservationId)
+        public
+        returns (bool)
+    {
         require(isReservation(reservationId), "RESERVATION_DOES_NOT_EXIST");
 
         // delete from table
@@ -123,7 +128,7 @@ contract Reservation is IReservation, Owned {
 
         bytes32 unitId = reservationStructs[reservationId].unitKey;
         unit.removeReservation(unitId, reservationId);
-        emit LogReservationDeleted(msg.sender, reservationId);
+        emit LogReservationDeleted(sender, reservationId);
         return true;
     }
 
@@ -138,7 +143,13 @@ contract Reservation is IReservation, Owned {
             address(0),
             "0x00"
         );
-        emit LogPurchaseReservation(msg.sender, reservationId);
+        uint256 tokenId = lock.getTokenIdFor(sender);
+        lock.setKeyManagerOf(tokenId, address(this));
+        require(
+            lock.keyManagerOf(tokenId) == address(this),
+            "LOCK_MANAGER_NOT_SET_TO_RESERVATION_CONTRACT"
+        );
+        emit LogPurchaseReservation(sender, reservationId);
         return true;
     }
 
@@ -152,10 +163,9 @@ contract Reservation is IReservation, Owned {
             "CHECK_IN_KEY_WRONG"
         );
         uint256 tokenId = lock.getTokenIdFor(sender);
-        lock.setKeyManagerOf(tokenId, address(this));
         lock.cancelAndRefund(tokenId);
 
-        deleteReservation(reservationId);
+        deleteReservation(sender, reservationId);
 
         emit LogRefundReservation(sender, reservationId);
 

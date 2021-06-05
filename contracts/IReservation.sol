@@ -21,9 +21,10 @@ interface IReservation {
 
     function createReservation(address sender, bytes32 unitId)
         external
+        payable
         returns (bool);
 
-    function deleteReservation(bytes32 reservationId) external returns (bool);
+    function deleteReservation(address sender, bytes32 reservationId) external returns (bool);
 
     function refundReservation(
         address sender,

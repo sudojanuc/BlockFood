@@ -74,14 +74,14 @@ contract Unit is IUnit, Owned {
         require(provider.isProvider(providerId), "PROVIDER_DOES_NOT_EXIST");
         require(!isUnit(unitId), "DUPLICATE_UNIT_KEY"); // duplicate key prohibited
         require(guestCount > 0, "GUEST_COUNT_IMPLAUSIBLE");
-        require(provider.isProviderOwner(sender, providerId), "NOT_OWNER");
+        require(provider.isProviderOwner(sender, providerId), "NOT_OWNER_CREATE_UNIT");
 
         unitList.push(unitId);
         unitStructs[unitId].unitListPointer = unitList.length - 1;
         unitStructs[unitId].providerKey = providerId;
         unitStructs[unitId].guestCount = guestCount;
 
-        provider.addUnit(providerId, unitId);
+        provider.addUnit(sender, providerId, unitId);
         emit LogNewUnit(sender, unitId, providerId);
         return true;
     }
@@ -90,7 +90,7 @@ contract Unit is IUnit, Owned {
         require(isUnit(unitId), "UNIT_DOES_NOT_EXIST");
         require(
             provider.isProviderOwner(sender, unitStructs[unitId].providerKey),
-            "NOT_OWNER"
+            "NOT_OWNER_DELETE_UNIT"
         );
 
         // delete from table
@@ -101,7 +101,7 @@ contract Unit is IUnit, Owned {
         unitList.pop();
 
         bytes32 providerId = unitStructs[unitId].providerKey;
-        provider.removeUnit(providerId, unitId);
+        provider.removeUnit(sender, providerId, unitId);
         emit LogUnitDeleted(sender, unitId);
         return true;
     }

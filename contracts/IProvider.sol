@@ -34,5 +34,5 @@ interface IProvider {
         external
         returns (bool);
 
-    function deleteProvider(bytes32 providerId) external returns (bool);
+    function deleteProvider(address sender, bytes32 providerId) external returns (bool);
 }
