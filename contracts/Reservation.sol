@@ -1,16 +1,19 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.5.0;
+pragma solidity >=0.5.17 <0.9.0;
+pragma experimental ABIEncoderV2;
+
+import "./IReservation.sol";
+import "./IPublicLock.sol";
 
 import "./Owned.sol";
 import "./Unit.sol";
-import "./IPublicLock.sol";
 
-contract Reservation is Owned {
-    struct ReservationStruct {
+contract Reservation is IReservation, Owned {
+    uint counter;
+
+    struct ReservationInternalStruct {
         uint256 reservationListPointer;
         bytes32 unitKey;
-        bytes32[] reservationKeys;
-        mapping(bytes32 => uint256) reservationKeyPointers;
         //custom data
         uint256 checkInKey;
     }
@@ -32,7 +35,7 @@ contract Reservation is Owned {
     Unit internal unit;
     IPublicLock internal lock;
 
-    mapping(bytes32 => ReservationStruct) public reservationStructs;
+    mapping(bytes32 => ReservationInternalStruct) public reservationStructs;
     bytes32[] public reservationList;
 
     constructor() public {
@@ -49,9 +52,9 @@ contract Reservation is Owned {
     }
 
     function getReservationCount()
-        external
+        public
         view
-        returns (uint256 reservationCount)
+        returns (uint256)
     {
         return reservationList.length;
     }
@@ -59,7 +62,7 @@ contract Reservation is Owned {
     function isReservation(bytes32 reservationId)
         public
         view
-        returns (bool isIndeed)
+        returns (bool)
     {
         if (reservationList.length == 0) return false;
         return
@@ -68,11 +71,35 @@ contract Reservation is Owned {
             ] == reservationId;
     }
 
-    function createReservation(bytes32 reservationId, bytes32 unitId)
+    function getAllReservations()
         external
+        view
+        returns (ReservationStruct[] memory)
+    {
+        ReservationStruct[] memory array =
+            new ReservationStruct[](getReservationCount());
+
+        for (uint256 i = 0; i < array.length; i++) {
+            array[i].reservationId = reservationList[i];
+            array[i].unitKey = reservationStructs[array[i].reservationId]
+                .unitKey;
+        }
+        return array;
+    }
+
+    function createReservation(bytes32 unitId)
+        external
+        returns (bool)
+    {
+        require(createReservation(bytes32(counter++), unitId));
+        return true;
+    }
+
+    function createReservation(bytes32 reservationId, bytes32 unitId)
+        public
         payable
         onlyOwner
-        returns (bool success)
+        returns (bool)
     {
         require(unit.isUnit(unitId), "UNIT_DOES_NOT_EXIST");
         require(!isReservation(reservationId), "DUPLICATE_RESERVATION_KEY"); // duplicate key prohibited
@@ -95,7 +122,7 @@ contract Reservation is Owned {
     function deleteReservation(bytes32 reservationId)
         public
         onlyOwner
-        returns (bool success)
+        returns (bool)
     {
         require(isReservation(reservationId), "RESERVATION_DOES_NOT_EXIST");
 
@@ -129,9 +156,12 @@ contract Reservation is Owned {
     }
 
     function refundReservation(bytes32 reservationId, uint256 checkInKey)
-        external
+        external returns (bool)
     {
-        require(reservationStructs[reservationId].checkInKey == checkInKey, "CHECK_IN_KEY_WRONG");
+        require(
+            reservationStructs[reservationId].checkInKey == checkInKey,
+            "CHECK_IN_KEY_WRONG"
+        );
         uint256 tokenId = lock.getTokenIdFor(msg.sender);
         lock.setKeyManagerOf(tokenId, address(this));
         lock.cancelAndRefund(tokenId);
@@ -139,6 +169,8 @@ contract Reservation is Owned {
         deleteReservation(reservationId);
 
         emit LogRefundReservation(msg.sender, reservationId);
+
+        return true;
     }
 
     function generateRandomCheckInKey(uint256 id)

@@ -1,11 +1,16 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.5.0;
+pragma solidity >=0.5.17 <0.9.0;
+pragma experimental ABIEncoderV2;
+
+import "./IUnit.sol";
 
 import "./Owned.sol";
 import "./Provider.sol";
 
-contract Unit is Owned {
-    struct UnitStruct {
+contract Unit is IUnit, Owned {
+    uint256 counter;
+
+    struct UnitInternalStruct {
         uint256 unitListPointer;
         bytes32 providerKey;
         bytes32[] reservationKeys;
@@ -19,7 +24,7 @@ contract Unit is Owned {
 
     Provider internal provider;
 
-    mapping(bytes32 => UnitStruct) public unitStructs;
+    mapping(bytes32 => UnitInternalStruct) public unitStructs;
     bytes32[] public unitList;
 
     constructor() public {
@@ -30,20 +35,41 @@ contract Unit is Owned {
         provider = Provider(adr);
     }
 
-    function getUnitCount() external view returns (uint256 unitCount) {
+    function getUnitCount() public view returns (uint256) {
         return unitList.length;
     }
 
-    function isUnit(bytes32 unitId) public view returns (bool isIndeed) {
+    function isUnit(bytes32 unitId) public view returns (bool) {
         if (unitList.length == 0) return false;
         return unitList[unitStructs[unitId].unitListPointer] == unitId;
+    }
+
+    function getAllUnits() external view returns (UnitStruct[] memory) {
+        UnitStruct[] memory array = new UnitStruct[](getUnitCount());
+
+        for (uint256 i = 0; i < array.length; i++) {
+            array[i].unitId = unitList[i];
+            array[i].guestCount = unitStructs[array[i].unitId].guestCount;
+            array[i].providerKey = unitStructs[array[i].unitId].providerKey;
+            array[i].reservationKeys = unitStructs[array[i].unitId]
+                .reservationKeys;
+        }
+        return array;
+    }
+
+    function createUnit(bytes32 providerId, uint16 guestCount)
+        external
+        returns (bool)
+    {
+        require(createUnit(bytes32(counter++), providerId, guestCount));
+        return true;
     }
 
     function createUnit(
         bytes32 unitId,
         bytes32 providerId,
         uint16 guestCount
-    ) external onlyOwner returns (bool success) {
+    ) public onlyOwner returns (bool) {
         require(provider.isProvider(providerId), "PROVIDER_DOES_NOT_EXIST");
         require(!isUnit(unitId), "DUPLICATE_UNIT_KEY"); // duplicate key prohibited
         require(guestCount > 0, "GUEST_COUNT_IMPLAUSIBLE");
@@ -61,7 +87,7 @@ contract Unit is Owned {
     function deleteUnit(bytes32 unitId)
         external
         onlyOwner
-        returns (bool success)
+        returns (bool)
     {
         require(isUnit(unitId), "UNIT_DOES_NOT_EXIST");
 
