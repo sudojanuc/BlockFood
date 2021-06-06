@@ -4,6 +4,7 @@ pragma experimental ABIEncoderV2;
 
 interface IProvider {
     struct ProviderStruct {
+        address owner;
         bytes32 providerId;
         bytes32[] unitKeys;
         string name;

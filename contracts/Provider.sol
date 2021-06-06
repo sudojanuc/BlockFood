@@ -74,6 +74,7 @@ contract Provider is IProvider, Owned {
             array[i].providerId = providerList[i];
             array[i].name = providerStructs[array[i].providerId].name;
             array[i].unitKeys = providerStructs[array[i].providerId].unitKeys;
+            array[i].owner =  providerStructs[array[i].providerId].owner;
         }
         return array;
     }
