@@ -44,7 +44,7 @@ export class AppEffects {
         ofType(fetchReservationsType),
         mergeMap(() => from(this.contractService.getAllReservations())
             .pipe(
-                tap(console.log),
+                tap(v => console.log('reservations: ', v)),
                 map(reservations => setReservations({reservations: reservations})),
                 catchError(() => EMPTY)
             ))

@@ -34,7 +34,11 @@ export class AppComponent implements OnInit {
         this.store.dispatch({type: fetchTablesType});
         this.store.dispatch({type: fetchReservationsType});
 
-
+    this.contractService.getAllReservations().then( v => {
+      console.log('reservationApp: ', v);
+      
+    }
+    )
   
     // this.contractService.contract.on('LogNewProvider', (fromAddress: any, restaurant: any) => {
     //   console.log('new Provider',restaurant);
