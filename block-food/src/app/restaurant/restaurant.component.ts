@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { select, Store } from '@ngrx/store';
-import { fetchMyRestaurantType, setMyRestaurant } from '../ngrx/app.actions';
-import { selectMyRestaurant, selectRestaurants } from '../ngrx/app.reducer';
+import { selectMyRestaurant } from '../ngrx/app.reducer';
 import { ContractService } from '../services/contract.service';
 
 export interface Restaurant {
@@ -35,7 +34,7 @@ export class RestaurantComponent implements OnInit {
 
   ngOnInit(): void {
     this.getRestaurant();
-    this.store.dispatch({type: fetchMyRestaurantType});
+    // this.store.dispatch({type: fetchMyRestaurantType});
 
     this.contractService.contract.on('NewReservationUnit', (fromAddress: any, tables: any) => {
       if (fromAddress == this.contractService.address) {
@@ -53,7 +52,7 @@ export class RestaurantComponent implements OnInit {
     this.contractService.contract.on('NewProvider', (fromAddress: any, restaurant: any) => {
 
       if (fromAddress == this.contractService.address) {
-        this.store.dispatch(setMyRestaurant({restaurant: restaurant}))
+        // this.store.dispatch(setMyRestaurant({restaurant: restaurant}))
       }
     });
 

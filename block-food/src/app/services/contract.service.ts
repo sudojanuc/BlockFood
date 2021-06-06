@@ -28,7 +28,7 @@ export class ContractService {
     
     this.provider.getSigner()
     .getAddress()
-    .then((address: any) => this.address = address )
+    .then((address: any) => { console.log('service',address); this.address = address} )
     
     // this.contract2.createReservation({value:ethers.utils.parseEther('0.01'),  gasLimit: 1000000});
   }

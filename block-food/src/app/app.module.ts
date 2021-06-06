@@ -27,7 +27,7 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { ReservationStatusComponent } from './reservation-status/reservation-status.component';
 import {MatTableModule} from '@angular/material/table';
 import { StoreModule } from '@ngrx/store';
-import { restaurantsReducer } from './ngrx/app.reducer';
+import { appReducer } from './ngrx/app.reducer';
 import { EffectsModule } from '@ngrx/effects';
 import { AppEffects } from './ngrx/app.effects';
 
@@ -51,7 +51,7 @@ export function enableWeb3Provider(provider : any) {
     ReservationStatusComponent
   ],
   imports: [
-    StoreModule.forRoot({ restaurants: restaurantsReducer }),
+    StoreModule.forRoot({ data: appReducer }),
     EffectsModule.forRoot([AppEffects]),
     BrowserModule,
     AppRoutingModule,

@@ -1,6 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { setMyRestaurant } from './ngrx/app.actions';
+import { select, Store } from '@ngrx/store';
+import { fetchAddressType } from './ngrx/app.actions';
+import { selectAddress } from './ngrx/app.reducer';
 import { ContractService } from './services/contract.service';
 // import { Contract, ethers, Wallet } from 'ethers';
 // import { from, of } from 'rxjs';
@@ -18,19 +19,24 @@ import { ContractService } from './services/contract.service';
 export class AppComponent implements OnInit {
   
   constructor(private contractService : ContractService,
-              private store : Store){
-    
+              private store : Store){ 
   }
+
+  myAddress$ = this.store.pipe(select(selectAddress));
+
   
   public mode:string = 'home';
 
   ngOnInit(){
+
+        this.store.dispatch({type: fetchAddressType});
+
   
-    this.contractService.contract.on('NewProvider', (fromAddress: any, restaurant: any) => {
-      if (fromAddress == this.contractService.address) {
-        this.store.dispatch(setMyRestaurant(restaurant))
-      }
-    });
+    // this.contractService.contract.on('NewProvider', (fromAddress: any, restaurant: any) => {
+    //   if (fromAddress == this.contractService.address) {
+    //     // this.store.dispatch(setMyRestaurant(restaurant))
+    //   }
+    // });
     
   }
   title = 'block-food';

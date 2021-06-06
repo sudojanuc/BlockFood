@@ -20,7 +20,7 @@ export class AppEffects {
 
     fetchAddress$ = createEffect(() => this.actions$.pipe(
         ofType(fetchAddressType),
-        mergeMap(() => from(this.contractService.provider.getSigner().getAddress()())
+        mergeMap(() => from(this.contractService.provider.getSigner().getAddress())
             .pipe(
                 map((address) => setAddress({address: (address as string) })),
                 catchError(() => EMPTY)
