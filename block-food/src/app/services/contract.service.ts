@@ -25,12 +25,7 @@ export class ContractService {
     // let daiAbi2 = environment.abi2;
     // let daiAddress2 = environment.address2;
     // this.contract2 = this.createContract(daiAbi2,daiAddress2);
-    
-    this.provider.getSigner()
-    .getAddress()
-    .then((address: any) => { console.log('service',address); this.address = address} )
-    
-    // this.contract2.createReservation({value:ethers.utils.parseEther('0.01'),  gasLimit: 1000000});
+        
   }
   
   private createContract(daiAbi:any, daiAddress:string):any {
@@ -60,7 +55,7 @@ export class ContractService {
   getAllRestaurents(): Promise<Restaurant[]> {
     console.log(this.contract);
     
-    return this.contract.getAllProviders({gasLimit : 3000000});
+    return this.contract.getAllProviders();
   }
   
   public getMyTables(restaurant:Restaurant):Promise<[Table[]]>{

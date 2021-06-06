@@ -12,6 +12,7 @@ export class AppEffects {
         ofType(fetchRestaurantsType),
         mergeMap(() => from(this.contractService.getAllRestaurents())
             .pipe(
+                tap(res =>console.log(res)),
                 map(restaurants => setRestaurants({restaurants: restaurants})),
                 catchError(() => EMPTY)
             ))

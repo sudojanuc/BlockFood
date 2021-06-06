@@ -24,8 +24,8 @@ export class UserComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.contractService.getAllRestaurents()
-                        .then(res => console.log(res[0]))
+    // this.contractService.getAllRestaurents()
+    //                     .then(res => console.log(res[0]))
     this.store.dispatch({type: fetchRestaurantsType});
   }
 
