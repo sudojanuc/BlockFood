@@ -1,6 +1,11 @@
+import { Restaurant } from "./restaurant";
+import { Table } from "./table";
+
 export interface Reservation {
-    providerId: string
-    name: string
     owner: string
+    reservationId: string
+    unitKey: string
+    restaurant?: Restaurant,
+    table?: Table
   }
   

@@ -1,9 +1,14 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
+import { Store } from '@ngrx/store';
 import { EMPTY, from } from 'rxjs';
-import { map, mergeMap, catchError, tap, filter } from 'rxjs/operators';
+import { map, mergeMap, catchError, tap, filter, withLatestFrom } from 'rxjs/operators';
+import { Reservation } from '../models/reservations';
+import { Restaurant } from '../models/restaurant';
+import { Table } from '../models/table';
 import { ContractService } from '../services/contract.service';
 import { fetchAddressType, fetchReservationsType, fetchRestaurantsType, fetchTablesType, setAddress, setReservations, setRestaurants, setTables } from './app.actions';
+import { AppState } from './app.reducer';
 
 @Injectable()
 export class AppEffects {
@@ -45,7 +50,26 @@ export class AppEffects {
         mergeMap(() => from(this.contractService.getAllReservations())
             .pipe(
                 tap(v => console.log('reservations: ', v)),
-                map(reservations => setReservations({reservations: reservations})),
+                // map(),
+                withLatestFrom(this.store$),
+                map(([reservations, store]) => 
+                    setReservations({
+                        reservations: reservations
+                                        .map((reservation: Reservation) => {
+                                            let table : Table = store.data.tables.find((table:Table) =>
+                                            table.unitId == reservation.unitKey
+                                            );
+                                            let restaurant = store.data.restaurants.find((restaurant: Restaurant) => 
+                                                restaurant.providerId == table.providerKey
+                                            );
+                                            // console.log('new Res',{...reservation, restaurant: restaurant});
+                                                                                        
+                                        return {...reservation, 
+                                                restaurant: restaurant,
+                                                table: table};
+                                         } )
+                    })
+                ),
                 catchError(() => EMPTY)
             ))
     )
@@ -53,6 +77,7 @@ export class AppEffects {
 
     constructor(
         private actions$: Actions,
-        private contractService: ContractService
+        private contractService: ContractService,
+        private store$: Store<any>
     ) { }
 }

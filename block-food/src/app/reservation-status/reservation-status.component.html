@@ -1,4 +1,4 @@
-<table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+<table mat-table [dataSource]="reservations$ | async" class="mat-elevation-z8">
 
   <!--- Note that these columns can be defined in any order.
           The actual rendered columns are set as a property on the row definition" -->
@@ -6,13 +6,13 @@
   <!-- Position Column -->
   <ng-container matColumnDef="restaurant">
     <th mat-header-cell *matHeaderCellDef> Restaurant </th>
-    <td mat-cell *matCellDef="let element"> {{element.providerName}} </td>
+    <td mat-cell *matCellDef="let element"> {{element.restaurant?.name}} </td>
   </ng-container>
 
   <!-- Name Column -->
   <ng-container matColumnDef="reservationid">
     <th mat-header-cell *matHeaderCellDef> Reservationid </th>
-    <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+    <td mat-cell *matCellDef="let element"> {{ getId(element.reservationId) }} </td>
     <!-- <th mat-header-cell *matHeaderCellDef> check in </th> -->
   </ng-container>
 
@@ -27,9 +27,9 @@
     <td mat-cell *matCellDef="let element">
       <mat-form-field style="padding-top: 10px;">
         <mat-label>code</mat-label>
-        <input matInput id="id{{element.id}}">
+        <input matInput id="id{{element.reservationId}}">
       </mat-form-field>
-          <button mat-flat-button color="primary" (click)="checkin(element.id)" style="margin-left: 20px;">checkIn</button>
+          <button mat-flat-button color="primary" (click)="checkin(element.reservationId)" style="margin-left: 20px;">checkIn</button>
     </td>
   </ng-container>
 

@@ -1,6 +1,6 @@
 import { Component, ElementRef, OnInit } from '@angular/core';
 import { select, Store } from '@ngrx/store';
-import { selectReservations } from '../ngrx/app.reducer';
+import { selectMyReservations, selectReservations } from '../ngrx/app.reducer';
 import { ContractService } from '../services/contract.service';
 
 @Component({
@@ -17,7 +17,7 @@ export class ReservationStatusComponent implements OnInit {
   ];
 
   reservations$ = this.store.pipe(
-    select(selectReservations)
+    select(selectMyReservations)
   )
 
   constructor(
@@ -27,15 +27,15 @@ export class ReservationStatusComponent implements OnInit {
 
   ngOnInit(): void {
     this.getReservations();
-    this.contractService.contract2.on('RefundReservation', (fromAddress: any, reservation: any) =>{
-      console.log('refund');
-      console.log(reservation);
+    // this.contractService.contract2.on('RefundReservation', (fromAddress: any, reservation: any) =>{
+    //   console.log('refund');
+    //   console.log(reservation);
       
       
-      if(fromAddress == this.contractService.address){
-        this.getReservations();
-      }
-    });
+    //   if(fromAddress == this.contractService.address){
+    //     this.getReservations();
+    //   }
+    // });
   }
 
   getReservations(){
@@ -54,6 +54,11 @@ export class ReservationStatusComponent implements OnInit {
     let code = this.elRef.nativeElement.querySelector('#id' + id).value;
     
     this.contractService.checkin(id, code);
+  }
+
+  getId(id:string){
+    return Number(id);
+    // return id;
   }
 
 }

@@ -64,3 +64,8 @@ export const selectReservations = createSelector<any,any,any>(
   (reducer: any) => reducer.data,
   (state: AppState) =>  state.reservations 
 );
+
+export const selectMyReservations = createSelector<any,any,any>(
+  (reducer: any) => reducer.data,
+  (state: AppState) =>  state.reservations.filter(reservation => reservation.owner == state.address)
+);
