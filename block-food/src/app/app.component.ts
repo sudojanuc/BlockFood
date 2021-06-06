@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { select, Store } from '@ngrx/store';
-import { fetchAddressType } from './ngrx/app.actions';
+import { fetchAddressType, fetchReservationsType, fetchRestaurantsType, fetchTablesType } from './ngrx/app.actions';
 import { selectAddress } from './ngrx/app.reducer';
 import { ContractService } from './services/contract.service';
 // import { Contract, ethers, Wallet } from 'ethers';
@@ -30,9 +30,15 @@ export class AppComponent implements OnInit {
   ngOnInit(){
 
         this.store.dispatch({type: fetchAddressType});
+        this.store.dispatch({type: fetchRestaurantsType});
+        this.store.dispatch({type: fetchTablesType});
+        this.store.dispatch({type: fetchReservationsType});
+
 
   
-    // this.contractService.contract.on('NewProvider', (fromAddress: any, restaurant: any) => {
+    // this.contractService.contract.on('LogNewProvider', (fromAddress: any, restaurant: any) => {
+    //   console.log('new Provider',restaurant);
+      
     //   if (fromAddress == this.contractService.address) {
     //     // this.store.dispatch(setMyRestaurant(restaurant))
     //   }

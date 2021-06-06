@@ -1,25 +1,32 @@
 import { createSelector, createFeatureSelector, createReducer, on } from "@ngrx/store";
-import { Restaurant } from "../restaurant/restaurant.component";
-import { setAddress, setRestaurants } from "./app.actions";
+import { Restaurant } from "../models/restaurant";
+import { Table } from "../models/table";
+import { setAddress, setReservations, setRestaurants, setTables } from "./app.actions";
 
 export interface AppState  
 {
   restaurants : ReadonlyArray<Restaurant>, 
-  address: string
+  address: string,
+  tables: ReadonlyArray<Table>,
+  reservations: any[]
 };
 
 export const initialState: AppState = 
 {
  restaurants : [],
- address: 'initial'
-//  myRestaurant: undefined
+ address: 'initial',
+ tables: [],
+ reservations: []
 }
 ;
 
 export const appReducer = createReducer(
   initialState,
   on(setRestaurants, (state, { restaurants }) => ({...state, restaurants: [...restaurants]})),
-  on(setAddress, (state, {address}) => ({...state, address: address}))
+  on(setAddress, (state, {address}) => ({...state, address: address})),
+  on(setTables, (state, {tables}) => ({...state, tables: [...tables]})),
+  on(setReservations, (state, {reservations}) => ({...state, reservations: [...reservations]})),
+
 );
 
 
@@ -36,10 +43,24 @@ export const selectAddress = createSelector<any,any,any>(
 
 export const selectMyRestaurant = createSelector<any,any,any>(
   (reducer: any) => reducer.data,
-  (state: AppState) =>  state.restaurants.filter(restaurant => {console.log(restaurant)}) 
+  (state: AppState) => { 
+    return state.restaurants.filter(restaurant => restaurant.owner == state.address)[0]
+  }
 );
 
-// export const selectMyRestaurant = createSelector<any,any,any>(
-//   (state: AppState) => state.restaurants,
-//   (restaurants: RestaurantStateType) => restaurants.myRestaurant
-// );
+export const selectTables = createSelector<any,any,any>(
+  (reducer: any) => reducer.data,
+  (state: AppState) => { 
+    return state.tables
+  }
+);
+
+export const selectTablesOfRestaurant = (restaurant:Restaurant) => createSelector<any,any,any>(
+  (reducer: any) => reducer.data,
+  (state: AppState) => state.tables.filter((table) => table.providerKey == restaurant?.providerId )
+);
+
+export const selectReservations = createSelector<any,any,any>(
+  (reducer: any) => reducer.data,
+  (state: AppState) =>  state.reservations 
+);

@@ -1,4 +1,6 @@
 import { Component, ElementRef, OnInit } from '@angular/core';
+import { select, Store } from '@ngrx/store';
+import { selectReservations } from '../ngrx/app.reducer';
 import { ContractService } from '../services/contract.service';
 
 @Component({
@@ -14,7 +16,13 @@ export class ReservationStatusComponent implements OnInit {
   dataSource = [
   ];
 
-  constructor(private contractService : ContractService, 
+  reservations$ = this.store.pipe(
+    select(selectReservations)
+  )
+
+  constructor(
+    private store: Store,
+    private contractService : ContractService, 
     private elRef:ElementRef) { }
 
   ngOnInit(): void {
@@ -31,15 +39,15 @@ export class ReservationStatusComponent implements OnInit {
   }
 
   getReservations(){
-    this.contractService.getMyReservations().then(res =>{
-      this.dataSource = res.filter((v:any) => v.isCreated );
-      this.dataSource.forEach((res:any) => {
-        console.log('id: ', res.id.toString());
-        console.log('key: ', res.checkInKey.toString());
+    // this.contractService.getMyReservations().then(res =>{
+    //   this.dataSource = res.filter((v:any) => v.isCreated );
+    //   this.dataSource.forEach((res:any) => {
+    //     console.log('id: ', res.id.toString());
+    //     console.log('key: ', res.checkInKey.toString());
 
-      }
-        )
-    });
+    //   }
+    //     )
+    // });
   }
 
   checkin(id:any){

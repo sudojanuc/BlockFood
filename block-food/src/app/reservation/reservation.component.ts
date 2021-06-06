@@ -1,6 +1,10 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { Restaurant, Table } from '../restaurant/restaurant.component';
+import { select, Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
+import { Restaurant } from '../models/restaurant';
+import { Table } from '../models/table';
+import { selectTablesOfRestaurant } from '../ngrx/app.reducer';
 import { ContractService } from '../services/contract.service';
 
 
@@ -12,36 +16,31 @@ import { ContractService } from '../services/contract.service';
 export class ReservationComponent implements OnInit {
 
   public restaurant: Restaurant;
-  tables: Table[] = [];
   selected: Table | undefined;
+  myTables$: Observable<Table[]>;
 
   constructor(
     public dialogRef: MatDialogRef<ReservationComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
-    private contractService: ContractService
+    private contractService: ContractService,
+    private store: Store
   ) {
     this.restaurant = data.restaurant;
+    this.myTables$ = this.store.pipe(
+      select(selectTablesOfRestaurant(this.restaurant))
+    );
   }
 
   ngOnInit(): void {
-    this.loadTables();
-    this.contractService.contract2.on('CreateReservation', (fromAddress: any, table: any) => {
-      console.log('CreateReservation');
-      console.log(table);
+    // this.contractService.contract2.on('CreateReservation', (fromAddress: any, table: any) => {
+    //   console.log('CreateReservation');
+    //   console.log(table);
 
-      if (fromAddress == this.contractService.address) {
-        this.loadTables();
-      }
-    });
+    //   if (fromAddress == this.contractService.address) {
+    //     this.loadTables();
+    //   }
+    // });
 
-  }
-
-  loadTables(){
-    this.contractService.getMyTables(this.restaurant)
-      .then(tables => {
-        this.tables = tables[0]
-        console.log(tables);
-      });
   }
 
   getColor(table: Table): string {

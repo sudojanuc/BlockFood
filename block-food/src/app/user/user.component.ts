@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { select, Store } from '@ngrx/store';
+import { Restaurant } from '../models/restaurant';
 import { fetchRestaurantsType, setRestaurants } from '../ngrx/app.actions';
 import { selectRestaurants } from '../ngrx/app.reducer';
 // import { selectRestaurants } from '../ngrx/restautant.reducer';
 import { ReservationComponent } from '../reservation/reservation.component';
-import { Restaurant } from '../restaurant/restaurant.component';
 import { ContractService } from '../services/contract.service';
 
 @Component({

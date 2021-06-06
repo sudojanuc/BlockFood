@@ -1,7 +1,8 @@
 import { Inject, Injectable } from '@angular/core';
-import { ethers } from 'ethers';
+import { ethers, utils } from 'ethers';
 import { environment } from 'src/environments/environment';
-import { Restaurant, Table } from '../restaurant/restaurant.component';
+import { Restaurant } from '../models/restaurant';
+import { Table } from '../models/table';
 import { WEB3PROVIDER } from './providers';
 declare const window: any;
 
@@ -45,7 +46,7 @@ export class ContractService {
   
   
   public createRestaurant(name:string){
-    this.contract.functions.createProvider(name); 
+    this.contract.createProvider(name); 
   }
   
   public getRestaurant():Promise<Restaurant[]>{
@@ -58,23 +59,27 @@ export class ContractService {
     return this.contract.getAllProviders();
   }
   
-  public getMyTables(restaurant:Restaurant):Promise<[Table[]]>{
-    return this.contract.functions.getReservationUnitsOfProvider(restaurant.id); 
+  public getAllTables():Promise<Table[]>  {
+    return this.contract.getAllUnits(); 
+    
   }
   
-  saveTable(guestCount: number) {
-    this.contract.functions.createReservationUnit(guestCount); 
+  saveTable(restaurant: Restaurant, guestCount: number) {
+    this.contract.functions.createUnit(restaurant.providerId,guestCount); 
   }
   
   async createReservation (selected: Table | undefined) {
-    let price = await this.contract2.getKeyPrice();
-    price = price.toString();
+    // let price = await this.contract.getKeyPrice();
+    // price = price.toString();
     
-    this.contract2.createReservation(selected?.id,{value:price});
+    this.contract.createReservation(selected?.unitId,
+      // {value:price}
+      { value: utils.parseEther('0.01') }
+      );
   }
 
-  getMyReservations(): Promise<any> {
-    return this.contract2.getReservationsOfOwner();
+  getAllReservations(): Promise<any> {
+    return this.contract.getAllReservations();
   }
   
   checkin(id:any,code:any) {

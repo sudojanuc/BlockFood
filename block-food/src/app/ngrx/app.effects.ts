@@ -3,7 +3,7 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { EMPTY, from } from 'rxjs';
 import { map, mergeMap, catchError, tap, filter } from 'rxjs/operators';
 import { ContractService } from '../services/contract.service';
-import { fetchAddressType, fetchRestaurantsType, setAddress, setRestaurants } from './app.actions';
+import { fetchAddressType, fetchReservationsType, fetchRestaurantsType, fetchTablesType, setAddress, setReservations, setRestaurants, setTables } from './app.actions';
 
 @Injectable()
 export class AppEffects {
@@ -29,16 +29,27 @@ export class AppEffects {
     )
     );
 
-    // fetchMyRestaurant$ = createEffect(() => this.actions$.pipe(
-    //     ofType(fetchMyRestaurantType),
-    //     mergeMap(() => from(this.contractService.getRestaurant())
-    //         .pipe(
-    //             filter(restaurant => restaurant[0].isCreated),
-    //             map(restaurant => setMyRestaurant({restaurant: restaurant[0]})),
-    //             catchError(() => EMPTY)
-    //         ))
-    // )
-    // );
+    fetchTables$ = createEffect(() => this.actions$.pipe(
+        ofType(fetchTablesType),
+        mergeMap(() => from(this.contractService.getAllTables())
+            .pipe(
+                // tap(console.log),
+                map(tables => setTables({tables: tables})),
+                catchError(() => EMPTY)
+            ))
+    )
+    );
+
+    fetchReservations$ = createEffect(() => this.actions$.pipe(
+        ofType(fetchReservationsType),
+        mergeMap(() => from(this.contractService.getAllReservations())
+            .pipe(
+                tap(console.log),
+                map(reservations => setReservations({reservations: reservations})),
+                catchError(() => EMPTY)
+            ))
+    )
+    );
 
     constructor(
         private actions$: Actions,
