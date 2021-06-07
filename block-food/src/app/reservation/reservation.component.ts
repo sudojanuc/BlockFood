@@ -20,14 +20,17 @@ export class ReservationComponent implements OnInit {
   myTables$: Observable<Table[]>;
 
   constructor(
-    public dialogRef: MatDialogRef<ReservationComponent>,
+    // public dialogRef: MatDialogRef<ReservationComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private contractService: ContractService,
     private store: Store
   ) {
     this.restaurant = data.restaurant;
+
     this.myTables$ = this.store.pipe(
-      select(selectTablesOfRestaurant(this.restaurant))
+      select(selectTablesOfRestaurant(
+        this.restaurant
+        ))
     );
   }
 

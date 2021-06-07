@@ -71,7 +71,7 @@ export function enableWeb3Provider(provider : any) {
     MatDatepickerModule,
     MatNativeDateModule,
     MatTableModule
-  ],
+    ],
   providers: [
     {
       provide: APP_INITIALIZER,
