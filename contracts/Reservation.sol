@@ -15,6 +15,7 @@ contract Reservation is IReservation, Owned {
     struct ReservationInternalStruct {
         uint256 reservationListPointer;
         bytes32 unitKey;
+        address owner;
         //custom data
         uint256 checkInKey;
     }
@@ -81,6 +82,9 @@ contract Reservation is IReservation, Owned {
             array[i].reservationId = reservationList[i];
             array[i].unitKey = reservationStructs[array[i].reservationId]
                 .unitKey;
+            array[i].owner = reservationStructs[array[i].reservationId]
+                .owner;
+            
         }
         return array;
     }
@@ -108,6 +112,7 @@ contract Reservation is IReservation, Owned {
             reservationList.length -
             1;
         reservationStructs[reservationId].unitKey = unitId;
+        reservationStructs[reservationId].owner = sender;
         reservationStructs[reservationId].checkInKey = generateRandomCheckInKey(
             block.number + uint256(unitId)
         );

@@ -6,6 +6,7 @@ interface IReservation {
     struct ReservationStruct {
         bytes32 reservationId;
         bytes32 unitKey;
+        address owner;
     }
 
     function setUnitAddress(address adr) external;
