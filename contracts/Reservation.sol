@@ -2,9 +2,9 @@
 pragma solidity >=0.5.17 <0.9.0;
 pragma experimental ABIEncoderV2;
 
-import "./IReservation.sol";
-import "./IPublicLock.sol";
-import "./IUnlock.sol";
+import "./interfaces/IReservation.sol";
+import "./interfaces/unlock/IPublicLock.sol";
+import "./interfaces/unlock/IUnlock.sol";
 
 import "./Owned.sol";
 import "./Unit.sol";
@@ -20,19 +20,10 @@ contract Reservation is IReservation, Owned {
         uint256 checkInKey;
     }
 
-    event LogNewReservation(
-        address sender,
-        bytes32 reservationId,
-        bytes32 unitId
-    );
-    event LogNewReservation(
-        address sender,
-        bytes32 reservationId,
-        bytes unitId
-    );
+    event LogNewReservation(address sender, ReservationStruct reservation);
     event LogReservationDeleted(address sender, bytes32 reservationId);
-    event LogPurchaseReservation(address sender, bytes32 reservationId);
-    event LogRefundReservation(address sender, bytes32 reservationId);
+    event LogPurchaseReservation(address sender, ReservationStruct reservation);
+    event LogRefundReservation(address sender, ReservationStruct reservation);
 
     Unit internal unit;
     IPublicLock internal lock;
@@ -82,9 +73,7 @@ contract Reservation is IReservation, Owned {
             array[i].reservationId = reservationList[i];
             array[i].unitKey = reservationStructs[array[i].reservationId]
                 .unitKey;
-            array[i].owner = reservationStructs[array[i].reservationId]
-                .owner;
-            
+            array[i].owner = reservationStructs[array[i].reservationId].owner;
         }
         return array;
     }
@@ -118,7 +107,15 @@ contract Reservation is IReservation, Owned {
         );
 
         unit.addReservation(unitId, reservationId);
-        emit LogNewReservation(sender, reservationId, unitId);
+
+        emit LogNewReservation(
+            sender,
+            ReservationStruct(
+                reservationId,
+                reservationStructs[reservationId].unitKey,
+                reservationStructs[reservationId].owner
+            )
+        );
         return true;
     }
 
@@ -159,7 +156,14 @@ contract Reservation is IReservation, Owned {
             lock.keyManagerOf(tokenId) == address(this),
             "LOCK_MANAGER_NOT_SET_TO_RESERVATION_CONTRACT"
         );
-        emit LogPurchaseReservation(sender, reservationId);
+        emit LogPurchaseReservation(
+            sender,
+            ReservationStruct(
+                reservationId,
+                reservationStructs[reservationId].unitKey,
+                reservationStructs[reservationId].owner
+            )
+        );
         return true;
     }
 
@@ -177,7 +181,14 @@ contract Reservation is IReservation, Owned {
 
         deleteReservation(sender, reservationId);
 
-        emit LogRefundReservation(sender, reservationId);
+        emit LogRefundReservation(
+            sender,
+            ReservationStruct(
+                reservationId,
+                reservationStructs[reservationId].unitKey,
+                reservationStructs[reservationId].owner
+            )
+        );
 
         return true;
     }

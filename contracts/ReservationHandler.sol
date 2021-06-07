@@ -3,10 +3,10 @@ pragma solidity >=0.5.17 <0.9.0;
 pragma experimental ABIEncoderV2;
 
 import "./Owned.sol";
-import "./IProvider.sol";
-import "./IUnit.sol";
-import "./IReservation.sol";
-import "./IReservationHandler.sol";
+import "./interfaces/IProvider.sol";
+import "./interfaces/IUnit.sol";
+import "./interfaces/IReservation.sol";
+import "./interfaces/IReservationHandler.sol";
 
 contract ReservationHandler is Owned, IReservationHandler {
     IProvider internal provider;

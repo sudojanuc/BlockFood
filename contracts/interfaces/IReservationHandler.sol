@@ -10,8 +10,6 @@ interface IReservationHandler {
     ///provider
     function getProviderCount() external view returns (uint256);
 
-    function isProvider(bytes32 providerId) external view returns (bool);
-
     function isProviderOwner(bytes32 providerId) external view returns (bool);
 
     function getProviderUnitCount(bytes32 providerId)

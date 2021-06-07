@@ -2,7 +2,7 @@
 pragma solidity >=0.5.17 <0.9.0;
 pragma experimental ABIEncoderV2;
 
-import "./IUnit.sol";
+import "./interfaces/IUnit.sol";
 
 import "./Owned.sol";
 import "./Provider.sol";
@@ -19,7 +19,7 @@ contract Unit is IUnit, Owned {
         uint16 guestCount;
     }
 
-    event LogNewUnit(address sender, bytes32 unitId, bytes32 providerId);
+    event LogNewUnit(address sender, UnitStruct);
     event LogUnitDeleted(address sender, bytes32 unitId);
 
     Provider internal provider;
@@ -57,10 +57,11 @@ contract Unit is IUnit, Owned {
         return array;
     }
 
-    function createUnit(address sender, bytes32 providerId, uint16 guestCount)
-        external
-        returns (bool)
-    {
+    function createUnit(
+        address sender,
+        bytes32 providerId,
+        uint16 guestCount
+    ) external returns (bool) {
         require(createUnit(sender, bytes32(counter++), providerId, guestCount));
         return true;
     }
@@ -74,7 +75,10 @@ contract Unit is IUnit, Owned {
         require(provider.isProvider(providerId), "PROVIDER_DOES_NOT_EXIST");
         require(!isUnit(unitId), "DUPLICATE_UNIT_KEY"); // duplicate key prohibited
         require(guestCount > 0, "GUEST_COUNT_IMPLAUSIBLE");
-        require(provider.isProviderOwner(sender, providerId), "NOT_OWNER_CREATE_UNIT");
+        require(
+            provider.isProviderOwner(sender, providerId),
+            "NOT_OWNER_CREATE_UNIT"
+        );
 
         unitList.push(unitId);
         unitStructs[unitId].unitListPointer = unitList.length - 1;
@@ -82,11 +86,23 @@ contract Unit is IUnit, Owned {
         unitStructs[unitId].guestCount = guestCount;
 
         provider.addUnit(sender, providerId, unitId);
-        emit LogNewUnit(sender, unitId, providerId);
+
+        emit LogNewUnit(
+            sender,
+            UnitStruct(
+                unitId,
+                unitStructs[unitId].providerKey,
+                unitStructs[unitId].reservationKeys,
+                unitStructs[unitId].guestCount
+            )
+        );
         return true;
     }
 
-    function deleteUnit(address sender, bytes32 unitId) external returns (bool) {
+    function deleteUnit(address sender, bytes32 unitId)
+        external
+        returns (bool)
+    {
         require(isUnit(unitId), "UNIT_DOES_NOT_EXIST");
         require(
             provider.isProviderOwner(sender, unitStructs[unitId].providerKey),

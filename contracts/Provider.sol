@@ -2,7 +2,7 @@
 pragma solidity >=0.5.17 <0.9.0;
 pragma experimental ABIEncoderV2;
 
-import "./IProvider.sol";
+import "./interfaces/IProvider.sol";
 import "./Owned.sol";
 
 contract Provider is IProvider, Owned {
@@ -17,7 +17,7 @@ contract Provider is IProvider, Owned {
         string name;
     }
 
-    event LogNewProvider(address sender, bytes32 providerId);
+    event LogNewProvider(address sender, IProvider.ProviderStruct provider);
     event LogProviderDeleted(address sender, bytes32 providerId);
 
     mapping(bytes32 => ProviderInternalStruct) public providerStructs;
@@ -74,7 +74,7 @@ contract Provider is IProvider, Owned {
             array[i].providerId = providerList[i];
             array[i].name = providerStructs[array[i].providerId].name;
             array[i].unitKeys = providerStructs[array[i].providerId].unitKeys;
-            array[i].owner =  providerStructs[array[i].providerId].owner;
+            array[i].owner = providerStructs[array[i].providerId].owner;
         }
         return array;
     }
@@ -103,13 +103,28 @@ contract Provider is IProvider, Owned {
             1;
         providerStructs[providerId].name = name;
         providerStructs[providerId].owner = sender;
-        emit LogNewProvider(sender, providerId);
+
+        emit LogNewProvider(
+            sender,
+            ProviderStruct(
+                providerStructs[providerId].owner,
+                providerId,
+                providerStructs[providerId].unitKeys,
+                providerStructs[providerId].name
+            )
+        );
         return true;
     }
 
-    function deleteProvider(address sender, bytes32 providerId) external returns (bool) {
+    function deleteProvider(address sender, bytes32 providerId)
+        external
+        returns (bool)
+    {
         require(isProvider(providerId), "PROVIDER_DOES_NOT_EXIST");
-        require(isProviderOwner(sender, providerId), "NOT_OWNER_DELETE_PROVIDER");
+        require(
+            isProviderOwner(sender, providerId),
+            "NOT_OWNER_DELETE_PROVIDER"
+        );
         // the following would break referential integrity
         require(
             providerStructs[providerId].unitKeys.length <= 0,
@@ -125,7 +140,11 @@ contract Provider is IProvider, Owned {
         return true;
     }
 
-    function addUnit(address sender,bytes32 providerId, bytes32 unitId) public {
+    function addUnit(
+        address sender,
+        bytes32 providerId,
+        bytes32 unitId
+    ) public {
         require(isProviderOwner(sender, providerId), "NOT_OWNER_ADD_UNIT");
         providerStructs[providerId].unitKeys.push(unitId);
         providerStructs[providerId].unitKeyPointers[unitId] =
@@ -133,7 +152,11 @@ contract Provider is IProvider, Owned {
             1;
     }
 
-    function removeUnit(address sender, bytes32 providerId, bytes32 unitId) public {
+    function removeUnit(
+        address sender,
+        bytes32 providerId,
+        bytes32 unitId
+    ) public {
         require(isProviderOwner(sender, providerId), "NOT_OWNER_REMOVE_UNIT");
         uint256 rowToDelete =
             providerStructs[providerId].unitKeyPointers[unitId];
