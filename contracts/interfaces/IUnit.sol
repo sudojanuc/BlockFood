@@ -22,7 +22,7 @@ interface IUnit {
 
     function createUnit(address sender, bytes32 providerId, uint16 guestCount)
         external
-        returns (bool);
+        returns (UnitStruct memory);
 
-    function deleteUnit(address sender, bytes32 unitId) external returns (bool);
+    function deleteUnit(address sender, bytes32 unitId) external returns (bytes32);
 }

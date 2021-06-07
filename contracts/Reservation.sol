@@ -20,11 +20,6 @@ contract Reservation is IReservation, Owned {
         uint256 checkInKey;
     }
 
-    event LogNewReservation(address sender, ReservationStruct reservation);
-    event LogReservationDeleted(address sender, bytes32 reservationId);
-    event LogPurchaseReservation(address sender, ReservationStruct reservation);
-    event LogRefundReservation(address sender, ReservationStruct reservation);
-
     Unit internal unit;
     IPublicLock internal lock;
     IUnlock internal unlock;
@@ -81,20 +76,19 @@ contract Reservation is IReservation, Owned {
     function createReservation(address sender, bytes32 unitId)
         public
         payable
-        returns (bool)
+        returns (ReservationStruct memory)
     {
-        require(createReservation(sender, bytes32(counter++), unitId));
-        return true;
+        return createReservation(sender, bytes32(counter++), unitId);
     }
 
     function createReservation(
         address sender,
         bytes32 reservationId,
         bytes32 unitId
-    ) public returns (bool) {
+    ) public returns (ReservationStruct memory) {
         require(unit.isUnit(unitId), "UNIT_DOES_NOT_EXIST");
         require(!isReservation(reservationId), "DUPLICATE_RESERVATION_KEY"); // duplicate key prohibited
-        require(purchaseReservation(sender, reservationId), "PURCHASE_FAILED");
+        require(purchaseReservation(sender), "PURCHASE_FAILED");
 
         reservationList.push(reservationId);
         reservationStructs[reservationId].reservationListPointer =
@@ -108,20 +102,17 @@ contract Reservation is IReservation, Owned {
 
         unit.addReservation(unitId, reservationId);
 
-        emit LogNewReservation(
-            sender,
+        return
             ReservationStruct(
                 reservationId,
                 reservationStructs[reservationId].unitKey,
                 reservationStructs[reservationId].owner
-            )
-        );
-        return true;
+            );
     }
 
-    function deleteReservation(address sender, bytes32 reservationId)
+    function deleteReservation(bytes32 reservationId)
         public
-        returns (bool)
+        returns (bytes32)
     {
         require(isReservation(reservationId), "RESERVATION_DOES_NOT_EXIST");
 
@@ -135,11 +126,11 @@ contract Reservation is IReservation, Owned {
 
         bytes32 unitId = reservationStructs[reservationId].unitKey;
         unit.removeReservation(unitId, reservationId);
-        emit LogReservationDeleted(sender, reservationId);
-        return true;
+
+        return reservationId;
     }
 
-    function purchaseReservation(address sender, bytes32 reservationId)
+    function purchaseReservation(address sender)
         internal
         returns (bool)
     {
@@ -156,14 +147,7 @@ contract Reservation is IReservation, Owned {
             lock.keyManagerOf(tokenId) == address(this),
             "LOCK_MANAGER_NOT_SET_TO_RESERVATION_CONTRACT"
         );
-        emit LogPurchaseReservation(
-            sender,
-            ReservationStruct(
-                reservationId,
-                reservationStructs[reservationId].unitKey,
-                reservationStructs[reservationId].owner
-            )
-        );
+
         return true;
     }
 
@@ -171,7 +155,7 @@ contract Reservation is IReservation, Owned {
         address sender,
         bytes32 reservationId,
         uint256 checkInKey
-    ) external returns (bool) {
+    ) external returns (ReservationStruct memory) {
         require(
             reservationStructs[reservationId].checkInKey == checkInKey,
             "CHECK_IN_KEY_WRONG"
@@ -179,18 +163,12 @@ contract Reservation is IReservation, Owned {
         uint256 tokenId = lock.getTokenIdFor(sender);
         lock.cancelAndRefund(tokenId);
 
-        deleteReservation(sender, reservationId);
-
-        emit LogRefundReservation(
-            sender,
+        return
             ReservationStruct(
                 reservationId,
                 reservationStructs[reservationId].unitKey,
                 reservationStructs[reservationId].owner
-            )
-        );
-
-        return true;
+            );
     }
 
     function generateRandomCheckInKey(uint256 id)

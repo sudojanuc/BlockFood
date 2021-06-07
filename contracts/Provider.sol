@@ -17,9 +17,6 @@ contract Provider is IProvider, Owned {
         string name;
     }
 
-    event LogNewProvider(address sender, IProvider.ProviderStruct provider);
-    event LogProviderDeleted(address sender, bytes32 providerId);
-
     mapping(bytes32 => ProviderInternalStruct) public providerStructs;
     bytes32[] public providerList;
 
@@ -81,21 +78,18 @@ contract Provider is IProvider, Owned {
 
     function createProvider(address sender, string calldata name)
         external
-        returns (bool)
+        returns (ProviderStruct memory)
     {
         require(remote == msg.sender, "NOT_REMOTE_CALL");
-        require(
-            createProvider(sender, bytes32(counter++), name),
-            "CREATE_PROVIDER_FAILED"
-        );
-        return true;
+
+        return createProvider(sender, bytes32(counter++), name);
     }
 
     function createProvider(
         address sender,
         bytes32 providerId,
         string memory name
-    ) internal returns (bool) {
+    ) internal returns (ProviderStruct memory) {
         require(!isProvider(providerId), "DUPLICATE_PROVIDER_KEY"); // duplicate key prohibited
         providerList.push(providerId);
         providerStructs[providerId].providerListPointer =
@@ -104,21 +98,17 @@ contract Provider is IProvider, Owned {
         providerStructs[providerId].name = name;
         providerStructs[providerId].owner = sender;
 
-        emit LogNewProvider(
-            sender,
-            ProviderStruct(
+        return ProviderStruct(
                 providerStructs[providerId].owner,
                 providerId,
                 providerStructs[providerId].unitKeys,
                 providerStructs[providerId].name
-            )
-        );
-        return true;
+            );
     }
 
     function deleteProvider(address sender, bytes32 providerId)
         external
-        returns (bool)
+        returns (bytes32)
     {
         require(isProvider(providerId), "PROVIDER_DOES_NOT_EXIST");
         require(
@@ -136,8 +126,7 @@ contract Provider is IProvider, Owned {
         providerStructs[keyToMove].providerListPointer = rowToDelete;
         providerList.pop();
 
-        emit LogProviderDeleted(sender, providerId);
-        return true;
+        return providerId;
     }
 
     function addUnit(

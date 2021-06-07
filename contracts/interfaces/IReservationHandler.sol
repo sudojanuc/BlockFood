@@ -27,42 +27,36 @@ interface IReservationHandler {
         view
         returns (IProvider.ProviderStruct[] memory);
 
-    function createProvider(string calldata name) external returns (bool);
+    function createProvider(string calldata name) external;
 
-    function deleteProvider(bytes32 providerId) external returns (bool);
+    function deleteProvider(bytes32 providerId) external;
 
     ///reservation
     function setUnitAddress(address adr) external;
 
     function getReservationCount() external view returns (uint256);
 
-    function isReservation(bytes32 reservationId) external view returns (bool);
-
     function getAllReservations()
         external
         view
         returns (IReservation.ReservationStruct[] memory);
 
-    function createReservation(bytes32 unitId) external payable returns (bool);
+    function createReservation(bytes32 unitId) external payable;
 
-    function deleteReservation(bytes32 reservationId) external returns (bool);
+    function deleteReservation(bytes32 reservationId) external;
 
     function refundReservation(bytes32 reservationId, uint256 checkInKey)
-        external
-        returns (bool);
+        external;
 
     ///unit
     function setProviderAddress(address adr) external;
 
     function getUnitCount() external view returns (uint256);
 
-    function isUnit(bytes32 unitId) external view returns (bool);
-
     function getAllUnits() external view returns (IUnit.UnitStruct[] memory);
 
     function createUnit(bytes32 providerId, uint16 guestCount)
-        external
-        returns (bool);
+        external;
 
-    function deleteUnit(bytes32 unitId) external returns (bool);
+    function deleteUnit(bytes32 unitId) external;
 }

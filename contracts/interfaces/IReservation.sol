@@ -23,13 +23,13 @@ interface IReservation {
     function createReservation(address sender, bytes32 unitId)
         external
         payable
-        returns (bool);
+        returns (ReservationStruct memory);
 
-    function deleteReservation(address sender, bytes32 reservationId) external returns (bool);
+    function deleteReservation(bytes32 reservationId) external returns (bytes32);
 
     function refundReservation(
         address sender,
         bytes32 reservationId,
         uint256 checkInKey
-    ) external returns (bool);
+    ) external returns (ReservationStruct memory);
 }

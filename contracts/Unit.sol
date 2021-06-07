@@ -19,9 +19,6 @@ contract Unit is IUnit, Owned {
         uint16 guestCount;
     }
 
-    event LogNewUnit(address sender, UnitStruct);
-    event LogUnitDeleted(address sender, bytes32 unitId);
-
     Provider internal provider;
 
     mapping(bytes32 => UnitInternalStruct) public unitStructs;
@@ -61,9 +58,8 @@ contract Unit is IUnit, Owned {
         address sender,
         bytes32 providerId,
         uint16 guestCount
-    ) external returns (bool) {
-        require(createUnit(sender, bytes32(counter++), providerId, guestCount));
-        return true;
+    ) external returns (UnitStruct memory) {
+        return createUnit(sender, bytes32(counter++), providerId, guestCount);
     }
 
     function createUnit(
@@ -71,7 +67,7 @@ contract Unit is IUnit, Owned {
         bytes32 unitId,
         bytes32 providerId,
         uint16 guestCount
-    ) public returns (bool) {
+    ) public returns (UnitStruct memory) {
         require(provider.isProvider(providerId), "PROVIDER_DOES_NOT_EXIST");
         require(!isUnit(unitId), "DUPLICATE_UNIT_KEY"); // duplicate key prohibited
         require(guestCount > 0, "GUEST_COUNT_IMPLAUSIBLE");
@@ -87,21 +83,17 @@ contract Unit is IUnit, Owned {
 
         provider.addUnit(sender, providerId, unitId);
 
-        emit LogNewUnit(
-            sender,
-            UnitStruct(
+        return UnitStruct(
                 unitId,
                 unitStructs[unitId].providerKey,
                 unitStructs[unitId].reservationKeys,
                 unitStructs[unitId].guestCount
-            )
-        );
-        return true;
+            );
     }
 
     function deleteUnit(address sender, bytes32 unitId)
         external
-        returns (bool)
+        returns (bytes32)
     {
         require(isUnit(unitId), "UNIT_DOES_NOT_EXIST");
         require(
@@ -118,8 +110,7 @@ contract Unit is IUnit, Owned {
 
         bytes32 providerId = unitStructs[unitId].providerKey;
         provider.removeUnit(sender, providerId, unitId);
-        emit LogUnitDeleted(sender, unitId);
-        return true;
+        return unitId;
     }
 
     function addReservation(bytes32 unitId, bytes32 reservationId) public {

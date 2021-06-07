@@ -10,8 +10,23 @@ import "./interfaces/IReservationHandler.sol";
 
 contract ReservationHandler is Owned, IReservationHandler {
     IProvider internal provider;
+    event LogNewProvider(address sender, IProvider.ProviderStruct provider);
+    event LogProviderDeleted(address sender, bytes32 providerId);
+
     IUnit internal unit;
+    event LogNewUnit(address sender, IUnit.UnitStruct unit);
+    event LogUnitDeleted(address sender, bytes32 unitId);
+
     IReservation internal reservation;
+    event LogNewReservation(
+        address sender,
+        IReservation.ReservationStruct reservation
+    );
+    event LogReservationDeleted(address sender, bytes32 reservationId);
+    event LogRefundReservation(
+        address sender,
+        IReservation.ReservationStruct reservation
+    );
 
     constructor(
         address adrProvider,
@@ -32,10 +47,6 @@ contract ReservationHandler is Owned, IReservationHandler {
 
     function getProviderCount() external view returns (uint256) {
         return provider.getProviderCount();
-    }
-
-    function isProvider(bytes32 providerId) external view returns (bool) {
-        return provider.isProvider(providerId);
     }
 
     function isProviderOwner(bytes32 providerId) public view returns (bool) {
@@ -66,12 +77,16 @@ contract ReservationHandler is Owned, IReservationHandler {
         return provider.getAllProviders();
     }
 
-    function createProvider(string calldata name) external returns (bool) {
-        return (provider.createProvider(msg.sender, name));
+    function createProvider(string calldata name) external {
+        emit LogNewProvider(
+            msg.sender,
+            provider.createProvider(msg.sender, name)
+        );
     }
 
-    function deleteProvider(bytes32 providerId) external returns (bool) {
-        return (provider.deleteProvider(msg.sender, providerId));
+    function deleteProvider(bytes32 providerId) external {
+        provider.deleteProvider(msg.sender, providerId);
+        emit LogProviderDeleted(msg.sender, providerId);
     }
 
     //unit methodes
@@ -85,23 +100,19 @@ contract ReservationHandler is Owned, IReservationHandler {
         return unit.getUnitCount();
     }
 
-    function isUnit(bytes32 unitId) external view returns (bool) {
-        return unit.isUnit(unitId);
-    }
-
     function getAllUnits() external view returns (IUnit.UnitStruct[] memory) {
         return unit.getAllUnits();
     }
 
-    function createUnit(bytes32 providerId, uint16 guestCount)
-        external
-        returns (bool)
-    {
-        return (unit.createUnit(msg.sender, providerId, guestCount));
+    function createUnit(bytes32 providerId, uint16 guestCount) external {
+        emit LogNewUnit(
+            msg.sender,
+            unit.createUnit(msg.sender, providerId, guestCount)
+        );
     }
 
-    function deleteUnit(bytes32 unitId) external returns (bool) {
-        return (unit.deleteUnit(msg.sender, unitId));
+    function deleteUnit(bytes32 unitId) external {
+        emit LogUnitDeleted(msg.sender, unit.deleteUnit(msg.sender, unitId));
     }
 
     //reservation methodes
@@ -113,10 +124,6 @@ contract ReservationHandler is Owned, IReservationHandler {
         return reservation.getReservationCount();
     }
 
-    function isReservation(bytes32 reservationId) external view returns (bool) {
-        return reservation.isReservation(reservationId);
-    }
-
     function getAllReservations()
         external
         view
@@ -125,19 +132,25 @@ contract ReservationHandler is Owned, IReservationHandler {
         return reservation.getAllReservations();
     }
 
-    function createReservation(bytes32 unitId) external payable returns (bool) {
-        return (reservation.createReservation.value(msg.value)(msg.sender, unitId));
+    function createReservation(bytes32 unitId) external payable {
+        emit LogNewReservation(
+            msg.sender,
+            reservation.createReservation.value(msg.value)(msg.sender, unitId)
+        );
     }
 
-    function deleteReservation(bytes32 reservationId) external returns (bool) {
-        return (reservation.deleteReservation(msg.sender, reservationId));
+    function deleteReservation(bytes32 reservationId) external {
+        emit LogReservationDeleted(
+            msg.sender,
+            reservation.deleteReservation(reservationId)
+        );
     }
 
     function refundReservation(bytes32 reservationId, uint256 checkInKey)
         external
-        returns (bool)
     {
-        return (
+        emit LogRefundReservation(
+            msg.sender,
             reservation.refundReservation(msg.sender, reservationId, checkInKey)
         );
     }

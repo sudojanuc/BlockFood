@@ -33,7 +33,7 @@ interface IProvider {
 
     function createProvider(address sender, string calldata name)
         external
-        returns (bool);
+        returns (ProviderStruct memory);
 
-    function deleteProvider(address sender, bytes32 providerId) external returns (bool);
+    function deleteProvider(address sender, bytes32 providerId) external returns (bytes32);
 }
