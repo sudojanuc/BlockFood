@@ -4,6 +4,7 @@ pragma experimental ABIEncoderV2;
 
 import "./IReservation.sol";
 import "./IPublicLock.sol";
+import "./IUnlock.sol";
 
 import "./Owned.sol";
 import "./Unit.sol";
@@ -34,6 +35,7 @@ contract Reservation is IReservation, Owned {
 
     Unit internal unit;
     IPublicLock internal lock;
+    IUnlock internal unlock;
 
     mapping(bytes32 => ReservationInternalStruct) public reservationStructs;
     bytes32[] public reservationList;
@@ -41,7 +43,10 @@ contract Reservation is IReservation, Owned {
     constructor(address adrUnit) public {
         unit = Unit(adrUnit);
         lock = IPublicLock(0x2D7Fa4dbdF5E7bfBC87523396aFfD6d38c9520fa);
-        //lock.updateRefundPenalty(1000, 0);
+    }
+
+    function initializeUnlock() public {
+        unlock.initialize(msg.sender);
     }
 
     function setUnitAddress(address adr) external onlyOwner {
