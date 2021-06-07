@@ -62,8 +62,6 @@ export class AppEffects {
                                             let restaurant = store.data.restaurants.find((restaurant: Restaurant) => 
                                                 restaurant.providerId == table.providerKey
                                             );
-                                            // console.log('new Res',{...reservation, restaurant: restaurant});
-                                                                                        
                                         return {...reservation, 
                                                 restaurant: restaurant,
                                                 table: table};

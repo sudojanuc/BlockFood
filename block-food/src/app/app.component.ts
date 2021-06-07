@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { select, Store } from '@ngrx/store';
-import { fetchAddressType, fetchReservationsType, fetchRestaurantsType, fetchTablesType } from './ngrx/app.actions';
+import { addReservation, addRestaurant, addTable, fetchAddressType, fetchReservationsType, fetchRestaurantsType, fetchTablesType } from './ngrx/app.actions';
 import { selectAddress } from './ngrx/app.reducer';
 import { ContractService } from './services/contract.service';
 // import { Contract, ethers, Wallet } from 'ethers';
@@ -35,13 +35,20 @@ export class AppComponent implements OnInit {
         this.store.dispatch({type: fetchReservationsType});
 
 
-    // this.contractService.contract.on('LogNewProvider', (fromAddress: any, restaurant: any) => {
-    //   console.log('new Provider',restaurant);
-      
-    //   if (fromAddress == this.contractService.address) {
-    //     // this.store.dispatch(setMyRestaurant(restaurant))
-    //   }
-    // });
+    this.contractService.contract.on('LogNewProvider', (_fromAddress: any, restaurant: any) => {
+      console.log('new Restaurant',restaurant);
+      this.store.dispatch(addRestaurant({restaurant:restaurant}));
+    });
+
+    this.contractService.contract.on('LogNewUnit', (_fromAddress: any, table: any) => {
+      console.log('new Table',table);
+      this.store.dispatch(addTable({table:table}));
+    });
+
+    this.contractService.contract.on('LogNewReservation', (_fromAddress: any, reservation: any) => {
+      console.log('new Reservation',reservation);
+      this.store.dispatch(addReservation({reservation: reservation }));
+    });
     
   }
   title = 'block-food';
