@@ -21,7 +21,7 @@ contract Owned is IOwner {
         owner = msg.sender;
     }
 
-    function addRemote(address adr) public {
+    function setRemote(address adr) public {
         require(owner == msg.sender, "NOT_OWNER");
         remote = adr;
     }

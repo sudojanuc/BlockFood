@@ -5,8 +5,8 @@ const Reservation = artifacts.require("Reservation");
 
 module.exports = function (deployer) {
   deployer
-    // .deploy(Provider)
-    .deploy(Provider, { overwrite: false })
+    .deploy(Provider)
+    // .deploy(Provider, { overwrite: false })
     .then(function () {
       return deployer.deploy(Unit, Provider.address);
       // return deployer.deploy(Unit, { overwrite: false });
