@@ -1,4 +1,4 @@
-<div class="">
+<div *ngIf="!(restaurantsLoading$ | async)">
     <div *ngFor=" let restaurant of restaurants$ | async" (click)="openReservation(restaurant)">
         <mat-card class="restaurant">
             <mat-card-title>Restaurant</mat-card-title>
@@ -8,3 +8,4 @@
         </mat-card>
     </div>
 </div>
+<mat-spinner *ngIf="restaurantsLoading$ | async" ></mat-spinner>

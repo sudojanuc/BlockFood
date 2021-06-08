@@ -1,6 +1,6 @@
 <div class="wrapper" color="primary">
-    <!-- <div *ngIf="isLoading">loading...</div> -->
-    <mat-card *ngIf="!( myRestaurant$ | async) " class="card marginTop">
+    <mat-spinner *ngIf="restaurantsLoading$ | async" ></mat-spinner>
+    <mat-card *ngIf="!( myRestaurant$ | async) && !( restaurantsLoading$ | async )" class="card marginTop">
         <mat-card-title>Create a new Restaurant</mat-card-title>
         <mat-card-content style="margin-top: 20%;">
             <mat-form-field appearance="fill">
@@ -10,10 +10,11 @@
         </mat-card-content>
         <mat-card-actions>
             <button mat-flat-button color="primary" (click)="saveRestaurant()">Save</button>
-            
+
         </mat-card-actions>
     </mat-card>
-    <div *ngIf="myRestaurant$ | async; let myRestaurant" class="card marginTop restaurant">
+    <ng-container *ngIf="!(restaurantsLoading$ | async)">
+    <div *ngIf=" myRestaurant$ | async; let myRestaurant " class="card marginTop restaurant">
         <mat-card>
             <mat-card-title>Your Restaurant</mat-card-title>
             <mat-card-content style="margin-top: 5%;">
@@ -31,6 +32,10 @@
                         <div>Chairs: {{table.guestCount}}</div>
                     </mat-card-content>
                 </mat-card>
+            </div>
+            <div class="table">
+                <mat-spinner *ngIf="tablesLoading$ | async" ></mat-spinner>
+
             </div>
         </div>
         <mat-divider class="marginTop"></mat-divider>
@@ -50,4 +55,5 @@
             </mat-card>
         </div>
     </div>
+</ng-container>
 </div>

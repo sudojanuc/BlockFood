@@ -1,6 +1,6 @@
 import { Component, ElementRef, OnInit } from '@angular/core';
 import { select, Store } from '@ngrx/store';
-import { selectMyReservations, selectReservations } from '../ngrx/app.reducer';
+import { selectMyReservations, selectReservations, selectReservationsLoading } from '../ngrx/app.reducer';
 import { ContractService } from '../services/contract.service';
 
 @Component({
@@ -13,11 +13,13 @@ export class ReservationStatusComponent implements OnInit {
   'time',
   'checkIn', 
 ];
-  dataSource = [
-  ];
 
   reservations$ = this.store.pipe(
     select(selectMyReservations)
+  )
+
+  reservationsLoading$ = this.store.pipe(
+    select(selectReservationsLoading)
   )
 
   constructor(

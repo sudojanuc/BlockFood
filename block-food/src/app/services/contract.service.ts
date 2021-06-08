@@ -1,5 +1,6 @@
 import { Inject, Injectable } from '@angular/core';
 import { ethers, utils } from 'ethers';
+import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Restaurant } from '../models/restaurant';
 import { Table } from '../models/table';
@@ -64,8 +65,8 @@ export class ContractService {
     
   }
   
-  saveTable(restaurant: Restaurant, guestCount: number) {
-    this.contract.functions.createUnit(restaurant.providerId,guestCount); 
+  saveTable(restaurant: Restaurant, guestCount: number): Observable<boolean> {
+    return this.contract.functions.createUnit(restaurant.providerId,guestCount); 
   }
   
   async createReservation (selected: Table | undefined) {

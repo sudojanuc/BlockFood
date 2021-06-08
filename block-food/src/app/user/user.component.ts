@@ -3,7 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { select, Store } from '@ngrx/store';
 import { Restaurant } from '../models/restaurant';
 import { fetchRestaurantsType, setRestaurants } from '../ngrx/app.actions';
-import { selectRestaurants } from '../ngrx/app.reducer';
+import { selectRestaurants, selectRestaurantsLoading } from '../ngrx/app.reducer';
 // import { selectRestaurants } from '../ngrx/restautant.reducer';
 import { ReservationComponent } from '../reservation/reservation.component';
 import { ContractService } from '../services/contract.service';
@@ -14,18 +14,20 @@ import { ContractService } from '../services/contract.service';
   styleUrls: ['./user.component.scss']
 })
 export class UserComponent implements OnInit {
-  // restaurants: Restaurant[] = [];
   restaurants$ = this.store.pipe(select(selectRestaurants));
 
+  restaurantsLoading$ = this.store.pipe(
+    select(selectRestaurantsLoading)
+  );
 
-  constructor(private contractService: ContractService,
+
+  constructor(
     public dialog: MatDialog,
     private store: Store
   ) { }
 
   ngOnInit(): void {
-    // this.contractService.getAllRestaurents()
-    //                     .then(res => console.log(res[0]))
+   
     this.store.dispatch({type: fetchRestaurantsType});
   }
 

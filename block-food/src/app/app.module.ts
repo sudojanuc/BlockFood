@@ -30,6 +30,8 @@ import { StoreModule } from '@ngrx/store';
 import { appReducer } from './ngrx/app.reducer';
 import { EffectsModule } from '@ngrx/effects';
 import { AppEffects } from './ngrx/app.effects';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+
 
 
 
@@ -70,7 +72,8 @@ export function enableWeb3Provider(provider : any) {
     MatDialogModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    MatTableModule
+    MatTableModule,
+    MatProgressSpinnerModule
     ],
   providers: [
     {

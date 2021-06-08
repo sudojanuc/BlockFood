@@ -4,6 +4,7 @@ import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { Restaurant } from '../models/restaurant';
 import { Table } from '../models/table';
+import { createTableType } from '../ngrx/app.actions';
 import { selectTablesOfRestaurant } from '../ngrx/app.reducer';
 import { ContractService } from '../services/contract.service';
 
