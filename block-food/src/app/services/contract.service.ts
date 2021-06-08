@@ -14,7 +14,6 @@ export class ContractService {
   
   public address: any;
   public contract: any;
-  public contract2: any;
   public provider: any;
   
   constructor(@Inject(WEB3PROVIDER) private web3Provider: any) {
@@ -24,9 +23,6 @@ export class ContractService {
     let daiAddress = environment.address;
     this.contract = this.createContract(daiAbi, daiAddress);
     
-    // let daiAbi2 = environment.abi2;
-    // let daiAddress2 = environment.address2;
-    // this.contract2 = this.createContract(daiAbi2,daiAddress2);
         
   }
   
