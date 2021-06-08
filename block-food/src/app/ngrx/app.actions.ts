@@ -44,10 +44,11 @@ export const setTablesLoading = createAction(
     props< {isLoading: boolean} >()
 );
 
-// export const setMyRestaurant = createAction(
-//     '[Restaurant] set my restaurant',
-//     props<{ restaurant: Restaurant }>()
-//     );
+export const setRestaurantsLoading = createAction(
+    '[Restaurants] loading',
+    props< {isLoading: boolean} >()
+);
+
 
 export const fetchRestaurantsType = '[Restaurant] fetch';
 // export const createRestaurantType = '[Restaurant] create';
@@ -60,6 +61,6 @@ export const fetchReservationsType = '[Reservations] fetch';
 
 export const createTableType = '[Table] create';
 
-export const createRestaurantType = '[Table] create';
+export const createRestaurantType = '[Restaurant] create';
 
 

@@ -1,7 +1,7 @@
 import { createSelector, createFeatureSelector, createReducer, on } from "@ngrx/store";
 import { Restaurant } from "../models/restaurant";
 import { Table } from "../models/table";
-import { addReservation, addRestaurant, addTable, fetchTablesType, setAddress, setReservations, setRestaurants, setTables, setTablesLoading } from "./app.actions";
+import { addReservation, addRestaurant, addTable, fetchTablesType, setAddress, setReservations, setRestaurants, setRestaurantsLoading, setTables, setTablesLoading } from "./app.actions";
 
 export interface AppState {
   restaurants: ReadonlyArray<Restaurant>,
@@ -34,6 +34,7 @@ export const appReducer = createReducer(
   on(addRestaurant, (state, { restaurant }) => ({ ...state, restaurants: [...state.restaurants, restaurant] })),
   on(addTable, (state, { table }) => ({ ...state, tables: [...state.tables, table] })),
   on(setTablesLoading, (state, { isLoading }) => ({ ...state, tablesLoading: isLoading})),
+  on(setRestaurantsLoading, (state, { isLoading }) => ({ ...state, restaurantsLoading: isLoading})),
   on(addReservation, (state, { reservation }) => {
     let table = state.tables.find((table: Table) =>
       table.unitId == reservation.unitKey);

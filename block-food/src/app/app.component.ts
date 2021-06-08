@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { filter, map, switchMap, take, tap } from 'rxjs/operators';
-import { addReservation, addRestaurant, addTable, fetchAddressType, fetchReservationsType, fetchRestaurantsType, fetchTablesType, setTablesLoading } from './ngrx/app.actions';
+import { addReservation, addRestaurant, addTable, fetchAddressType, fetchReservationsType, fetchRestaurantsType, fetchTablesType, setRestaurantsLoading, setTablesLoading } from './ngrx/app.actions';
 import { selectAddress } from './ngrx/app.reducer';
 import { ContractService } from './services/contract.service';
 // import { Contract, ethers, Wallet } from 'ethers';
@@ -38,6 +38,10 @@ export class AppComponent implements OnInit {
     this.contractService.contract.on('LogNewProvider', (_fromAddress: any, restaurant: any) => {
       console.log('new Restaurant', restaurant);
       this.store.dispatch(addRestaurant({ restaurant: restaurant }));
+      this.myAddress$.pipe(
+        take(1),
+        filter((address) => address == _fromAddress ),
+        map(() => this.store.dispatch(setRestaurantsLoading({ isLoading: false })))).subscribe();
     });
 
     this.contractService.contract.on('LogNewUnit', (_fromAddress: any, table: any) => {

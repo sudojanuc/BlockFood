@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { map, switchMap, tap } from 'rxjs/operators';
 import { Restaurant } from '../models/restaurant';
-import { createTableType } from '../ngrx/app.actions';
+import { createRestaurantType, createTableType } from '../ngrx/app.actions';
 import { selectMyRestaurant, selectRestaurantsLoading, selectTablesLoading, selectTablesOfRestaurant } from '../ngrx/app.reducer';
 import { ContractService } from '../services/contract.service';
 
@@ -42,11 +42,9 @@ export class RestaurantComponent implements OnInit {
   }
 
   public saveRestaurant() {
-    this.contractService.createRestaurant(this.name);
-    // this.store.dispatch({type: createTableType, payload:{
-    //   restaurant: restaurant,
-    //   guestCount: this.chairs
-    // } })
+    this.store.dispatch({type: createRestaurantType, payload:{
+      name: this.name
+    } })
   }
 
   public saveTable(restaurant: Restaurant) {

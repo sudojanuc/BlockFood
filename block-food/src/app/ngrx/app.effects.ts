@@ -8,6 +8,7 @@ import { Restaurant } from '../models/restaurant';
 import { Table } from '../models/table';
 import { ContractService } from '../services/contract.service';
 import {
+    createRestaurantType,
     createTableType,
     fetchAddressType,
     fetchReservationsType,
@@ -16,6 +17,7 @@ import {
     setAddress,
     setReservations,
     setRestaurants,
+    setRestaurantsLoading,
     setTables,
     setTablesLoading
 } from './app.actions';
@@ -31,6 +33,18 @@ export class AppEffects {
                 map(restaurants => setRestaurants({ restaurants: restaurants })),
                 catchError(() => EMPTY)
             ))
+    )
+    );
+
+    createRestaurant$ = createEffect(() => this.actions$.pipe(
+        ofType(createRestaurantType),
+        switchMap((action: any) =>
+            from(this.contractService.createRestaurant(action.payload.name))
+                .pipe(
+                    // tap(console.log),
+                    map(() => setRestaurantsLoading({isLoading: true})),
+                    catchError(() => EMPTY)
+                ))
     )
     );
 

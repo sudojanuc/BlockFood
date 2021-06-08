@@ -46,8 +46,8 @@ export class ContractService {
   }
   
   
-  public createRestaurant(name:string){
-    this.contract.createProvider(name); 
+  public createRestaurant(name:string): Observable<boolean>{
+    return this.contract.createProvider(name); 
   }
   
   public getRestaurant():Promise<Restaurant[]>{
