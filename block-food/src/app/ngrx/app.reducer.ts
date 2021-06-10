@@ -27,7 +27,7 @@ export const initialState: AppState =
 
 export const appReducer = createReducer(
   initialState,
-  on(setRestaurants, (state, { restaurants }) =>({ ...stateCopy, restaurants: [...restaurants], restaurantsLoading: false })) ,
+  on(setRestaurants, (state, { restaurants }) =>({ ...state, restaurants: [...restaurants], restaurantsLoading: false })) ,
   on(setAddress, (state, { address }) =>  ({ ...state, address: address })),
   on(setTables, (state, { tables }) => ({ ...state, tables: [...tables], tablesLoading: false })),
   on(setReservations, (state, { reservations }) => ({ ...state, reservations: [...reservations], reservationsLoading: false })),
