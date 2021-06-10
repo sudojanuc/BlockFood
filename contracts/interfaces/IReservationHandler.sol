@@ -34,7 +34,7 @@ interface IReservationHandler {
     function refundReservation(bytes32 reservationKey, uint256 checkInKey)
         external;
 
-    function getCheckInKey(address sender, bytes32 reservationKey)
+    function getCheckInKey(bytes32 reservationKey)
         external
         view
         returns (uint256);
@@ -42,15 +42,20 @@ interface IReservationHandler {
     ///unit
     function setProviderAddress(address adr) external;
 
-    function isUnitOwner(bytes32 unitKey)
-        external
-        view
-        returns (bool);
+    function isUnitOwner(bytes32 unitKey) external view returns (bool);
 
     function getAllUnits() external view returns (IUnit.UnitStruct[] memory);
 
-    function createUnit(bytes32 providerKey, uint16 guestCount)
-        external;
+    function createUnit(bytes32 providerKey, uint16 guestCount) external;
 
     function deleteUnit(bytes32 unitKey) external;
+
+    //lockfactory
+    function initializeUnlock() external;
+
+    function getKeyPrice(bytes32 providerKey) external view returns (uint256);
+
+    function updateKeyPrice(bytes32 providerKey, uint256 keyPrice) external;
+
+    function getLock(bytes32 providerKey) external view returns (IPublicLock);
 }
