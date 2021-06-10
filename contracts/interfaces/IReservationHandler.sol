@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: MIT
+// SPDX-License-Keyentifier: MIT
 pragma solidity 0.5.17;
 pragma experimental ABIEncoderV2;
 
@@ -8,19 +8,7 @@ import "./IReservation.sol";
 
 interface IReservationHandler {
     ///provider
-    function getProviderCount() external view returns (uint256);
-
-    function isProviderOwner(bytes32 providerId) external view returns (bool);
-
-    function getProviderUnitCount(bytes32 providerId)
-        external
-        view
-        returns (uint256);
-
-    function getProviderUnitAtIndex(bytes32 providerId, uint256 row)
-        external
-        view
-        returns (bytes32);
+    function isProviderOwner(bytes32 providerKey) external view returns (bool);
 
     function getAllProviders()
         external
@@ -29,34 +17,40 @@ interface IReservationHandler {
 
     function createProvider(string calldata name) external;
 
-    function deleteProvider(bytes32 providerId) external;
+    function deleteProvider(bytes32 providerKey) external;
 
     ///reservation
     function setUnitAddress(address adr) external;
-
-    function getReservationCount() external view returns (uint256);
 
     function getAllReservations()
         external
         view
         returns (IReservation.ReservationStruct[] memory);
 
-    function createReservation(bytes32 unitId) external payable;
+    function createReservation(bytes32 unitKey) external payable;
 
-    function deleteReservation(bytes32 reservationId) external;
+    function deleteReservation(bytes32 reservationKey) external;
 
-    function refundReservation(bytes32 reservationId, uint256 checkInKey)
+    function refundReservation(bytes32 reservationKey, uint256 checkInKey)
         external;
+
+    function getCheckInKey(address sender, bytes32 reservationKey)
+        external
+        view
+        returns (uint256);
 
     ///unit
     function setProviderAddress(address adr) external;
 
-    function getUnitCount() external view returns (uint256);
+    function isUnitOwner(bytes32 unitKey)
+        external
+        view
+        returns (bool);
 
     function getAllUnits() external view returns (IUnit.UnitStruct[] memory);
 
-    function createUnit(bytes32 providerId, uint16 guestCount)
+    function createUnit(bytes32 providerKey, uint16 guestCount)
         external;
 
-    function deleteUnit(bytes32 unitId) external;
+    function deleteUnit(bytes32 unitKey) external;
 }

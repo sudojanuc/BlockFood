@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: MIT
+// SPDX-License-Keyentifier: MIT
 pragma solidity >=0.5.17 <0.9.0;
 pragma experimental ABIEncoderV2;
 
@@ -44,16 +44,12 @@ contract Reservation is IReservation, Owned {
         lock = IPublicLock(adr);
     }
 
-    function getReservationCount() public view returns (uint256) {
-        return reservationList.length;
-    }
-
-    function isReservation(bytes32 reservationId) public view returns (bool) {
+    function isReservation(bytes32 reservationKey) public view returns (bool) {
         if (reservationList.length == 0) return false;
         return
             reservationList[
-                reservationStructs[reservationId].reservationListPointer
-            ] == reservationId;
+                reservationStructs[reservationKey].reservationListPointer
+            ] == reservationKey;
     }
 
     function getAllReservations()
@@ -62,83 +58,81 @@ contract Reservation is IReservation, Owned {
         returns (ReservationStruct[] memory)
     {
         ReservationStruct[] memory array =
-            new ReservationStruct[](getReservationCount());
+            new ReservationStruct[](reservationList.length);
 
         for (uint256 i = 0; i < array.length; i++) {
-            array[i].reservationId = reservationList[i];
-            array[i].unitKey = reservationStructs[array[i].reservationId]
+            array[i].reservationKey = reservationList[i];
+            array[i].unitKey = reservationStructs[array[i].reservationKey]
                 .unitKey;
-            array[i].owner = reservationStructs[array[i].reservationId].owner;
+            array[i].owner = reservationStructs[array[i].reservationKey].owner;
         }
         return array;
     }
 
-    function createReservation(address sender, bytes32 unitId)
+    function createReservation(address sender, bytes32 unitKey)
         public
         payable
         returns (ReservationStruct memory)
     {
-        return createReservation(sender, bytes32(counter++), unitId);
+        return createReservation(sender, bytes32(counter++), unitKey);
     }
 
     function createReservation(
         address sender,
-        bytes32 reservationId,
-        bytes32 unitId
+        bytes32 reservationKey,
+        bytes32 unitKey
     ) public returns (ReservationStruct memory) {
-        require(unit.isUnit(unitId), "UNIT_DOES_NOT_EXIST");
-        require(!isReservation(reservationId), "DUPLICATE_RESERVATION_KEY"); // duplicate key prohibited
+        require(unit.isUnit(unitKey), "UNIT_DOES_NOT_EXIST");
+        require(!isReservation(reservationKey), "DUPLICATE_RESERVATION_KEY"); // duplicate key prohibited
         require(purchaseReservation(sender), "PURCHASE_FAILED");
 
-        reservationList.push(reservationId);
-        reservationStructs[reservationId].reservationListPointer =
+        reservationList.push(reservationKey);
+        reservationStructs[reservationKey].reservationListPointer =
             reservationList.length -
             1;
-        reservationStructs[reservationId].unitKey = unitId;
-        reservationStructs[reservationId].owner = sender;
-        reservationStructs[reservationId].checkInKey = generateRandomCheckInKey(
-            block.number + uint256(unitId)
+        reservationStructs[reservationKey].unitKey = unitKey;
+        reservationStructs[reservationKey].owner = sender;
+        reservationStructs[reservationKey]
+            .checkInKey = generateRandomCheckInKey(
+            block.number + uint256(unitKey)
         );
 
-        unit.addReservation(unitId, reservationId);
+        unit.addReservation(unitKey, reservationKey);
 
         return
             ReservationStruct(
-                reservationId,
-                reservationStructs[reservationId].unitKey,
-                reservationStructs[reservationId].owner
+                reservationKey,
+                reservationStructs[reservationKey].unitKey,
+                reservationStructs[reservationKey].owner
             );
     }
 
-    function deleteReservation(bytes32 reservationId)
+    function deleteReservation(bytes32 reservationKey)
         public
         returns (bytes32)
     {
-        require(isReservation(reservationId), "RESERVATION_DOES_NOT_EXIST");
+        require(isReservation(reservationKey), "RESERVATION_DOES_NOT_EXIST");
 
         // delete from table
         uint256 rowToDelete =
-            reservationStructs[reservationId].reservationListPointer;
+            reservationStructs[reservationKey].reservationListPointer;
         bytes32 keyToMove = reservationList[reservationList.length - 1];
         reservationList[rowToDelete] = keyToMove;
-        reservationStructs[reservationId].reservationListPointer = rowToDelete;
+        reservationStructs[reservationKey].reservationListPointer = rowToDelete;
         reservationList.pop();
 
-        bytes32 unitId = reservationStructs[reservationId].unitKey;
-        unit.removeReservation(unitId, reservationId);
+        bytes32 unitKey = reservationStructs[reservationKey].unitKey;
+        unit.removeReservation(unitKey, reservationKey);
 
-        return reservationId;
+        return reservationKey;
     }
 
-    function purchaseReservation(address sender)
-        internal
-        returns (bool)
-    {
+    function purchaseReservation(address sender) internal returns (bool) {
         require(msg.value >= lock.keyPrice(), "VALUE_TOO_SMALL");
         lock.purchase.value(msg.value)(
             lock.keyPrice(),
             sender,
-            address(0),
+            0x0d5900731140977cd80b7Bd2DCE9cEc93F8a176B,
             "0x00"
         );
         uint256 tokenId = lock.getTokenIdFor(sender);
@@ -153,11 +147,11 @@ contract Reservation is IReservation, Owned {
 
     function refundReservation(
         address sender,
-        bytes32 reservationId,
+        bytes32 reservationKey,
         uint256 checkInKey
     ) external returns (ReservationStruct memory) {
         require(
-            reservationStructs[reservationId].checkInKey == checkInKey,
+            reservationStructs[reservationKey].checkInKey == checkInKey,
             "CHECK_IN_KEY_WRONG"
         );
         uint256 tokenId = lock.getTokenIdFor(sender);
@@ -165,9 +159,9 @@ contract Reservation is IReservation, Owned {
 
         return
             ReservationStruct(
-                reservationId,
-                reservationStructs[reservationId].unitKey,
-                reservationStructs[reservationId].owner
+                reservationKey,
+                reservationStructs[reservationKey].unitKey,
+                reservationStructs[reservationKey].owner
             );
     }
 
@@ -177,5 +171,20 @@ contract Reservation is IReservation, Owned {
         returns (uint256)
     {
         return uint256(keccak256(abi.encodePacked(id))) % 10**8;
+    }
+
+    function getCheckInKey(address sender, bytes32 reservationKey)
+        external
+        view
+        returns (uint256)
+    {
+        require(
+            unit.isUnitOwner(
+                sender,
+                reservationStructs[reservationKey].unitKey
+            ),
+            "NOT_OWNER_GET_CHECK_IN_KEY"
+        );
+        return reservationStructs[reservationKey].checkInKey;
     }
 }

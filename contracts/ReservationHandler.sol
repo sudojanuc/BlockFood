@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: MIT
+// SPDX-License-Keyentifier: MIT
 pragma solidity >=0.5.17 <0.9.0;
 pragma experimental ABIEncoderV2;
 
@@ -11,18 +11,18 @@ import "./interfaces/IReservationHandler.sol";
 contract ReservationHandler is Owned, IReservationHandler {
     IProvider internal provider;
     event LogNewProvider(address sender, IProvider.ProviderStruct provider);
-    event LogProviderDeleted(address sender, bytes32 providerId);
+    event LogProviderDeleted(address sender, bytes32 providerKey);
 
     IUnit internal unit;
     event LogNewUnit(address sender, IUnit.UnitStruct unit);
-    event LogUnitDeleted(address sender, bytes32 unitId);
+    event LogUnitDeleted(address sender, bytes32 unitKey);
 
     IReservation internal reservation;
     event LogNewReservation(
         address sender,
         IReservation.ReservationStruct reservation
     );
-    event LogReservationDeleted(address sender, bytes32 reservationId);
+    event LogReservationDeleted(address sender, bytes32 reservationKey);
     event LogRefundReservation(
         address sender,
         IReservation.ReservationStruct reservation
@@ -45,28 +45,8 @@ contract ReservationHandler is Owned, IReservationHandler {
         unit.setProviderAddress(adr);
     }
 
-    function getProviderCount() external view returns (uint256) {
-        return provider.getProviderCount();
-    }
-
-    function isProviderOwner(bytes32 providerId) public view returns (bool) {
-        return provider.isProviderOwner(msg.sender, providerId);
-    }
-
-    function getProviderUnitCount(bytes32 providerId)
-        external
-        view
-        returns (uint256)
-    {
-        return provider.getProviderUnitCount(providerId);
-    }
-
-    function getProviderUnitAtIndex(bytes32 providerId, uint256 row)
-        external
-        view
-        returns (bytes32)
-    {
-        return provider.getProviderUnitAtIndex(providerId, row);
+    function isProviderOwner(bytes32 providerKey) public view returns (bool) {
+        return provider.isProviderOwner(msg.sender, providerKey);
     }
 
     function getAllProviders()
@@ -84,9 +64,9 @@ contract ReservationHandler is Owned, IReservationHandler {
         );
     }
 
-    function deleteProvider(bytes32 providerId) external {
-        provider.deleteProvider(msg.sender, providerId);
-        emit LogProviderDeleted(msg.sender, providerId);
+    function deleteProvider(bytes32 providerKey) external {
+        provider.deleteProvider(msg.sender, providerKey);
+        emit LogProviderDeleted(msg.sender, providerKey);
     }
 
     //unit methodes
@@ -96,32 +76,28 @@ contract ReservationHandler is Owned, IReservationHandler {
         reservation.setUnitAddress(adr);
     }
 
-    function getUnitCount() external view returns (uint256) {
-        return unit.getUnitCount();
+    function isUnitOwner(bytes32 unitKey) public view returns (bool) {
+        return unit.isUnitOwner(msg.sender, unitKey);
     }
 
     function getAllUnits() external view returns (IUnit.UnitStruct[] memory) {
         return unit.getAllUnits();
     }
 
-    function createUnit(bytes32 providerId, uint16 guestCount) external {
+    function createUnit(bytes32 providerKey, uint16 guestCount) external {
         emit LogNewUnit(
             msg.sender,
-            unit.createUnit(msg.sender, providerId, guestCount)
+            unit.createUnit(msg.sender, providerKey, guestCount)
         );
     }
 
-    function deleteUnit(bytes32 unitId) external {
-        emit LogUnitDeleted(msg.sender, unit.deleteUnit(msg.sender, unitId));
+    function deleteUnit(bytes32 unitKey) external {
+        emit LogUnitDeleted(msg.sender, unit.deleteUnit(msg.sender, unitKey));
     }
 
     //reservation methodes
     function setReservationAddress(address adr) external onlyOwner {
         reservation = IReservation(adr);
-    }
-
-    function getReservationCount() external view returns (uint256) {
-        return reservation.getReservationCount();
     }
 
     function getAllReservations()
@@ -132,26 +108,37 @@ contract ReservationHandler is Owned, IReservationHandler {
         return reservation.getAllReservations();
     }
 
-    function createReservation(bytes32 unitId) external payable {
+    function createReservation(bytes32 unitKey) external payable {
         emit LogNewReservation(
             msg.sender,
-            reservation.createReservation.value(msg.value)(msg.sender, unitId)
+            reservation.createReservation.value(msg.value)(msg.sender, unitKey)
         );
     }
 
-    function deleteReservation(bytes32 reservationId) external {
+    function deleteReservation(bytes32 reservationKey) external {
         emit LogReservationDeleted(
             msg.sender,
-            reservation.deleteReservation(reservationId)
+            reservation.deleteReservation(reservationKey)
         );
     }
 
-    function refundReservation(bytes32 reservationId, uint256 checkInKey)
+    function refundReservation(bytes32 reservationKey, uint256 checkInKey)
         external
     {
         emit LogRefundReservation(
             msg.sender,
-            reservation.refundReservation(msg.sender, reservationId, checkInKey)
+            reservation.refundReservation(
+                msg.sender,
+                reservationKey,
+                checkInKey
+            )
         );
     }
+
+    function getCheckInKey(address sender, bytes32 reservationKey)
+        external
+        view
+        returns (uint256){
+            return reservation.getCheckInKey(sender, reservationKey);
+        }
 }

@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: MIT
+// SPDX-License-Keyentifier: MIT
 pragma solidity >=0.5.17 <0.9.0;
 pragma experimental ABIEncoderV2;
 
@@ -32,23 +32,31 @@ contract Unit is IUnit, Owned {
         provider = Provider(adr);
     }
 
-    function getUnitCount() public view returns (uint256) {
-        return unitList.length;
+    function isUnit(bytes32 unitKey) public view returns (bool) {
+        if (unitList.length == 0) return false;
+        return unitList[unitStructs[unitKey].unitListPointer] == unitKey;
     }
 
-    function isUnit(bytes32 unitId) public view returns (bool) {
-        if (unitList.length == 0) return false;
-        return unitList[unitStructs[unitId].unitListPointer] == unitId;
+    function isUnitOwner(address sender, bytes32 unitKey)
+        public
+        view
+        returns (bool)
+    {
+        require(
+            provider.isProviderOwner(sender, unitStructs[unitKey].providerKey), "SENDER_IS_NOT_OWNER"
+        );
+
+        return true;
     }
 
     function getAllUnits() external view returns (UnitStruct[] memory) {
-        UnitStruct[] memory array = new UnitStruct[](getUnitCount());
+        UnitStruct[] memory array = new UnitStruct[](unitList.length);
 
         for (uint256 i = 0; i < array.length; i++) {
-            array[i].unitId = unitList[i];
-            array[i].guestCount = unitStructs[array[i].unitId].guestCount;
-            array[i].providerKey = unitStructs[array[i].unitId].providerKey;
-            array[i].reservationKeys = unitStructs[array[i].unitId]
+            array[i].unitKey = unitList[i];
+            array[i].guestCount = unitStructs[array[i].unitKey].guestCount;
+            array[i].providerKey = unitStructs[array[i].unitKey].providerKey;
+            array[i].reservationKeys = unitStructs[array[i].unitKey]
                 .reservationKeys;
         }
         return array;
@@ -56,79 +64,80 @@ contract Unit is IUnit, Owned {
 
     function createUnit(
         address sender,
-        bytes32 providerId,
+        bytes32 providerKey,
         uint16 guestCount
     ) external returns (UnitStruct memory) {
-        return createUnit(sender, bytes32(counter++), providerId, guestCount);
+        return createUnit(sender, bytes32(counter++), providerKey, guestCount);
     }
 
     function createUnit(
         address sender,
-        bytes32 unitId,
-        bytes32 providerId,
+        bytes32 unitKey,
+        bytes32 providerKey,
         uint16 guestCount
     ) public returns (UnitStruct memory) {
-        require(provider.isProvider(providerId), "PROVIDER_DOES_NOT_EXIST");
-        require(!isUnit(unitId), "DUPLICATE_UNIT_KEY"); // duplicate key prohibited
+        require(provider.isProvider(providerKey), "PROVIDER_DOES_NOT_EXIST");
+        require(!isUnit(unitKey), "DUPLICATE_UNIT_KEY"); // duplicate key prohibited
         require(guestCount > 0, "GUEST_COUNT_IMPLAUSIBLE");
         require(
-            provider.isProviderOwner(sender, providerId),
+            provider.isProviderOwner(sender, providerKey),
             "NOT_OWNER_CREATE_UNIT"
         );
 
-        unitList.push(unitId);
-        unitStructs[unitId].unitListPointer = unitList.length - 1;
-        unitStructs[unitId].providerKey = providerId;
-        unitStructs[unitId].guestCount = guestCount;
+        unitList.push(unitKey);
+        unitStructs[unitKey].unitListPointer = unitList.length - 1;
+        unitStructs[unitKey].providerKey = providerKey;
+        unitStructs[unitKey].guestCount = guestCount;
 
-        provider.addUnit(sender, providerId, unitId);
+        provider.addUnit(sender, providerKey, unitKey);
 
-        return UnitStruct(
-                unitId,
-                unitStructs[unitId].providerKey,
-                unitStructs[unitId].reservationKeys,
-                unitStructs[unitId].guestCount
+        return
+            UnitStruct(
+                unitKey,
+                unitStructs[unitKey].providerKey,
+                unitStructs[unitKey].reservationKeys,
+                unitStructs[unitKey].guestCount
             );
     }
 
-    function deleteUnit(address sender, bytes32 unitId)
+    function deleteUnit(address sender, bytes32 unitKey)
         external
         returns (bytes32)
     {
-        require(isUnit(unitId), "UNIT_DOES_NOT_EXIST");
+        require(isUnit(unitKey), "UNIT_DOES_NOT_EXIST");
         require(
-            provider.isProviderOwner(sender, unitStructs[unitId].providerKey),
+            provider.isProviderOwner(sender, unitStructs[unitKey].providerKey),
             "NOT_OWNER_DELETE_UNIT"
         );
 
         // delete from table
-        uint256 rowToDelete = unitStructs[unitId].unitListPointer;
+        uint256 rowToDelete = unitStructs[unitKey].unitListPointer;
         bytes32 keyToMove = unitList[unitList.length - 1];
         unitList[rowToDelete] = keyToMove;
-        unitStructs[unitId].unitListPointer = rowToDelete;
+        unitStructs[unitKey].unitListPointer = rowToDelete;
         unitList.pop();
 
-        bytes32 providerId = unitStructs[unitId].providerKey;
-        provider.removeUnit(sender, providerId, unitId);
-        return unitId;
+        bytes32 providerKey = unitStructs[unitKey].providerKey;
+        provider.removeUnit(sender, providerKey, unitKey);
+        return unitKey;
     }
 
-    function addReservation(bytes32 unitId, bytes32 reservationId) public {
-        unitStructs[unitId].reservationKeys.push(reservationId);
-        unitStructs[unitId].reservationKeyPointers[reservationId] =
-            unitStructs[unitId].reservationKeys.length -
+    function addReservation(bytes32 unitKey, bytes32 reservationKey) public {
+        unitStructs[unitKey].reservationKeys.push(reservationKey);
+        unitStructs[unitKey].reservationKeyPointers[reservationKey] =
+            unitStructs[unitKey].reservationKeys.length -
             1;
     }
 
-    function removeReservation(bytes32 unitId, bytes32 reservationId) public {
+    function removeReservation(bytes32 unitKey, bytes32 reservationKey) public {
         uint256 rowToDelete =
-            unitStructs[unitId].reservationKeyPointers[reservationId];
+            unitStructs[unitKey].reservationKeyPointers[reservationKey];
         bytes32 keyToMove =
-            unitStructs[unitId].reservationKeys[
-                unitStructs[unitId].reservationKeys.length - 1
+            unitStructs[unitKey].reservationKeys[
+                unitStructs[unitKey].reservationKeys.length - 1
             ];
-        unitStructs[unitId].reservationKeys[rowToDelete] = keyToMove;
-        unitStructs[unitId].reservationKeyPointers[keyToMove] = rowToDelete;
-        unitStructs[unitId].reservationKeys.pop();
+        unitStructs[unitKey].reservationKeys[rowToDelete] = keyToMove;
+        unitStructs[unitKey].reservationKeyPointers[keyToMove] = rowToDelete;
+        unitStructs[unitKey].reservationKeys.pop();
     }
 }

@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: MIT
+// SPDX-License-Keyentifier: MIT
 pragma solidity >=0.5.17 <0.9.0;
 pragma experimental ABIEncoderV2;
 
@@ -22,45 +22,19 @@ contract Provider is IProvider, Owned {
 
     constructor() public {}
 
-    function getProviderCount() external view returns (uint256) {
-        return providerList.length;
-    }
-
-    function isProvider(bytes32 providerId) public view returns (bool) {
+    function isProvider(bytes32 providerKey) public view returns (bool) {
         if (providerList.length == 0) return false;
         return
-            providerList[providerStructs[providerId].providerListPointer] ==
-            providerId;
+            providerList[providerStructs[providerKey].providerListPointer] ==
+            providerKey;
     }
 
-    function isProviderOwner(bytes32 providerId) public view returns (bool) {
-        return msg.sender == providerStructs[providerId].owner;
-    }
-
-    function isProviderOwner(address sender, bytes32 providerId)
+    function isProviderOwner(address sender, bytes32 providerKey)
         public
         view
         returns (bool)
     {
-        return sender == providerStructs[providerId].owner;
-    }
-
-    function getProviderUnitCount(bytes32 providerId)
-        external
-        view
-        returns (uint256)
-    {
-        require(isProvider(providerId), "PROVIDER_DOES_NOT_EXIST");
-        return providerStructs[providerId].unitKeys.length;
-    }
-
-    function getProviderUnitAtIndex(bytes32 providerId, uint256 row)
-        external
-        view
-        returns (bytes32)
-    {
-        require(isProvider(providerId), "PROVIDER_DOES_NOT_EXIST");
-        return providerStructs[providerId].unitKeys[row];
+        return sender == providerStructs[providerKey].owner;
     }
 
     function getAllProviders() external view returns (ProviderStruct[] memory) {
@@ -68,10 +42,10 @@ contract Provider is IProvider, Owned {
             new ProviderStruct[](providerList.length);
 
         for (uint256 i = 0; i < array.length; i++) {
-            array[i].providerId = providerList[i];
-            array[i].name = providerStructs[array[i].providerId].name;
-            array[i].unitKeys = providerStructs[array[i].providerId].unitKeys;
-            array[i].owner = providerStructs[array[i].providerId].owner;
+            array[i].providerKey = providerList[i];
+            array[i].name = providerStructs[array[i].providerKey].name;
+            array[i].unitKeys = providerStructs[array[i].providerKey].unitKeys;
+            array[i].owner = providerStructs[array[i].providerKey].owner;
         }
         return array;
     }
@@ -87,74 +61,75 @@ contract Provider is IProvider, Owned {
 
     function createProvider(
         address sender,
-        bytes32 providerId,
+        bytes32 providerKey,
         string memory name
     ) internal returns (ProviderStruct memory) {
-        require(!isProvider(providerId), "DUPLICATE_PROVIDER_KEY"); // duplicate key prohibited
-        providerList.push(providerId);
-        providerStructs[providerId].providerListPointer =
+        require(!isProvider(providerKey), "DUPLICATE_PROVIDER_KEY"); // duplicate key prohibited
+        providerList.push(providerKey);
+        providerStructs[providerKey].providerListPointer =
             providerList.length -
             1;
-        providerStructs[providerId].name = name;
-        providerStructs[providerId].owner = sender;
+        providerStructs[providerKey].name = name;
+        providerStructs[providerKey].owner = sender;
 
-        return ProviderStruct(
-                providerStructs[providerId].owner,
-                providerId,
-                providerStructs[providerId].unitKeys,
-                providerStructs[providerId].name
+        return
+            ProviderStruct(
+                providerStructs[providerKey].owner,
+                providerKey,
+                providerStructs[providerKey].unitKeys,
+                providerStructs[providerKey].name
             );
     }
 
-    function deleteProvider(address sender, bytes32 providerId)
+    function deleteProvider(address sender, bytes32 providerKey)
         external
         returns (bytes32)
     {
-        require(isProvider(providerId), "PROVIDER_DOES_NOT_EXIST");
+        require(isProvider(providerKey), "PROVIDER_DOES_NOT_EXIST");
         require(
-            isProviderOwner(sender, providerId),
+            isProviderOwner(sender, providerKey),
             "NOT_OWNER_DELETE_PROVIDER"
         );
         // the following would break referential integrity
         require(
-            providerStructs[providerId].unitKeys.length <= 0,
+            providerStructs[providerKey].unitKeys.length <= 0,
             "LENGTH_UNIT_KEYS_GREATER_THAN_ZERO"
         );
-        uint256 rowToDelete = providerStructs[providerId].providerListPointer;
+        uint256 rowToDelete = providerStructs[providerKey].providerListPointer;
         bytes32 keyToMove = providerList[providerList.length - 1];
         providerList[rowToDelete] = keyToMove;
         providerStructs[keyToMove].providerListPointer = rowToDelete;
         providerList.pop();
 
-        return providerId;
+        return providerKey;
     }
 
     function addUnit(
         address sender,
-        bytes32 providerId,
-        bytes32 unitId
+        bytes32 providerKey,
+        bytes32 unitKey
     ) public {
-        require(isProviderOwner(sender, providerId), "NOT_OWNER_ADD_UNIT");
-        providerStructs[providerId].unitKeys.push(unitId);
-        providerStructs[providerId].unitKeyPointers[unitId] =
-            providerStructs[providerId].unitKeys.length -
+        require(isProviderOwner(sender, providerKey), "NOT_OWNER_ADD_UNIT");
+        providerStructs[providerKey].unitKeys.push(unitKey);
+        providerStructs[providerKey].unitKeyPointers[unitKey] =
+            providerStructs[providerKey].unitKeys.length -
             1;
     }
 
     function removeUnit(
         address sender,
-        bytes32 providerId,
-        bytes32 unitId
+        bytes32 providerKey,
+        bytes32 unitKey
     ) public {
-        require(isProviderOwner(sender, providerId), "NOT_OWNER_REMOVE_UNIT");
+        require(isProviderOwner(sender, providerKey), "NOT_OWNER_REMOVE_UNIT");
         uint256 rowToDelete =
-            providerStructs[providerId].unitKeyPointers[unitId];
+            providerStructs[providerKey].unitKeyPointers[unitKey];
         bytes32 keyToMove =
-            providerStructs[providerId].unitKeys[
-                providerStructs[providerId].unitKeys.length - 1
+            providerStructs[providerKey].unitKeys[
+                providerStructs[providerKey].unitKeys.length - 1
             ];
-        providerStructs[providerId].unitKeys[rowToDelete] = keyToMove;
-        providerStructs[providerId].unitKeyPointers[keyToMove] = rowToDelete;
-        providerStructs[providerId].unitKeys.pop();
+        providerStructs[providerKey].unitKeys[rowToDelete] = keyToMove;
+        providerStructs[providerKey].unitKeyPointers[keyToMove] = rowToDelete;
+        providerStructs[providerKey].unitKeys.pop();
     }
 }
