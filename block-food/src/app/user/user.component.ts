@@ -28,7 +28,7 @@ export class UserComponent implements OnInit {
 
   ngOnInit(): void {
    
-    this.store.dispatch({type: fetchRestaurantsType});
+    // this.store.dispatch({type: fetchRestaurantsType});
   }
 
   openReservation(restaurant: Restaurant) {

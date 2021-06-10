@@ -17,7 +17,7 @@ export const initialState: AppState =
 {
   restaurants: [],
   restaurantsLoading: true,
-  address: 'initial',
+  address: '',
   tables: [],
   tablesLoading: true,
   reservations: [],
@@ -27,8 +27,8 @@ export const initialState: AppState =
 
 export const appReducer = createReducer(
   initialState,
-  on(setRestaurants, (state, { restaurants }) => ({ ...state, restaurants: [...restaurants], restaurantsLoading: false })),
-  on(setAddress, (state, { address }) => ({ ...state, address: address })),
+  on(setRestaurants, (state, { restaurants }) =>({ ...stateCopy, restaurants: [...restaurants], restaurantsLoading: false })) ,
+  on(setAddress, (state, { address }) =>  ({ ...state, address: address })),
   on(setTables, (state, { tables }) => ({ ...state, tables: [...tables], tablesLoading: false })),
   on(setReservations, (state, { reservations }) => ({ ...state, reservations: [...reservations], reservationsLoading: false })),
   on(addRestaurant, (state, { restaurant }) => ({ ...state, restaurants: [...state.restaurants, restaurant] })),
@@ -44,7 +44,8 @@ export const appReducer = createReducer(
     );
 
     return ({
-      ...state, reservations: [...state.reservations,
+      ...state, 
+      reservations: [...state.reservations,
       {
         ...reservation,
         restaurant: restaurant,
@@ -72,7 +73,7 @@ export const selectAddress = createSelector<any, any, any>(
 export const selectMyRestaurant = createSelector<any, any, any>(
   (reducer: any) => reducer.data,
   (state: AppState) => {
-    return state.restaurants.filter(restaurant => restaurant?.owner == state.address)[0]
+    return state.restaurants.filter(restaurant => restaurant?.owner.toLocaleLowerCase() == state.address.toLocaleLowerCase())[0] 
   }
 );
 
@@ -95,7 +96,7 @@ export const selectReservations = createSelector<any, any, any>(
 
 export const selectMyReservations = createSelector<any, any, any>(
   (reducer: any) => reducer.data,
-  (state: AppState) => state.reservations.filter(reservation => reservation.owner == state.address)
+  (state: AppState) => state.reservations.filter(reservation => reservation.owner.toLocaleLowerCase() == state.address.toLocaleLowerCase())
 );
 
 export const selectRestaurantsLoading = createSelector<any, any, any>(

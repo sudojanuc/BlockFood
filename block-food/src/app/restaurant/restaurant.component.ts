@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { select, Store } from '@ngrx/store';
-import { map, switchMap, tap } from 'rxjs/operators';
+import { switchMap } from 'rxjs/operators';
 import { Restaurant } from '../models/restaurant';
-import { createRestaurantType, createTableType } from '../ngrx/app.actions';
-import { selectMyRestaurant, selectRestaurantsLoading, selectTablesLoading, selectTablesOfRestaurant } from '../ngrx/app.reducer';
+import { createRestaurantType, createTableType, fetchRestaurantsType } from '../ngrx/app.actions';
+import {  selectMyRestaurant, selectRestaurantsLoading, selectTablesLoading, selectTablesOfRestaurant } from '../ngrx/app.reducer';
 import { ContractService } from '../services/contract.service';
 
 @Component({
@@ -31,8 +31,6 @@ export class RestaurantComponent implements OnInit {
     select(selectMyRestaurant),
     switchMap(myRestaurant => this.store.pipe(select(selectTablesOfRestaurant(myRestaurant))))
   );
-
-
 
   constructor(private contractService: ContractService,
     private store: Store) { }

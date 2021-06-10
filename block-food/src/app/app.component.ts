@@ -1,14 +1,9 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { select, Store } from '@ngrx/store';
-import { filter, map, switchMap, take, tap } from 'rxjs/operators';
-import { addReservation, addRestaurant, addTable, fetchAddressType, fetchReservationsType, fetchRestaurantsType, fetchTablesType, setRestaurantsLoading, setTablesLoading } from './ngrx/app.actions';
+import { filter, map, skipWhile, switchMap, take, tap } from 'rxjs/operators';
+import { setAddress, addReservation, addRestaurant, addTable, fetchAddressType, fetchReservationsType, fetchRestaurantsType, fetchTablesType, setRestaurantsLoading, setTablesLoading } from './ngrx/app.actions';
 import { selectAddress } from './ngrx/app.reducer';
 import { ContractService } from './services/contract.service';
-// import { Contract, ethers, Wallet } from 'ethers';
-// import { from, of } from 'rxjs';
-// import { tap, map, catchError } from 'rxjs/operators';
-// import { environment } from 'src/environments/environment';
-// import { WEB3PROVIDER } from './services/providers';
 
 
 
@@ -30,10 +25,18 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
 
-    this.store.dispatch({ type: fetchAddressType });
-    this.store.dispatch({ type: fetchRestaurantsType });
-    this.store.dispatch({ type: fetchTablesType });
-    this.store.dispatch({ type: fetchReservationsType });
+    this.myAddress$.pipe(
+      filter(address => address),
+      take(1),
+      tap((address) => {
+        console.log('got address', address);
+        
+        this.store.dispatch({ type: fetchRestaurantsType });
+        this.store.dispatch({ type: fetchTablesType });
+        this.store.dispatch({ type: fetchReservationsType });
+      })
+    ).subscribe()
+
 
     this.contractService.contract.on('LogNewProvider', (_fromAddress: any, restaurant: any) => {
       console.log('new Restaurant', restaurant);
@@ -62,6 +65,10 @@ export class AppComponent implements OnInit {
 
   public changeMode(mode: any) {
     this.mode = mode;
+  }
+
+  connect() {
+    this.contractService.connectMetamask();
   }
 
 }

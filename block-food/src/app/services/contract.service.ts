@@ -1,9 +1,11 @@
 import { Inject, Injectable } from '@angular/core';
+import { Store } from '@ngrx/store';
 import { ethers, utils } from 'ethers';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Restaurant } from '../models/restaurant';
 import { Table } from '../models/table';
+import { setAddress } from '../ngrx/app.actions';
 import { WEB3PROVIDER } from './providers';
 declare const window: any;
 
@@ -15,30 +17,39 @@ export class ContractService {
   public address: any;
   public contract: any;
   public provider: any;
+  private daiAbi = environment.abi;
+  private daiAddress = environment.address;
   
-  constructor(@Inject(WEB3PROVIDER) private web3Provider: any) {
-    this.provider = new ethers.providers.Web3Provider(window.ethereum);
-    
-    let daiAbi = environment.abi;
-    let daiAddress = environment.address;
-    this.contract = this.createContract(daiAbi, daiAddress);
-    
+  constructor(
+    @Inject(WEB3PROVIDER) public web3provider: any,
+    private store: Store    
+    ) {      
+      this.provider = new ethers.providers.Web3Provider(window.ethereum);
+      this.contract = new ethers.Contract(this.daiAddress, this.daiAbi, this.provider);
+      this.contract = this.contract.connect(this.provider.getSigner());
+      this.provider.on("network", (newNetwork: any, oldNetwork: any) => {
+        // When a Provider makes its initial connection, it emits a "network"
+        // event with a null oldNetwork along with the newNetwork. So, if the
+        // oldNetwork exists, it represents a changing network
+        console.log(newNetwork,oldNetwork);
         
+        if (oldNetwork) {
+            window.location.reload();
+        }
+    });
+    console.log(this.web3provider, this.provider, this.contract,this.provider.getSigner());
   }
   
-  private createContract(daiAbi:any, daiAddress:string):any {
-    // The ERC-20 Contract ABI, which is a common contract interface
-    // for tokens (this is the Human-Readable ABI format)
-    // const daiAbi = environment.abi;
-    // const daiAddress = environment.address;
+  public createContract():any {
+
+  }
+  public connectMetamask(){
     
-    // The Contract object
-    let contract = new ethers.Contract(daiAddress, daiAbi, this.provider);
-    contract = contract.connect(this.provider.getSigner());
-    return contract;
-    
-    
-    // this.contract.createReservation({value:ethers.utils.parseEther('0.2'),  gasLimit: 1000000});
+    this.web3provider.enable()
+                     .then((address: string) => 
+                         this.store.dispatch(setAddress({address: address[0]}))
+                         );
+
   }
   
   

@@ -36,11 +36,12 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 
 
-export function enableWeb3Provider(provider : any) {
-  return () => {
-    provider.enable();  // Ask the user to enable MetaMask at load time.
-  };
-}
+// export function enableWeb3Provider(provider : any) {
+//   return () => {
+//     // provider.enable();  // Ask the user to enable MetaMask at load time.
+//     provider
+//   };
+// }
 
 @NgModule({
   declarations: [
@@ -73,15 +74,15 @@ export function enableWeb3Provider(provider : any) {
     MatDatepickerModule,
     MatNativeDateModule,
     MatTableModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
     ],
   providers: [
-    {
-      provide: APP_INITIALIZER,
-      useFactory: enableWeb3Provider,
-      deps: [WEB3PROVIDER],
-      multi: true
-    },
+    // {
+    //   provide: APP_INITIALIZER,
+    //   useFactory: enableWeb3Provider,
+    //   deps: [WEB3PROVIDER],
+    //   multi: true
+    // },
     MatDatepickerModule
   ],
   bootstrap: [AppComponent]

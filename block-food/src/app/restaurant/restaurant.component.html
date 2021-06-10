@@ -14,46 +14,46 @@
         </mat-card-actions>
     </mat-card>
     <ng-container *ngIf="!(restaurantsLoading$ | async)">
-    <div *ngIf=" myRestaurant$ | async; let myRestaurant " class="card marginTop restaurant">
-        <mat-card>
-            <mat-card-title>Your Restaurant</mat-card-title>
-            <mat-card-content style="margin-top: 5%;">
-                <div>name: {{(myRestaurant$ | async).name}}</div>
-            </mat-card-content>
-        </mat-card>
-
-        <mat-divider class="marginTop"></mat-divider>
-
-        <div class="tableWrapper marginTop">
-            <div *ngFor=" let table of myTables$ | async">
-                <mat-card class="table">
-                    <mat-card-title>Table</mat-card-title>
-                    <mat-card-content style="margin-top: 20%;">
-                        <div>Chairs: {{table.guestCount}}</div>
+        <div *ngIf=" myRestaurant$ | async; let myRestaurant " class="card marginTop restaurant">
+            <mat-card>
+                <mat-card-title>Your Restaurant</mat-card-title>
+                <mat-card-content style="margin-top: 5%;">
+                    <div>name: {{(myRestaurant$ | async).name}}</div>
+                </mat-card-content>
+            </mat-card>
+            
+            <mat-divider class="marginTop"></mat-divider>
+            
+            <div class="tableWrapper marginTop">
+                <div *ngFor=" let table of myTables$ | async">
+                    <mat-card class="table">
+                        <mat-card-title>Table</mat-card-title>
+                        <mat-card-content style="margin-top: 20%;">
+                            <div>Chairs: {{table.guestCount}}</div>
+                        </mat-card-content>
+                    </mat-card>
+                </div>
+                <div class="table">
+                    <mat-spinner *ngIf="tablesLoading$ | async" ></mat-spinner>
+                    
+                </div>
+            </div>
+            <mat-divider class="marginTop"></mat-divider>
+            
+            <div class="marginTop">
+                <mat-card class="card newTable">
+                    <mat-card-title>Create a new Table</mat-card-title>
+                    <mat-card-content style="margin-top: 5%;">
+                        <mat-form-field appearance="fill">
+                            <mat-label>Amount of chairs</mat-label>
+                            <input matInput [(ngModel)]="chairs">
+                        </mat-form-field>
                     </mat-card-content>
+                    <mat-card-actions>
+                        <button mat-flat-button color="primary" (click)="saveTable(myRestaurant)">Save</button>
+                    </mat-card-actions>
                 </mat-card>
             </div>
-            <div class="table">
-                <mat-spinner *ngIf="tablesLoading$ | async" ></mat-spinner>
-
-            </div>
         </div>
-        <mat-divider class="marginTop"></mat-divider>
-
-        <div class="marginTop">
-            <mat-card class="card newTable">
-                <mat-card-title>Create a new Table</mat-card-title>
-                <mat-card-content style="margin-top: 5%;">
-                    <mat-form-field appearance="fill">
-                        <mat-label>Amount of chairs</mat-label>
-                        <input matInput [(ngModel)]="chairs">
-                    </mat-form-field>
-                </mat-card-content>
-                <mat-card-actions>
-                    <button mat-flat-button color="primary" (click)="saveTable(myRestaurant)">Save</button>
-                </mat-card-actions>
-            </mat-card>
-        </div>
-    </div>
-</ng-container>
+    </ng-container>
 </div>
