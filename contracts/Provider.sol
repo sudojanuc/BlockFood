@@ -3,9 +3,9 @@ pragma solidity >=0.5.17 <0.9.0;
 pragma experimental ABIEncoderV2;
 
 import "./interfaces/IProvider.sol";
-import "./Owned.sol";
+import "./LockFactory.sol";
 
-contract Provider is IProvider, Owned {
+contract Provider is IProvider, LockFactory {
     uint256 counter = 0;
 
     struct ProviderInternalStruct {
@@ -19,8 +19,6 @@ contract Provider is IProvider, Owned {
 
     mapping(bytes32 => ProviderInternalStruct) public providerStructs;
     bytes32[] public providerList;
-
-    constructor() public {}
 
     function isProvider(bytes32 providerKey) public view returns (bool) {
         if (providerList.length == 0) return false;
@@ -65,6 +63,7 @@ contract Provider is IProvider, Owned {
         string memory name
     ) internal returns (ProviderStruct memory) {
         require(!isProvider(providerKey), "DUPLICATE_PROVIDER_KEY"); // duplicate key prohibited
+        createNewLock(providerKey);
         providerList.push(providerKey);
         providerStructs[providerKey].providerListPointer =
             providerList.length -

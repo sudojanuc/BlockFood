@@ -3,9 +3,11 @@ pragma solidity >=0.5.17 <0.9.0;
 pragma experimental ABIEncoderV2;
 
 import "./interfaces/IUnit.sol";
+import "./interfaces/unlock/IPublicLock.sol";
 
 import "./Owned.sol";
 import "./Provider.sol";
+
 
 contract Unit is IUnit, Owned {
     uint256 counter;
@@ -26,6 +28,10 @@ contract Unit is IUnit, Owned {
 
     constructor(address adr) public {
         provider = Provider(adr);
+    }
+
+    function getLock(bytes32 key) public view returns (IPublicLock) {
+        return provider.getLock(unitStructs[key].providerKey);
     }
 
     function setProviderAddress(address adr) external onlyOwner {

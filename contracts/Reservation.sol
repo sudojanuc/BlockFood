@@ -3,11 +3,9 @@ pragma solidity >=0.5.17 <0.9.0;
 pragma experimental ABIEncoderV2;
 
 import "./interfaces/IReservation.sol";
-import "./interfaces/unlock/IPublicLock.sol";
-import "./interfaces/unlock/IUnlock.sol";
 
-import "./Owned.sol";
 import "./Unit.sol";
+import "./Owned.sol";
 
 contract Reservation is IReservation, Owned {
     uint256 counter;
@@ -21,27 +19,17 @@ contract Reservation is IReservation, Owned {
     }
 
     Unit internal unit;
-    IPublicLock internal lock;
-    IUnlock internal unlock;
 
+    mapping(bytes32 => IPublicLock) public locks;
     mapping(bytes32 => ReservationInternalStruct) public reservationStructs;
     bytes32[] public reservationList;
 
     constructor(address adrUnit) public {
         unit = Unit(adrUnit);
-        lock = IPublicLock(0x2D7Fa4dbdF5E7bfBC87523396aFfD6d38c9520fa);
-    }
-
-    function initializeUnlock() public {
-        unlock.initialize(msg.sender);
     }
 
     function setUnitAddress(address adr) external onlyOwner {
         unit = Unit(adr);
-    }
-
-    function setLockAddress(address payable adr) external onlyOwner {
-        lock = IPublicLock(adr);
     }
 
     function isReservation(bytes32 reservationKey) public view returns (bool) {
@@ -84,7 +72,9 @@ contract Reservation is IReservation, Owned {
     ) public returns (ReservationStruct memory) {
         require(unit.isUnit(unitKey), "UNIT_DOES_NOT_EXIST");
         require(!isReservation(reservationKey), "DUPLICATE_RESERVATION_KEY"); // duplicate key prohibited
-        require(purchaseReservation(sender), "PURCHASE_FAILED");
+        locks[reservationKey] = unit.getLock(unitKey);
+        require(address(locks[reservationKey]) != address(0), "NO_LOCK_IN_RESERVATION");
+        require(purchaseReservation(sender, reservationKey), "PURCHASE_FAILED");
 
         reservationList.push(reservationKey);
         reservationStructs[reservationKey].reservationListPointer =
@@ -127,18 +117,18 @@ contract Reservation is IReservation, Owned {
         return reservationKey;
     }
 
-    function purchaseReservation(address sender) internal returns (bool) {
-        require(msg.value >= lock.keyPrice(), "VALUE_TOO_SMALL");
-        lock.purchase.value(msg.value)(
-            lock.keyPrice(),
+    function purchaseReservation(address sender, bytes32 reservationKey) internal returns (bool) {
+        require(msg.value >= locks[reservationKey].keyPrice(), "VALUE_TOO_SMALL");
+        locks[reservationKey].purchase.value(msg.value)(
+            locks[reservationKey].keyPrice(),
             sender,
             0x0d5900731140977cd80b7Bd2DCE9cEc93F8a176B,
             "0x00"
         );
-        uint256 tokenId = lock.getTokenIdFor(sender);
-        lock.setKeyManagerOf(tokenId, address(this));
+        uint256 tokenId = locks[reservationKey].getTokenIdFor(sender);
+        locks[reservationKey].setKeyManagerOf(tokenId, address(this));
         require(
-            lock.keyManagerOf(tokenId) == address(this),
+            locks[reservationKey].keyManagerOf(tokenId) == address(this),
             "LOCK_MANAGER_NOT_SET_TO_RESERVATION_CONTRACT"
         );
 
@@ -154,8 +144,8 @@ contract Reservation is IReservation, Owned {
             reservationStructs[reservationKey].checkInKey == checkInKey,
             "CHECK_IN_KEY_WRONG"
         );
-        uint256 tokenId = lock.getTokenIdFor(sender);
-        lock.cancelAndRefund(tokenId);
+        uint256 tokenId = locks[reservationKey].getTokenIdFor(sender);
+        locks[reservationKey].cancelAndRefund(tokenId);
 
         return
             ReservationStruct(

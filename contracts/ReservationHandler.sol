@@ -135,10 +135,28 @@ contract ReservationHandler is Owned, IReservationHandler {
         );
     }
 
-    function getCheckInKey(address sender, bytes32 reservationKey)
+    function getCheckInKey(bytes32 reservationKey)
         external
         view
-        returns (uint256){
-            return reservation.getCheckInKey(sender, reservationKey);
-        }
+        returns (uint256)
+    {
+        return reservation.getCheckInKey(msg.sender, reservationKey);
+    }
+
+    //lockFactory
+    function initializeUnlock() external {
+        provider.initializeUnlock();
+    }
+
+    function getKeyPrice(bytes32 providerKey) external view returns (uint256) {
+        return provider.getKeyPrice(providerKey);
+    }
+
+    function updateKeyPrice(bytes32 providerKey, uint256 keyPrice) external {
+        provider.updateKeyPrice(providerKey, keyPrice);
+    }
+
+    function getLock(bytes32 providerKey) external view returns (IPublicLock){
+        return provider.getLock(providerKey);
+    }
 }
