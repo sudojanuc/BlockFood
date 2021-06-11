@@ -4,8 +4,10 @@ pragma experimental ABIEncoderV2;
 
 import "./interfaces/IProvider.sol";
 import "./LockFactory.sol";
+import "./BuissnesHourManager.sol";
+import "./ethereum-datetime/contracts/DateTime.sol";
 
-contract Provider is IProvider, LockFactory {
+contract Provider is IProvider, LockFactory, BuissnesHourManager {
     uint256 counter = 0;
 
     struct ProviderInternalStruct {
@@ -71,6 +73,7 @@ contract Provider is IProvider, LockFactory {
         providerStructs[providerKey].name = name;
         providerStructs[providerKey].owner = sender;
 
+        initializeBuissnesHours(providerKey);
         return
             ProviderStruct(
                 providerStructs[providerKey].owner,
