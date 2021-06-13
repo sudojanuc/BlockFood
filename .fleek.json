@@ -1,0 +1,8 @@
+{
+    "build": {
+      "image": "node:alpine",
+      "command": "npm install && npm run build",
+      "publicDir": "/dist",
+      "baseDir": "/block-food"
+    }
+   }
