@@ -31,6 +31,7 @@ import { appReducer } from './ngrx/app.reducer';
 import { EffectsModule } from '@ngrx/effects';
 import { AppEffects } from './ngrx/app.effects';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import { HashLocationStrategy, LocationStrategy } from '@angular/common';
 
 
 
@@ -77,6 +78,8 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
     MatProgressSpinnerModule,
     ],
   providers: [
+    {provide: LocationStrategy, useClass: HashLocationStrategy},
+
     // {
     //   provide: APP_INITIALIZER,
     //   useFactory: enableWeb3Provider,
