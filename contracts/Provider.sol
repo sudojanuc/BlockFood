@@ -1,11 +1,12 @@
-// SPDX-License-Keyentifier: MIT
+// SPDX-License-Identifier: MIT
+
 pragma solidity >=0.5.17 <0.9.0;
 pragma experimental ABIEncoderV2;
 
 import "./interfaces/IProvider.sol";
 import "./LockFactory.sol";
 import "./BuissnesHourManager.sol";
-import "./ethereum-datetime/contracts/DateTime.sol";
+import "./datetime/contracts/DateTime.sol";
 
 contract Provider is IProvider, LockFactory, BuissnesHourManager {
     uint256 counter = 0;
@@ -50,6 +51,18 @@ contract Provider is IProvider, LockFactory, BuissnesHourManager {
         return array;
     }
 
+    function renameProvider(
+        address sender,
+        bytes32 providerKey,
+        string calldata newName
+    ) external {
+        require(
+            isProviderOwner(sender, providerKey),
+            "NOT_OWNER_OF_PROVIDER_RENAME"
+        );
+        providerStructs[providerKey].name = newName;
+    }
+
     function createProvider(address sender, string calldata name)
         external
         returns (ProviderStruct memory)
@@ -87,15 +100,16 @@ contract Provider is IProvider, LockFactory, BuissnesHourManager {
         external
         returns (bytes32)
     {
-        require(isProvider(providerKey), "PROVIDER_DOES_NOT_EXIST");
+        //TODO: delete after all refunds are done
+        require(isProvider(providerKey), "PROVIDER_DOES_NOT_EXIST_DELETE");
         require(
             isProviderOwner(sender, providerKey),
-            "NOT_OWNER_DELETE_PROVIDER"
+            "NOT_OWNER_DELETE_PROVIDER_DELETE"
         );
         // the following would break referential integrity
         require(
             providerStructs[providerKey].unitKeys.length <= 0,
-            "LENGTH_UNIT_KEYS_GREATER_THAN_ZERO"
+            "LENGTH_UNIT_KEYS_GREATER_THAN_ZERO_DELETE"
         );
         uint256 rowToDelete = providerStructs[providerKey].providerListPointer;
         bytes32 keyToMove = providerList[providerList.length - 1];
@@ -123,7 +137,10 @@ contract Provider is IProvider, LockFactory, BuissnesHourManager {
         bytes32 providerKey,
         bytes32 unitKey
     ) public {
-        require(isProviderOwner(sender, providerKey), "NOT_OWNER_REMOVE_UNIT");
+        require(
+            isProviderOwner(sender, providerKey),
+            "NOT_OWNER_OF_PROVIDER_REMOVE_UNIT"
+        );
         uint256 rowToDelete =
             providerStructs[providerKey].unitKeyPointers[unitKey];
         bytes32 keyToMove =
@@ -133,5 +150,19 @@ contract Provider is IProvider, LockFactory, BuissnesHourManager {
         providerStructs[providerKey].unitKeys[rowToDelete] = keyToMove;
         providerStructs[providerKey].unitKeyPointers[keyToMove] = rowToDelete;
         providerStructs[providerKey].unitKeys.pop();
+    }
+
+    function setBuissnesHours(
+        address sender,
+        bytes32 key,
+        uint8 weekDayType,
+        uint8 startHour,
+        uint8 endHour
+    ) external {
+        require(
+            isProviderOwner(sender, key),
+            "NOT_OWNER_OF_PROVIDER_SET_HOURS"
+        );
+        super.setBuissnesHours(key, weekDayType, startHour, endHour);
     }
 }

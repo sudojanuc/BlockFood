@@ -1,4 +1,5 @@
-// SPDX-License-Keyentifier: MIT
+// SPDX-License-Identifier: MIT
+
 pragma solidity >=0.5.17 <0.9.0;
 pragma experimental ABIEncoderV2;
 
@@ -73,7 +74,10 @@ contract Reservation is IReservation, Owned {
         require(unit.isUnit(unitKey), "UNIT_DOES_NOT_EXIST");
         require(!isReservation(reservationKey), "DUPLICATE_RESERVATION_KEY"); // duplicate key prohibited
         locks[reservationKey] = unit.getLock(unitKey);
-        require(address(locks[reservationKey]) != address(0), "NO_LOCK_IN_RESERVATION");
+        require(
+            address(locks[reservationKey]) != address(0),
+            "NO_LOCK_IN_RESERVATION"
+        );
         require(purchaseReservation(sender, reservationKey), "PURCHASE_FAILED");
 
         reservationList.push(reservationKey);
@@ -117,8 +121,14 @@ contract Reservation is IReservation, Owned {
         return reservationKey;
     }
 
-    function purchaseReservation(address sender, bytes32 reservationKey) internal returns (bool) {
-        require(msg.value >= locks[reservationKey].keyPrice(), "VALUE_TOO_SMALL");
+    function purchaseReservation(address sender, bytes32 reservationKey)
+        internal
+        returns (bool)
+    {
+        require(
+            msg.value >= locks[reservationKey].keyPrice(),
+            "VALUE_TOO_SMALL"
+        );
         locks[reservationKey].purchase.value(msg.value)(
             locks[reservationKey].keyPrice(),
             sender,

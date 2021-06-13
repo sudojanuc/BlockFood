@@ -1,9 +1,10 @@
-// SPDX-License-Keyentifier: MIT
+// SPDX-License-Identifier: MIT
+
 pragma solidity >=0.5.17 <0.9.0;
 pragma experimental ABIEncoderV2;
 
-import "./ethereum-datetime/contracts/api.sol";
-import "./ethereum-datetime/contracts/DateTime.sol";
+import "./datetime/contracts/api.sol";
+import "./datetime/contracts/DateTime.sol";
 
 contract BuissnesHourManager {
     enum WeekDayType {
@@ -35,13 +36,13 @@ contract BuissnesHourManager {
         uint8 weekDayType,
         uint8 startHour,
         uint8 endHour
-    ) external {
+    ) internal {
         require(
             weekDayType <= uint8(WeekDayType.sunday),
             "WRONG_WEEKDAY_INPUT"
         );
-        require(startHour<24, "START_HOURS_OUT_OF_BOUNDS");
-        require(endHour<24, "END_HOURS_OUT_OF_BOUNDS");
+        require(startHour < 24, "START_HOURS_OUT_OF_BOUNDS");
+        require(endHour < 24, "END_HOURS_OUT_OF_BOUNDS");
         buissnesDays[key][weekDayType].startHour = startHour;
         buissnesDays[key][weekDayType].endHour = endHour;
     }
@@ -70,17 +71,11 @@ contract BuissnesHourManager {
             );
     }
 
-    function BuissnesHoursToTimeStamp(
-        uint8 hour,
-        uint8 minute
-    ) external view returns (uint256 timestamp) {
-        return
-            dateTime.toTimestamp(
-                0,
-                0,
-                0,
-                hour,
-                minute
-            );
+    function BuissnesHoursToTimeStamp(uint8 hour, uint8 minute)
+        external
+        view
+        returns (uint256 timestamp)
+    {
+        return dateTime.toTimestamp(0, 0, 0, hour, minute);
     }
 }

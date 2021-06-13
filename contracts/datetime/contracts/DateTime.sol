@@ -1,6 +1,8 @@
-pragma solidity ^0.4.16;
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.5.17;
+import "./api.sol";
 
-contract DateTime {
+contract DateTime is DateTimeAPI{
         /*
          *  Date and Time utilities for ethereum contracts
          *
@@ -57,7 +59,7 @@ contract DateTime {
                 }
         }
 
-        function parseTimestamp(uint timestamp) internal pure returns (_DateTime dt) {
+        function parseTimestamp(uint timestamp) internal pure returns (_DateTime memory dt) {
                 uint secondsAccountedFor = 0;
                 uint buf;
                 uint8 i;

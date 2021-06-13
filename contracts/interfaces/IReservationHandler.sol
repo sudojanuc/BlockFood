@@ -15,9 +15,24 @@ interface IReservationHandler {
         view
         returns (IProvider.ProviderStruct[] memory);
 
+    function renameProvider(bytes32 providerKey, string calldata newName)
+        external;
+
     function createProvider(string calldata name) external;
 
     function deleteProvider(bytes32 providerKey) external;
+
+    function setBuissnesHours(
+        bytes32 key,
+        uint8 weekDayType,
+        uint8 startHour,
+        uint8 endHour
+    ) external;
+
+    function getBuissnesHours(bytes32 key, uint8 weekDayType)
+        external
+        view
+        returns (uint8 start, uint8 end);
 
     ///reservation
     function setUnitAddress(address adr) external;

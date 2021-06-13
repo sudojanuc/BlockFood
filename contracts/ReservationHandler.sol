@@ -1,4 +1,5 @@
-// SPDX-License-Keyentifier: MIT
+// SPDX-License-Identifier: MIT
+
 pragma solidity >=0.5.17 <0.9.0;
 pragma experimental ABIEncoderV2;
 
@@ -57,6 +58,12 @@ contract ReservationHandler is Owned, IReservationHandler {
         return provider.getAllProviders();
     }
 
+    function renameProvider(bytes32 providerKey, string calldata newName)
+        external
+    {
+        provider.renameProvider(msg.sender, providerKey, newName);
+    }
+
     function createProvider(string calldata name) external {
         emit LogNewProvider(
             msg.sender,
@@ -67,6 +74,29 @@ contract ReservationHandler is Owned, IReservationHandler {
     function deleteProvider(bytes32 providerKey) external {
         provider.deleteProvider(msg.sender, providerKey);
         emit LogProviderDeleted(msg.sender, providerKey);
+    }
+
+    function setBuissnesHours(
+        bytes32 key,
+        uint8 weekDayType,
+        uint8 startHour,
+        uint8 endHour
+    ) external {
+        provider.setBuissnesHours(
+            msg.sender,
+            key,
+            weekDayType,
+            startHour,
+            endHour
+        );
+    }
+
+    function getBuissnesHours(bytes32 key, uint8 weekDayType)
+        external
+        view
+        returns (uint8 start, uint8 end)
+    {
+        return provider.getBuissnesHours(key, weekDayType);
     }
 
     //unit methodes
@@ -156,7 +186,7 @@ contract ReservationHandler is Owned, IReservationHandler {
         provider.updateKeyPrice(providerKey, keyPrice);
     }
 
-    function getLock(bytes32 providerKey) external view returns (IPublicLock){
+    function getLock(bytes32 providerKey) external view returns (IPublicLock) {
         return provider.getLock(providerKey);
     }
 }
