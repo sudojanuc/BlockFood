@@ -23,7 +23,10 @@ export class ContractService {
   constructor(
     @Inject(WEB3PROVIDER) public web3provider: any,
     private store: Store    
-    ) {      
+    ) {   
+      console.log(window.ethereum);
+      
+      if (typeof window.ethereum !== 'undefined') {   
       this.provider = new ethers.providers.Web3Provider(window.ethereum);
       this.contract = new ethers.Contract(this.daiAddress, this.daiAbi, this.provider);
       this.contract = this.contract.connect(this.provider.getSigner());
@@ -38,6 +41,9 @@ export class ContractService {
         }
     });
     console.log(this.web3provider, this.provider, this.contract,this.provider.getSigner());
+  } else {
+    alert('please install metamask provider and then reload this page')
+  }
   }
   
   public createContract():any {
