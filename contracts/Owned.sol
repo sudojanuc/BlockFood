@@ -17,6 +17,11 @@ contract Owned is IOwner {
         _;
     }
 
+    modifier checkRemote() {
+        require(remote == msg.sender, "NOT_REMOTE_CALL");
+        _;
+    }
+
     constructor() public {
         owner = msg.sender;
     }

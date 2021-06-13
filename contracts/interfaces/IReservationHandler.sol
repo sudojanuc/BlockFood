@@ -18,7 +18,7 @@ interface IReservationHandler {
     function renameProvider(bytes32 providerKey, string calldata newName)
         external;
 
-    function createProvider(string calldata name) external;
+    function createProvider(string calldata name, uint8 timePerReservation) external;
 
     function deleteProvider(bytes32 providerKey) external;
 

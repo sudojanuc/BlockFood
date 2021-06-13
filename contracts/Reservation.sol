@@ -17,12 +17,14 @@ contract Reservation is IReservation, Owned {
         address owner;
         //custom data
         uint256 checkInKey;
+        uint256 startTime;
+        uint256 endTime;
     }
 
     Unit internal unit;
 
     mapping(bytes32 => IPublicLock) public locks;
-    mapping(bytes32 => ReservationInternalStruct) public reservationStructs;
+    mapping(bytes32 => ReservationInternalStruct) internal reservationStructs;
     bytes32[] public reservationList;
 
     constructor(address adrUnit) public {
@@ -41,39 +43,61 @@ contract Reservation is IReservation, Owned {
             ] == reservationKey;
     }
 
+    function isTimeAvailable(uint256 time) public view returns (bool) {
+        uint256 i;
+        for (i = 0; i < reservationList.length; i++) {
+            if (
+                reservationStructs[reservationList[i]].startTime <= time &&
+                reservationStructs[reservationList[i]].endTime > time
+            ) return false;
+        }
+
+        return true;
+    }
+
     function getAllReservations()
         external
         view
         returns (ReservationStruct[] memory)
     {
+        uint256 i;
         ReservationStruct[] memory array =
             new ReservationStruct[](reservationList.length);
 
-        for (uint256 i = 0; i < array.length; i++) {
+        for (i = 0; i < array.length; i++) {
             array[i].reservationKey = reservationList[i];
             array[i].unitKey = reservationStructs[array[i].reservationKey]
                 .unitKey;
             array[i].owner = reservationStructs[array[i].reservationKey].owner;
+            array[i].startTime = reservationStructs[array[i].reservationKey]
+                .startTime;
+            array[i].endTime = reservationStructs[array[i].reservationKey]
+                .endTime;
         }
         return array;
     }
 
-    function createReservation(address sender, bytes32 unitKey)
-        public
-        payable
-        returns (ReservationStruct memory)
-    {
-        return createReservation(sender, bytes32(counter++), unitKey);
+    function createReservation(
+        address sender,
+        bytes32 unitKey,
+        uint256 startTime
+    ) public payable checkRemote returns (ReservationStruct memory) {
+        return
+            createReservation(sender, bytes32(counter++), unitKey, startTime);
     }
 
     function createReservation(
         address sender,
         bytes32 reservationKey,
-        bytes32 unitKey
-    ) public returns (ReservationStruct memory) {
+        bytes32 unitKey,
+        uint256 startTime
+    ) public checkRemote returns (ReservationStruct memory) {
         require(unit.isUnit(unitKey), "UNIT_DOES_NOT_EXIST");
         require(!isReservation(reservationKey), "DUPLICATE_RESERVATION_KEY"); // duplicate key prohibited
-        locks[reservationKey] = unit.getLock(unitKey);
+        require(isTimeAvailable(startTime), "TIME_NOT_AVAILABLE");
+
+        locks[reservationKey] = unit.getLock(unitKey); //needed to get one key per reservation
+
         require(
             address(locks[reservationKey]) != address(0),
             "NO_LOCK_IN_RESERVATION"
@@ -86,6 +110,10 @@ contract Reservation is IReservation, Owned {
             1;
         reservationStructs[reservationKey].unitKey = unitKey;
         reservationStructs[reservationKey].owner = sender;
+        reservationStructs[reservationKey].startTime = startTime;
+        reservationStructs[reservationKey].endTime =
+            startTime +
+            unit.getTimePerReservation(unitKey);
         reservationStructs[reservationKey]
             .checkInKey = generateRandomCheckInKey(
             block.number + uint256(unitKey)
@@ -97,7 +125,9 @@ contract Reservation is IReservation, Owned {
             ReservationStruct(
                 reservationKey,
                 reservationStructs[reservationKey].unitKey,
-                reservationStructs[reservationKey].owner
+                reservationStructs[reservationKey].owner,
+                reservationStructs[reservationKey].startTime,
+                reservationStructs[reservationKey].endTime
             );
     }
 
@@ -149,7 +179,7 @@ contract Reservation is IReservation, Owned {
         address sender,
         bytes32 reservationKey,
         uint256 checkInKey
-    ) external returns (ReservationStruct memory) {
+    ) external checkRemote returns (ReservationStruct memory) {
         require(
             reservationStructs[reservationKey].checkInKey == checkInKey,
             "CHECK_IN_KEY_WRONG"
@@ -161,7 +191,9 @@ contract Reservation is IReservation, Owned {
             ReservationStruct(
                 reservationKey,
                 reservationStructs[reservationKey].unitKey,
-                reservationStructs[reservationKey].owner
+                reservationStructs[reservationKey].owner,
+                reservationStructs[reservationKey].startTime,
+                reservationStructs[reservationKey].endTime
             );
     }
 
@@ -176,6 +208,7 @@ contract Reservation is IReservation, Owned {
     function getCheckInKey(address sender, bytes32 reservationKey)
         external
         view
+        checkRemote
         returns (uint256)
     {
         require(
