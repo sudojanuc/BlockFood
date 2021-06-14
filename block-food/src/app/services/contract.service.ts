@@ -30,16 +30,7 @@ export class ContractService {
       this.provider = new ethers.providers.Web3Provider(window.ethereum);
       this.contract = new ethers.Contract(this.daiAddress, this.daiAbi, this.provider);
       this.contract = this.contract.connect(this.provider.getSigner());
-      this.provider.on("network", (newNetwork: any, oldNetwork: any) => {
-        // When a Provider makes its initial connection, it emits a "network"
-        // event with a null oldNetwork along with the newNetwork. So, if the
-        // oldNetwork exists, it represents a changing network
-        console.log(newNetwork,oldNetwork);
-        
-        if (oldNetwork) {
-            window.location.reload();
-        }
-    });
+
     console.log(this.web3provider, this.provider, this.contract,this.provider.getSigner());
   } else {
     alert('please install metamask provider and then reload this page')
