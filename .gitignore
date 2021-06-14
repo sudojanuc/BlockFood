@@ -4,3 +4,5 @@ test/
 .secret
 package.json
 node_modules/
+assets/
+ganache-template.txt

@@ -1,123 +1,190 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity >=0.5.0;
+pragma solidity >=0.5.17 <0.9.0;
 pragma experimental ABIEncoderV2;
 
-import "./IPublicLock.sol";
-import "./ReservationProvider.sol";
+import "./interfaces/IReservation.sol";
 
-contract Reservation
-{
-    IPublicLock internal publicLock;
-    ReservationProvider internal reservationProvider;
+import "./Unit.sol";
+import "./Owned.sol";
 
-    struct Reservation
-    {
-        uint id;
-        uint checkInKey;
-        string providerName;
-        bool isCreated;
+contract Reservation is IReservation, Owned {
+    uint256 counter;
+
+    struct ReservationInternalStruct {
+        uint256 reservationListPointer;
+        bytes32 unitKey;
+        address owner;
+        //custom data
+        uint256 checkInKey;
     }
 
-    Reservation[] private reservations;
+    Unit internal unit;
 
-    event CreateReservation(address owner, Reservation reservation);
-    event RefundReservation(address owner, Reservation reservation);
+    mapping(bytes32 => IPublicLock) public locks;
+    mapping(bytes32 => ReservationInternalStruct) public reservationStructs;
+    bytes32[] public reservationList;
 
-    mapping (uint => uint) private reservationsOfUnit;
-    mapping (uint => address) private reservationsOfOwner;
-    mapping (address => uint) private reservationCountOfOwner;
-    mapping (uint => Reservation) private reservationIdOfReservation;
-    mapping (uint => uint) private reservationCountOfUnit;
-    mapping (uint => uint) private unitOfReservation;
-
-    constructor() public{
-        publicLock = IPublicLock(0x9D3BAd7746Df8941d88377f65edE7f5F42c88e1b);
-        reservationProvider = ReservationProvider(0xFaDe2d70699edadBD9e673d25B47eE9A05F971B2);
+    constructor(address adrUnit) public {
+        unit = Unit(adrUnit);
     }
 
-    function refundReservation(uint reservationId, uint checkInKey) external
-    {
-        require(reservationIdOfReservation[reservationId].checkInKey == checkInKey);
-        uint tokenId = publicLock.getTokenIdFor(msg.sender);
-        publicLock.setKeyManagerOf(tokenId, address(this));
-        publicLock.cancelAndRefund(tokenId);
-
-        emit RefundReservation(msg.sender, reservations[reservationId]);
-
-        delete reservations[reservationId];
-        reservationProvider.decreaseUnitReservationCount(unitOfReservation[reservationId]);
+    function setUnitAddress(address adr) external onlyOwner {
+        unit = Unit(adr);
     }
 
-    /*function withdrawReservationFee(uint reservationId) public
-    {
-        //publicLock.withdraw(msg.sed, publicLock.keyPrice());
-    }*/
-
-    function createReservation(uint reservationUnitId) external payable
-    {
-        require(msg.value >= publicLock.keyPrice());
-        publicLock.purchase.value(msg.value)(publicLock.keyPrice(), msg.sender, address(0), '0x00');
-        uint id = reservations.length;
-        Reservation memory reservation = Reservation(
-            id,
-            generateRandomCheckInKey(block.number),
-            reservationProvider.getProviderOfUnit(reservationUnitId).name,
-            true);
-        reservations.push(reservation);
-        reservationsOfUnit[id] = reservationUnitId;
-        reservationCountOfUnit[reservationUnitId]++;
-        reservationProvider.increaseUnitReservationCount(reservationUnitId);
-
-        reservationIdOfReservation[id] = reservations[id];
-        reservationsOfOwner[id] = msg.sender;
-        reservationCountOfOwner[msg.sender]++;
-
-        unitOfReservation[id] = reservationUnitId;
-
-        emit CreateReservation(msg.sender, reservations[id]);
+    function isReservation(bytes32 reservationKey) public view returns (bool) {
+        if (reservationList.length == 0) return false;
+        return
+            reservationList[
+                reservationStructs[reservationKey].reservationListPointer
+            ] == reservationKey;
     }
 
-    function generateRandomCheckInKey(uint id) private pure returns (uint) {
-        uint rand = uint(keccak256(abi.encodePacked(id)));
-        return rand % 10**8;
-    }
-
-    function getReservationsOfUnit(uint reservationUnitId) external view returns(Reservation[] memory)
+    function getAllReservations()
+        external
+        view
+        returns (ReservationStruct[] memory)
     {
+        ReservationStruct[] memory array =
+            new ReservationStruct[](reservationList.length);
 
-        Reservation[] memory res = new Reservation[](reservationCountOfUnit[reservationUnitId]);
-        uint count = 0;
-
-        for(uint i = 0; i < reservations.length; i++)
-        {
-            if(reservationsOfUnit[i] == reservationUnitId)
-            {
-                res[count++] = reservations[i];
-            }
+        for (uint256 i = 0; i < array.length; i++) {
+            array[i].reservationKey = reservationList[i];
+            array[i].unitKey = reservationStructs[array[i].reservationKey]
+                .unitKey;
+            array[i].owner = reservationStructs[array[i].reservationKey].owner;
         }
-        return res;
+        return array;
     }
 
-    function getReservations() external view returns (Reservation[] memory)
+    function createReservation(address sender, bytes32 unitKey)
+        public
+        payable
+        returns (ReservationStruct memory)
     {
-        return reservations;
+        return createReservation(sender, bytes32(counter++), unitKey);
     }
 
-    function getReservationsOfOwner() external view returns (Reservation[] memory)
+    function createReservation(
+        address sender,
+        bytes32 reservationKey,
+        bytes32 unitKey
+    ) public returns (ReservationStruct memory) {
+        require(unit.isUnit(unitKey), "UNIT_DOES_NOT_EXIST");
+        require(!isReservation(reservationKey), "DUPLICATE_RESERVATION_KEY"); // duplicate key prohibited
+        locks[reservationKey] = unit.getLock(unitKey);
+        require(
+            address(locks[reservationKey]) != address(0),
+            "NO_LOCK_IN_RESERVATION"
+        );
+        require(purchaseReservation(sender, reservationKey), "PURCHASE_FAILED");
+
+        reservationList.push(reservationKey);
+        reservationStructs[reservationKey].reservationListPointer =
+            reservationList.length -
+            1;
+        reservationStructs[reservationKey].unitKey = unitKey;
+        reservationStructs[reservationKey].owner = sender;
+        reservationStructs[reservationKey]
+            .checkInKey = generateRandomCheckInKey(
+            block.number + uint256(unitKey)
+        );
+
+        unit.addReservation(unitKey, reservationKey);
+
+        return
+            ReservationStruct(
+                reservationKey,
+                reservationStructs[reservationKey].unitKey,
+                reservationStructs[reservationKey].owner
+            );
+    }
+
+    function deleteReservation(bytes32 reservationKey)
+        public
+        returns (bytes32)
     {
-        Reservation[] memory res = new Reservation[](reservationCountOfOwner[msg.sender]);
-        uint count = 0;
-        for (uint i = 0; i < reservations.length; i++)
-        {
-            if(reservationsOfOwner[i] == msg.sender)
-            {
-                res[count++] = reservations[i];
-            }
-        }
+        require(isReservation(reservationKey), "RESERVATION_DOES_NOT_EXIST");
 
-        return res;
+        // delete from table
+        uint256 rowToDelete =
+            reservationStructs[reservationKey].reservationListPointer;
+        bytes32 keyToMove = reservationList[reservationList.length - 1];
+        reservationList[rowToDelete] = keyToMove;
+        reservationStructs[reservationKey].reservationListPointer = rowToDelete;
+        reservationList.pop();
+
+        bytes32 unitKey = reservationStructs[reservationKey].unitKey;
+        unit.removeReservation(unitKey, reservationKey);
+
+        return reservationKey;
     }
 
-    function getKeyPrice() external view returns (uint) { return publicLock.keyPrice(); }
+    function purchaseReservation(address sender, bytes32 reservationKey)
+        internal
+        returns (bool)
+    {
+        require(
+            msg.value >= locks[reservationKey].keyPrice(),
+            "VALUE_TOO_SMALL"
+        );
+        locks[reservationKey].purchase.value(msg.value)(
+            locks[reservationKey].keyPrice(),
+            sender,
+            0x0d5900731140977cd80b7Bd2DCE9cEc93F8a176B,
+            "0x00"
+        );
+        uint256 tokenId = locks[reservationKey].getTokenIdFor(sender);
+        locks[reservationKey].setKeyManagerOf(tokenId, address(this));
+        require(
+            locks[reservationKey].keyManagerOf(tokenId) == address(this),
+            "LOCK_MANAGER_NOT_SET_TO_RESERVATION_CONTRACT"
+        );
+
+        return true;
+    }
+
+    function refundReservation(
+        address sender,
+        bytes32 reservationKey,
+        uint256 checkInKey
+    ) external returns (ReservationStruct memory) {
+        require(
+            reservationStructs[reservationKey].checkInKey == checkInKey,
+            "CHECK_IN_KEY_WRONG"
+        );
+        uint256 tokenId = locks[reservationKey].getTokenIdFor(sender);
+        locks[reservationKey].cancelAndRefund(tokenId);
+
+        return
+            ReservationStruct(
+                reservationKey,
+                reservationStructs[reservationKey].unitKey,
+                reservationStructs[reservationKey].owner
+            );
+    }
+
+    function generateRandomCheckInKey(uint256 id)
+        private
+        pure
+        returns (uint256)
+    {
+        return uint256(keccak256(abi.encodePacked(id))) % 10**8;
+    }
+
+    function getCheckInKey(address sender, bytes32 reservationKey)
+        external
+        view
+        returns (uint256)
+    {
+        require(
+            unit.isUnitOwner(
+                sender,
+                reservationStructs[reservationKey].unitKey
+            ),
+            "NOT_OWNER_GET_CHECK_IN_KEY"
+        );
+        return reservationStructs[reservationKey].checkInKey;
+    }
 }

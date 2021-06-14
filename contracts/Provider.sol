@@ -1,0 +1,168 @@
+// SPDX-License-Identifier: MIT
+
+pragma solidity >=0.5.17 <0.9.0;
+pragma experimental ABIEncoderV2;
+
+import "./interfaces/IProvider.sol";
+import "./LockFactory.sol";
+import "./BuissnesHourManager.sol";
+import "./datetime/contracts/DateTime.sol";
+
+contract Provider is IProvider, LockFactory, BuissnesHourManager {
+    uint256 counter = 0;
+
+    struct ProviderInternalStruct {
+        address owner;
+        uint256 providerListPointer; // needed to delete a "Provider"
+        bytes32[] unitKeys;
+        mapping(bytes32 => uint256) unitKeyPointers;
+        //custom data
+        string name;
+    }
+
+    mapping(bytes32 => ProviderInternalStruct) public providerStructs;
+    bytes32[] public providerList;
+
+    function isProvider(bytes32 providerKey) public view returns (bool) {
+        if (providerList.length == 0) return false;
+        return
+            providerList[providerStructs[providerKey].providerListPointer] ==
+            providerKey;
+    }
+
+    function isProviderOwner(address sender, bytes32 providerKey)
+        public
+        view
+        returns (bool)
+    {
+        return sender == providerStructs[providerKey].owner;
+    }
+
+    function getAllProviders() external view returns (ProviderStruct[] memory) {
+        ProviderStruct[] memory array =
+            new ProviderStruct[](providerList.length);
+
+        for (uint256 i = 0; i < array.length; i++) {
+            array[i].providerKey = providerList[i];
+            array[i].name = providerStructs[array[i].providerKey].name;
+            array[i].unitKeys = providerStructs[array[i].providerKey].unitKeys;
+            array[i].owner = providerStructs[array[i].providerKey].owner;
+        }
+        return array;
+    }
+
+    function renameProvider(
+        address sender,
+        bytes32 providerKey,
+        string calldata newName
+    ) external {
+        require(
+            isProviderOwner(sender, providerKey),
+            "NOT_OWNER_OF_PROVIDER_RENAME"
+        );
+        providerStructs[providerKey].name = newName;
+    }
+
+    function createProvider(address sender, string calldata name)
+        external
+        returns (ProviderStruct memory)
+    {
+        require(remote == msg.sender, "NOT_REMOTE_CALL");
+
+        return createProvider(sender, bytes32(counter++), name);
+    }
+
+    function createProvider(
+        address sender,
+        bytes32 providerKey,
+        string memory name
+    ) internal returns (ProviderStruct memory) {
+        require(!isProvider(providerKey), "DUPLICATE_PROVIDER_KEY"); // duplicate key prohibited
+        createNewLock(providerKey);
+        providerList.push(providerKey);
+        providerStructs[providerKey].providerListPointer =
+            providerList.length -
+            1;
+        providerStructs[providerKey].name = name;
+        providerStructs[providerKey].owner = sender;
+
+        initializeBuissnesHours(providerKey);
+        return
+            ProviderStruct(
+                providerStructs[providerKey].owner,
+                providerKey,
+                providerStructs[providerKey].unitKeys,
+                providerStructs[providerKey].name
+            );
+    }
+
+    function deleteProvider(address sender, bytes32 providerKey)
+        external
+        returns (bytes32)
+    {
+        //TODO: delete after all refunds are done
+        require(isProvider(providerKey), "PROVIDER_DOES_NOT_EXIST_DELETE");
+        require(
+            isProviderOwner(sender, providerKey),
+            "NOT_OWNER_DELETE_PROVIDER_DELETE"
+        );
+        // the following would break referential integrity
+        require(
+            providerStructs[providerKey].unitKeys.length <= 0,
+            "LENGTH_UNIT_KEYS_GREATER_THAN_ZERO_DELETE"
+        );
+        uint256 rowToDelete = providerStructs[providerKey].providerListPointer;
+        bytes32 keyToMove = providerList[providerList.length - 1];
+        providerList[rowToDelete] = keyToMove;
+        providerStructs[keyToMove].providerListPointer = rowToDelete;
+        providerList.pop();
+
+        return providerKey;
+    }
+
+    function addUnit(
+        address sender,
+        bytes32 providerKey,
+        bytes32 unitKey
+    ) public {
+        require(isProviderOwner(sender, providerKey), "NOT_OWNER_ADD_UNIT");
+        providerStructs[providerKey].unitKeys.push(unitKey);
+        providerStructs[providerKey].unitKeyPointers[unitKey] =
+            providerStructs[providerKey].unitKeys.length -
+            1;
+    }
+
+    function removeUnit(
+        address sender,
+        bytes32 providerKey,
+        bytes32 unitKey
+    ) public {
+        require(
+            isProviderOwner(sender, providerKey),
+            "NOT_OWNER_OF_PROVIDER_REMOVE_UNIT"
+        );
+        uint256 rowToDelete =
+            providerStructs[providerKey].unitKeyPointers[unitKey];
+        bytes32 keyToMove =
+            providerStructs[providerKey].unitKeys[
+                providerStructs[providerKey].unitKeys.length - 1
+            ];
+        providerStructs[providerKey].unitKeys[rowToDelete] = keyToMove;
+        providerStructs[providerKey].unitKeyPointers[keyToMove] = rowToDelete;
+        providerStructs[providerKey].unitKeys.pop();
+    }
+
+    function setBuissnesHours(
+        address sender,
+        bytes32 key,
+        uint8 weekDayType,
+        uint8 startHour,
+        uint8 endHour
+    ) external {
+        require(
+            isProviderOwner(sender, key),
+            "NOT_OWNER_OF_PROVIDER_SET_HOURS"
+        );
+        super.setBuissnesHours(key, weekDayType, startHour, endHour);
+    }
+}

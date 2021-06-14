@@ -18,11 +18,11 @@
  *
  */
 
-const HDWalletProvider = require('@truffle/hdwallet-provider');
+const HDWalletProvider = require("@truffle/hdwallet-provider");
 //const infuraKey = "0b13f7010f844b9abaea41a05659c7f2";
-const infuraKey = "0b13f7010f844b9abaea41a05659c7f2";
-//https://rinkeby.infura.io/v3/0b13f7010f844b9abaea41a05659c7f2
-const fs = require('fs');
+const infuraKey = "b7184f5521474c3ebb6f5166e4569e49";
+
+const fs = require("fs");
 const mnemonic = fs.readFileSync(".secret").toString().trim();
 
 module.exports = {
@@ -37,36 +37,18 @@ module.exports = {
    */
 
   networks: {
-    // Useful for testing. The `development` name is special - truffle uses it by default
-    // if it's defined here and no other network is specified at the command line.
-    // You should run a client (like ganache-cli, geth or parity) in a separate terminal
-    // tab if you use this network and you must also set the `host`, `port` and `network_id`
-    // options below to some value.
-    //
-    // development: {
-    //  host: "127.0.0.1",     // Localhost (default: none)
-    //  port: 8545,            // Standard Ethereum port (default: none)
-    //  network_id: "*",       // Any network (default: none)
-    // },
-    // Another network with more advanced options...
-    // advanced: {
-    // port: 8777,             // Custom port
-    // network_id: 1342,       // Custom network
-    // gas: 8500000,           // Gas sent with each transaction (default: ~6700000)
-    // gasPrice: 20000000000,  // 20 gwei (in wei) (default: 100 gwei)
-    // from: <address>,        // Account to send txs from (default: accounts[0])
-    // websocket: true        // Enable EventEmitter interface for web3 (default: false)
-    // },
-    // Useful for deploying to a public network.
-    // NB: It's important to wrap the provider as a function.
+    development: {
+      host: "localhost",
+      port: 8545,
+      network_id: "*"
+    },
     rinkeby: {
-
-    provider: () => new HDWalletProvider(mnemonic, `https://rinkeby.infura.io/v3/${infuraKey}`),
-      //provider: () => new HDWalletProvider(mnemonic, `https://kovan.infura.io/v3/${infuraKey}`),
-    gas: 5000000,
-    gasPrice: 25000000000,
-    network_id: 4,
-    skipDryRun: true     // Skip dry run before migrations? (default: false for public nets )
+      // provider: () => new HDWalletProvider( mnemonic, `wss://rinkeby.infura.io/ws/v3/${infuraKey}`),
+      provider: () => new HDWalletProvider(mnemonic, `https://rinkeby.infura.io/v3/${infuraKey}`),
+      gas: 5000000,
+      gasPrice: 2500000000,
+      network_id: 4,
+      skipDryRun: true, // Skip dry run before migrations? (default: false for public nets )
     },
     xDai: {
       provider: () => new HDWalletProvider(mnemonic, 'wss://rpc.xdaichain.com/wss'),
@@ -92,6 +74,14 @@ module.exports = {
     // network_id: 2111,   // This network is yours, in the cloud.
     // production: true    // Treats this network as if it was a public net. (default: false)
     // }
+
+
+
+
+  },
+  plugins: ["truffle-plugin-verify"],
+  api_keys: {
+    etherscan: "9W175QNRUDRQ414YHPMK1VUHQW2IJJSY3D",
   },
 
   // Set default mocha options here, use special reporters etc.
@@ -102,7 +92,8 @@ module.exports = {
   // Configure your compilers
   compilers: {
     solc: {
-      version: "^0.5.0",    // Fetch exact version from solc-bin (default: truffle's version)
+      //version: "0.5.17"
+      version: "^0.5.0", // Fetch exact version from solc-bin (default: truffle's version)
       // docker: true,        // Use "0.5.1" you've installed locally with docker (default: false)
       // settings: {          // See the solidity docs for advice about optimization and evmVersion
       //  optimizer: {
@@ -111,7 +102,7 @@ module.exports = {
       //  },
       //  evmVersion: "byzantium"
       // }
-    }
+    },
   },
 
   // Truffle DB is currently disabled by default; to enable it, change enabled: false to enabled: true
@@ -121,9 +112,6 @@ module.exports = {
   // $ truffle migrate --reset --compile-all
 
   db: {
-    enabled: false
+    enabled: false,
   },
-  etherscan: {
-    apiKey: "0x297a9db1739cfefb75de53f0c7d00139f92250e4"
-  }
 };
