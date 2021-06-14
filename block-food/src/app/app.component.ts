@@ -24,6 +24,19 @@ export class AppComponent implements OnInit {
   public mode: string = 'home';
 
   ngOnInit() {
+    console.log(this.contractService.provider.on)
+    this.contractService.provider.on("network", (newNetwork: any, oldNetwork: any) => {
+      // When a Provider makes its initial connection, it emits a "network"
+      // event with a null oldNetwork along with the newNetwork. So, if the
+      // oldNetwork exists, it represents a changing network
+      console.log(newNetwork,oldNetwork);
+      if(newNetwork.name !== 'rinkeby'){
+        alert('Please use the rinkeby test network to use this app');
+      }
+      if (oldNetwork) {
+          window.location.reload();
+      }
+  });
 
     this.myAddress$.pipe(
       filter(address => address),
