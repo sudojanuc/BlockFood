@@ -8,6 +8,8 @@ import "./LockFactory.sol";
 import "./BuissnesHourManager.sol";
 import "./datetime/contracts/DateTime.sol";
 
+import "./Owned.sol";
+
 contract Provider is IProvider, LockFactory, BuissnesHourManager {
     uint256 counter = 0;
 
@@ -18,9 +20,10 @@ contract Provider is IProvider, LockFactory, BuissnesHourManager {
         mapping(bytes32 => uint256) unitKeyPointers;
         //custom data
         string name;
+        uint8 timePerReservation;
     }
 
-    mapping(bytes32 => ProviderInternalStruct) public providerStructs;
+    mapping(bytes32 => ProviderInternalStruct) internal providerStructs;
     bytes32[] public providerList;
 
     function isProvider(bytes32 providerKey) public view returns (bool) {
@@ -47,8 +50,18 @@ contract Provider is IProvider, LockFactory, BuissnesHourManager {
             array[i].name = providerStructs[array[i].providerKey].name;
             array[i].unitKeys = providerStructs[array[i].providerKey].unitKeys;
             array[i].owner = providerStructs[array[i].providerKey].owner;
+            array[i].timePerReservation = providerStructs[array[i].providerKey]
+                .timePerReservation;
         }
         return array;
+    }
+
+    function getTimePerReservation(bytes32 providerKey)
+        public
+        view
+        returns (uint8)
+    {
+        return providerStructs[providerKey].timePerReservation;
     }
 
     function renameProvider(
@@ -63,19 +76,25 @@ contract Provider is IProvider, LockFactory, BuissnesHourManager {
         providerStructs[providerKey].name = newName;
     }
 
-    function createProvider(address sender, string calldata name)
-        external
-        returns (ProviderStruct memory)
-    {
-        require(remote == msg.sender, "NOT_REMOTE_CALL");
-
-        return createProvider(sender, bytes32(counter++), name);
+    function createProvider(
+        address sender,
+        string calldata name,
+        uint8 timePerReservation
+    ) external checkRemote returns (ProviderStruct memory) {
+        return
+            createProvider(
+                sender,
+                bytes32(counter++),
+                name,
+                timePerReservation
+            );
     }
 
     function createProvider(
         address sender,
         bytes32 providerKey,
-        string memory name
+        string memory name,
+        uint8 timePerReservation
     ) internal returns (ProviderStruct memory) {
         require(!isProvider(providerKey), "DUPLICATE_PROVIDER_KEY"); // duplicate key prohibited
         createNewLock(providerKey);
@@ -85,6 +104,7 @@ contract Provider is IProvider, LockFactory, BuissnesHourManager {
             1;
         providerStructs[providerKey].name = name;
         providerStructs[providerKey].owner = sender;
+        providerStructs[providerKey].timePerReservation = timePerReservation;
 
         initializeBuissnesHours(providerKey);
         return
@@ -92,12 +112,14 @@ contract Provider is IProvider, LockFactory, BuissnesHourManager {
                 providerStructs[providerKey].owner,
                 providerKey,
                 providerStructs[providerKey].unitKeys,
-                providerStructs[providerKey].name
+                providerStructs[providerKey].name,
+                providerStructs[providerKey].timePerReservation
             );
     }
 
     function deleteProvider(address sender, bytes32 providerKey)
         external
+        checkRemote
         returns (bytes32)
     {
         //TODO: delete after all refunds are done
@@ -124,7 +146,7 @@ contract Provider is IProvider, LockFactory, BuissnesHourManager {
         address sender,
         bytes32 providerKey,
         bytes32 unitKey
-    ) public {
+    ) public checkRemote {
         require(isProviderOwner(sender, providerKey), "NOT_OWNER_ADD_UNIT");
         providerStructs[providerKey].unitKeys.push(unitKey);
         providerStructs[providerKey].unitKeyPointers[unitKey] =
@@ -136,7 +158,7 @@ contract Provider is IProvider, LockFactory, BuissnesHourManager {
         address sender,
         bytes32 providerKey,
         bytes32 unitKey
-    ) public {
+    ) public checkRemote {
         require(
             isProviderOwner(sender, providerKey),
             "NOT_OWNER_OF_PROVIDER_REMOVE_UNIT"
@@ -158,7 +180,7 @@ contract Provider is IProvider, LockFactory, BuissnesHourManager {
         uint8 weekDayType,
         uint8 startHour,
         uint8 endHour
-    ) external {
+    ) external checkRemote {
         require(
             isProviderOwner(sender, key),
             "NOT_OWNER_OF_PROVIDER_SET_HOURS"

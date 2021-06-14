@@ -10,6 +10,7 @@ interface IProvider {
         bytes32 providerKey;
         bytes32[] unitKeys;
         string name;
+        uint8 timePerReservation;
     }
 
     function isProviderOwner(address sender, bytes32 providerKey)
@@ -25,7 +26,7 @@ interface IProvider {
         string calldata newName
     ) external;
 
-    function createProvider(address sender, string calldata name)
+    function createProvider(address sender, string calldata name, uint8 timePerReservation)
         external
         returns (ProviderStruct memory);
 

@@ -64,10 +64,10 @@ contract ReservationHandler is Owned, IReservationHandler {
         provider.renameProvider(msg.sender, providerKey, newName);
     }
 
-    function createProvider(string calldata name) external {
+    function createProvider(string calldata name, uint8 timePerReservation) external {
         emit LogNewProvider(
             msg.sender,
-            provider.createProvider(msg.sender, name)
+            provider.createProvider(msg.sender, name, timePerReservation)
         );
     }
 

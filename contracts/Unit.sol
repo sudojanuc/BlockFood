@@ -9,7 +9,6 @@ import "./interfaces/unlock/IPublicLock.sol";
 import "./Owned.sol";
 import "./Provider.sol";
 
-
 contract Unit is IUnit, Owned {
     uint256 counter;
 
@@ -24,7 +23,7 @@ contract Unit is IUnit, Owned {
 
     Provider internal provider;
 
-    mapping(bytes32 => UnitInternalStruct) public unitStructs;
+    mapping(bytes32 => UnitInternalStruct) internal unitStructs;
     bytes32[] public unitList;
 
     constructor(address adr) public {
@@ -50,7 +49,8 @@ contract Unit is IUnit, Owned {
         returns (bool)
     {
         require(
-            provider.isProviderOwner(sender, unitStructs[unitKey].providerKey), "SENDER_IS_NOT_OWNER"
+            provider.isProviderOwner(sender, unitStructs[unitKey].providerKey),
+            "SENDER_IS_NOT_OWNER"
         );
 
         return true;
@@ -69,11 +69,19 @@ contract Unit is IUnit, Owned {
         return array;
     }
 
+    function getTimePerReservation(bytes32 unitKey)
+        public
+        view
+        returns (uint8)
+    {
+        return provider.getTimePerReservation(unitStructs[unitKey].providerKey);
+    }
+
     function createUnit(
         address sender,
         bytes32 providerKey,
         uint16 guestCount
-    ) external returns (UnitStruct memory) {
+    ) external checkRemote returns (UnitStruct memory) {
         return createUnit(sender, bytes32(counter++), providerKey, guestCount);
     }
 
@@ -82,7 +90,7 @@ contract Unit is IUnit, Owned {
         bytes32 unitKey,
         bytes32 providerKey,
         uint16 guestCount
-    ) public returns (UnitStruct memory) {
+    ) internal returns (UnitStruct memory) {
         require(provider.isProvider(providerKey), "PROVIDER_DOES_NOT_EXIST");
         require(!isUnit(unitKey), "DUPLICATE_UNIT_KEY"); // duplicate key prohibited
         require(guestCount > 0, "GUEST_COUNT_IMPLAUSIBLE");
@@ -109,6 +117,7 @@ contract Unit is IUnit, Owned {
 
     function deleteUnit(address sender, bytes32 unitKey)
         external
+        checkRemote
         returns (bytes32)
     {
         require(isUnit(unitKey), "UNIT_DOES_NOT_EXIST");

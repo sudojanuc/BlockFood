@@ -7,6 +7,8 @@ interface IReservation {
         bytes32 reservationKey;
         bytes32 unitKey;
         address owner;
+        uint startTime;
+        uint endTime;
     }
 
     function setUnitAddress(address adr) external;
