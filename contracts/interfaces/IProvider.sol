@@ -34,8 +34,6 @@ interface IProvider {
         external
         returns (bytes32);
 
-    function initializeUnlock() external;
-
     function getKeyPrice(bytes32 key) external view returns (uint256);
 
     function updateKeyPrice(bytes32 key, uint256 keyPrice) external;

@@ -18,7 +18,7 @@ interface IReservation {
         view
         returns (ReservationStruct[] memory);
 
-    function createReservation(address sender, bytes32 unitKey)
+    function createReservation(address sender, bytes32 unitKey, uint256 startTime)
         external
         payable
         returns (ReservationStruct memory);

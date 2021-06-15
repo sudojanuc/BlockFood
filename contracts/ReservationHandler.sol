@@ -138,10 +138,10 @@ contract ReservationHandler is Owned, IReservationHandler {
         return reservation.getAllReservations();
     }
 
-    function createReservation(bytes32 unitKey) external payable {
+    function createReservation(bytes32 unitKey, uint256 startTime) external payable {
         emit LogNewReservation(
             msg.sender,
-            reservation.createReservation.value(msg.value)(msg.sender, unitKey)
+            reservation.createReservation.value(msg.value)(msg.sender, unitKey, startTime)
         );
     }
 
@@ -174,10 +174,6 @@ contract ReservationHandler is Owned, IReservationHandler {
     }
 
     //lockFactory
-    function initializeUnlock() external {
-        provider.initializeUnlock();
-    }
-
     function getKeyPrice(bytes32 providerKey) external view returns (uint256) {
         return provider.getKeyPrice(providerKey);
     }

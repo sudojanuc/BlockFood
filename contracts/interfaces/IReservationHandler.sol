@@ -42,7 +42,7 @@ interface IReservationHandler {
         view
         returns (IReservation.ReservationStruct[] memory);
 
-    function createReservation(bytes32 unitKey) external payable;
+    function createReservation(bytes32 unitKey, uint256 startTime) external payable;
 
     function deleteReservation(bytes32 reservationKey) external;
 
@@ -66,8 +66,6 @@ interface IReservationHandler {
     function deleteUnit(bytes32 unitKey) external;
 
     //lockfactory
-    function initializeUnlock() external;
-
     function getKeyPrice(bytes32 providerKey) external view returns (uint256);
 
     function updateKeyPrice(bytes32 providerKey, uint256 keyPrice) external;

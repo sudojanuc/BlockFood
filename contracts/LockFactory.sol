@@ -13,6 +13,10 @@ contract LockFactory is Owned {
 
     mapping(bytes32 => IPublicLock) lockToKey;
 
+    constructor() public {
+        unlock = IUnlock(0xD8C88BE5e8EB88E38E6ff5cE186d764676012B0b);
+    }
+
     function setLockAddress(address payable adr, bytes32 key)
         external
         onlyOwner
@@ -20,14 +24,16 @@ contract LockFactory is Owned {
         lockToKey[key] = IPublicLock(adr);
     }
 
-    function initializeUnlock() public {
-        unlock.initialize(msg.sender);
-    }
-
     function createNewLock(bytes32 key) internal {
-        //unlock.createLock(_expirationDuration, _tokenAddress, _keyPrice, _maxNumberOfKeys, _lockName, _salt);
-        IPublicLock lock =
-            IPublicLock(0x2D7Fa4dbdF5E7bfBC87523396aFfD6d38c9520fa);
+        unlock.createLock(
+            100,
+            address(0),
+            100000000000000,
+            20,
+            "blu",
+            bytes12(keccak256(abi.encodePacked(key)))
+        );
+        IPublicLock lock = IPublicLock(address(uint160((unlock.publicLockAddress()))));
         lockToKey[key] = lock;
     }
 
