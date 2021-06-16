@@ -4,18 +4,22 @@ const Unit = artifacts.require("Unit");
 const Reservation = artifacts.require("Reservation");
 
 module.exports = function (deployer) {
+  var provider, reservation, unit, reservationHander;
   deployer
     .deploy(Provider)
     // .deploy(Provider, { overwrite: false })
-    .then(function () {
+    .then(function (instance) {
+      provider = instance;
       return deployer.deploy(Unit, Provider.address);
       // return deployer.deploy(Unit, { overwrite: false });
     })
-    .then(function () {
+    .then(function (instance) {
+      unit = instance;
       return deployer.deploy(Reservation, Unit.address);
       // return deployer.deploy(Reservation, { overwrite: false });
     })
-    .then(function () {
+    .then(function (instance) {
+      reservation = instance;
       return deployer.deploy(
         ReservationHandler,
         Provider.address,
@@ -23,5 +27,12 @@ module.exports = function (deployer) {
         Reservation.address
       );
       // return deployer.deploy(ReservationHandler, { overwrite: false });
-    });
+    })
+    .then(function (instance) {
+      reservationHander = instance;
+      provider.setRemote(reservationHander.address);
+      unit.setRemote(reservationHander.address);
+      reservation.setRemote(reservationHander.address);
+    })
+    ;
 };
