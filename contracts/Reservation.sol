@@ -44,6 +44,7 @@ contract Reservation is IReservation, AccessRestriction {
     }
 
     function isTimeAvailable(uint256 time) public view returns (bool) {
+        require(time >= now, "PAST_NOT_AVAILABLE"); //TODO use oracle if possible
         uint256 i;
         for (i = 0; i < reservationList.length; i++) {
             if (
@@ -208,7 +209,8 @@ contract Reservation is IReservation, AccessRestriction {
     function getCheckInKey(address sender, bytes32 reservationKey)
         external
         view
-        onlyRemote
+        //TODO add this for production
+        //onlyRemote
         returns (uint256)
     {
         require(

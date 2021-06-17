@@ -48,12 +48,7 @@ contract Unit is IUnit, ParentNode {
         view
         returns (bool)
     {
-        require(
-            provider.isProviderOwner(sender, unitStructs[unitKey].providerKey),
-            "SENDER_IS_NOT_OWNER"
-        );
-
-        return true;
+        return provider.isProviderOwner(sender, unitStructs[unitKey].providerKey);
     }
 
     function getAllUnits() external view returns (UnitStruct[] memory) {
