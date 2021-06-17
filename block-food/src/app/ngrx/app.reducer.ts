@@ -37,10 +37,10 @@ export const appReducer = createReducer(
   on(setRestaurantsLoading, (state, { isLoading }) => ({ ...state, restaurantsLoading: isLoading})),
   on(addReservation, (state, { reservation }) => {
     let table = state.tables.find((table: Table) =>
-      table.unitId == reservation.unitKey);
+      table.unitKey == reservation.unitKey);
 
     let restaurant = state.restaurants.find((restaurant: Restaurant) =>
-      restaurant.providerId == table?.providerKey
+      restaurant.providerKey == table?.providerKey
     );
 
     return ({
@@ -86,7 +86,7 @@ export const selectTables = createSelector<any, any, any>(
 
 export const selectTablesOfRestaurant = (restaurant: Restaurant) => createSelector<any, any, any>(
   (reducer: any) => reducer.data,
-  (state: AppState) => state.tables.filter((table) => table?.providerKey == restaurant?.providerId)
+  (state: AppState) => state.tables.filter((table) => table?.providerKey == restaurant?.providerKey)
 );
 
 export const selectReservations = createSelector<any, any, any>(

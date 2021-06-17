@@ -76,6 +76,7 @@ import { HashLocationStrategy, LocationStrategy } from '@angular/common';
     MatNativeDateModule,
     MatTableModule,
     MatProgressSpinnerModule,
+    MatIconModule
     ],
   providers: [
     {provide: LocationStrategy, useClass: HashLocationStrategy},

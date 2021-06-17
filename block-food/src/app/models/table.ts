@@ -1,5 +1,5 @@
 export interface Table {
-    unitId: string,
+    unitKey: string,
     guestCount: number,
     providerKey: string,
     reservationKeys: string[]

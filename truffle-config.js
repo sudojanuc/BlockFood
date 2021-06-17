@@ -19,8 +19,8 @@
  */
 
 const HDWalletProvider = require("@truffle/hdwallet-provider");
-//const infuraKey = "0b13f7010f844b9abaea41a05659c7f2";
-const infuraKey = "b7184f5521474c3ebb6f5166e4569e49";
+const infuraKey = "341f93e32677417caab076c24bdc90ea";
+// const infuraKey = "b7184f5521474c3ebb6f5166e4569e49";
 
 const fs = require("fs");
 const mnemonic = fs.readFileSync(".secret").toString().trim();
@@ -44,9 +44,11 @@ module.exports = {
     },
     rinkeby: {
       // provider: () => new HDWalletProvider( mnemonic, `wss://rinkeby.infura.io/ws/v3/${infuraKey}`),
-      provider: () => new HDWalletProvider(mnemonic, `https://rinkeby.infura.io/v3/${infuraKey}`),
+      provider: () => new HDWalletProvider( mnemonic, `wss://rinkeby.infura.io/ws/v3/${infuraKey}`),
+
+      // provider: () => new HDWalletProvider(mnemonic, `https://rinkeby.infura.io/v3/${infuraKey}`),
       gas: 5000000,
-      gasPrice: 2500000000,
+      gasPrice: 2000000000,
       network_id: 4,
       skipDryRun: true, // Skip dry run before migrations? (default: false for public nets )
     },
@@ -61,12 +63,12 @@ module.exports = {
     matic: {
       provider: () => new HDWalletProvider(mnemonic, `wss://rpc-mumbai.maticvigil.com/ws`),
       network_id: 80001,
-      confirmations: 2,
-      timeoutBlocks: 200,
-      skipDryRun: true,
-      gas: 200000,
-      gasPrice: 10000000000,
-      timeoutBlocks: 5000
+      // confirmations: 2,
+      // timeoutBlocks: 200,
+      // skipDryRun: true,
+      // gas: 200000,
+      // gasPrice: 10000000000,
+      // timeoutBlocks: 5000
     },
     // Useful for private networks
     // private: {

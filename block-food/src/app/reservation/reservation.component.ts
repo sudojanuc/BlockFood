@@ -19,6 +19,8 @@ export class ReservationComponent implements OnInit {
   public restaurant: Restaurant;
   selected: Table | undefined;
   myTables$: Observable<Table[]>;
+  date:any = new Date();
+  time:any='';
 
   constructor(
     // public dialogRef: MatDialogRef<ReservationComponent>,
@@ -63,7 +65,13 @@ export class ReservationComponent implements OnInit {
       alert('Please select a Table');
       return;
     }
-    this.contractService.createReservation(this.selected);
+    let hours = this.time.substr(0,2);
+    let mins = this.time.substr(3);
+    this.date.setHours(hours);
+    this.date.setMinutes(mins);
+    console.log(this.date, this.time);
+    
+    this.contractService.createReservation(this.selected, this.date.valueOf());
 
 
   }

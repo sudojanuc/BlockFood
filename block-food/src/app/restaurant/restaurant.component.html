@@ -7,6 +7,11 @@
                 <mat-label>Restaurant name</mat-label>
                 <input matInput [(ngModel)]="name">
             </mat-form-field>
+            <br>
+            <mat-form-field appearance="fill">
+                <mat-label>Reservation time (hours)</mat-label>
+                <input type="number" matInput [(ngModel)]="timePerReservation"> 
+            </mat-form-field>
         </mat-card-content>
         <mat-card-actions>
             <button mat-flat-button color="primary" (click)="saveRestaurant()">Save</button>
@@ -18,7 +23,8 @@
             <mat-card>
                 <mat-card-title>Your Restaurant</mat-card-title>
                 <mat-card-content style="margin-top: 5%;">
-                    <div>name: {{(myRestaurant$ | async).name}}</div>
+                    <div>Name: {{(myRestaurant$ | async).name}}</div>
+                    <div><mat-icon inline="true">access_time</mat-icon>: {{(myRestaurant$ | async).timePerReservation}} hours</div>
                 </mat-card-content>
             </mat-card>
             
