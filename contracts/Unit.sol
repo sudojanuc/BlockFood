@@ -6,10 +6,10 @@ pragma experimental ABIEncoderV2;
 import "./interfaces/IUnit.sol";
 import "./interfaces/unlock/IPublicLock.sol";
 
-import "./Owned.sol";
+import "./AccessRestriction.sol";
 import "./Provider.sol";
 
-contract Unit is IUnit, Owned {
+contract Unit is IUnit, ParentNode {
     uint256 counter;
 
     struct UnitInternalStruct {
@@ -34,7 +34,7 @@ contract Unit is IUnit, Owned {
         return provider.getLock(unitStructs[key].providerKey);
     }
 
-    function setProviderAddress(address adr) external onlyOwner {
+    function setProviderAddress(address adr) external onlyRemote {
         provider = Provider(adr);
     }
 
@@ -81,7 +81,7 @@ contract Unit is IUnit, Owned {
         address sender,
         bytes32 providerKey,
         uint16 guestCount
-    ) external checkRemote returns (UnitStruct memory) {
+    ) external onlyRemote returns (UnitStruct memory) {
         return createUnit(sender, bytes32(counter++), providerKey, guestCount);
     }
 
@@ -117,7 +117,7 @@ contract Unit is IUnit, Owned {
 
     function deleteUnit(address sender, bytes32 unitKey)
         external
-        checkRemote
+        onlyRemote
         returns (bytes32)
     {
         require(isUnit(unitKey), "UNIT_DOES_NOT_EXIST");
@@ -138,14 +138,20 @@ contract Unit is IUnit, Owned {
         return unitKey;
     }
 
-    function addReservation(bytes32 unitKey, bytes32 reservationKey) public {
+    function addReservation(bytes32 unitKey, bytes32 reservationKey)
+        public
+        onlyBy(child)
+    {
         unitStructs[unitKey].reservationKeys.push(reservationKey);
         unitStructs[unitKey].reservationKeyPointers[reservationKey] =
             unitStructs[unitKey].reservationKeys.length -
             1;
     }
 
-    function removeReservation(bytes32 unitKey, bytes32 reservationKey) public {
+    function removeReservation(bytes32 unitKey, bytes32 reservationKey)
+        public
+        onlyBy(child)
+    {
         uint256 rowToDelete =
             unitStructs[unitKey].reservationKeyPointers[reservationKey];
         bytes32 keyToMove =

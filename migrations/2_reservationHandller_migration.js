@@ -28,11 +28,4 @@ module.exports = function (deployer) {
       );
       // return deployer.deploy(ReservationHandler, { overwrite: false });
     })
-    .then(function (instance) {
-      reservationHander = instance;
-      provider.setRemote(reservationHander.address);
-      unit.setRemote(reservationHander.address);
-      reservation.setRemote(reservationHander.address);
-    })
-    ;
 };

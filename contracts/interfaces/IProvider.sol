@@ -1,4 +1,5 @@
 // SPDX-License-Keyentifier: MIT
+
 pragma solidity 0.5.17;
 pragma experimental ABIEncoderV2;
 
@@ -13,6 +14,11 @@ interface IProvider {
         uint8 timePerReservation;
     }
 
+    function setChild(address childAdr) external;
+    function setRemote(address adr) external;
+
+    function setLockAddress(address payable adr, bytes32 key) external;
+
     function isProviderOwner(address sender, bytes32 providerKey)
         external
         view
@@ -26,9 +32,11 @@ interface IProvider {
         string calldata newName
     ) external;
 
-    function createProvider(address sender, string calldata name, uint8 timePerReservation)
-        external
-        returns (ProviderStruct memory);
+    function createProvider(
+        address sender,
+        string calldata name,
+        uint8 timePerReservation
+    ) external returns (ProviderStruct memory);
 
     function deleteProvider(address sender, bytes32 providerKey)
         external

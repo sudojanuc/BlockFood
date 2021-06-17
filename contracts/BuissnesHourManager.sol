@@ -16,7 +16,7 @@ contract BuissnesHourManager {
         saturday,
         sunday
     }
-    WeekDayType public types;
+    WeekDayType internal types;
 
     struct BuissnesDay {
         WeekDayType weekday;

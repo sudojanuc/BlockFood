@@ -8,9 +8,10 @@ import "./LockFactory.sol";
 import "./BuissnesHourManager.sol";
 import "./datetime/contracts/DateTime.sol";
 
-import "./Owned.sol";
+import "./AccessRestriction.sol";
+import "./ParentNode.sol";
 
-contract Provider is IProvider, LockFactory, BuissnesHourManager {
+contract Provider is IProvider, ParentNode, LockFactory, BuissnesHourManager {
     uint256 counter = 0;
 
     struct ProviderInternalStruct {
@@ -80,7 +81,7 @@ contract Provider is IProvider, LockFactory, BuissnesHourManager {
         address sender,
         string calldata name,
         uint8 timePerReservation
-    ) external checkRemote returns (ProviderStruct memory) {
+    ) external onlyRemote returns (ProviderStruct memory) {
         return
             createProvider(
                 sender,
@@ -119,7 +120,7 @@ contract Provider is IProvider, LockFactory, BuissnesHourManager {
 
     function deleteProvider(address sender, bytes32 providerKey)
         external
-        checkRemote
+        onlyRemote
         returns (bytes32)
     {
         //TODO: delete after all refunds are done
@@ -146,7 +147,7 @@ contract Provider is IProvider, LockFactory, BuissnesHourManager {
         address sender,
         bytes32 providerKey,
         bytes32 unitKey
-    ) public checkRemote {
+    ) public onlyBy(child) {
         require(isProviderOwner(sender, providerKey), "NOT_OWNER_ADD_UNIT");
         providerStructs[providerKey].unitKeys.push(unitKey);
         providerStructs[providerKey].unitKeyPointers[unitKey] =
@@ -158,7 +159,7 @@ contract Provider is IProvider, LockFactory, BuissnesHourManager {
         address sender,
         bytes32 providerKey,
         bytes32 unitKey
-    ) public checkRemote {
+    ) public onlyBy(child) {
         require(
             isProviderOwner(sender, providerKey),
             "NOT_OWNER_OF_PROVIDER_REMOVE_UNIT"
@@ -180,7 +181,7 @@ contract Provider is IProvider, LockFactory, BuissnesHourManager {
         uint8 weekDayType,
         uint8 startHour,
         uint8 endHour
-    ) external checkRemote {
+    ) external onlyRemote {
         require(
             isProviderOwner(sender, key),
             "NOT_OWNER_OF_PROVIDER_SET_HOURS"

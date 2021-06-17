@@ -3,13 +3,14 @@
 pragma solidity >=0.5.17 <0.9.0;
 pragma experimental ABIEncoderV2;
 
-import "./Owned.sol";
 import "./interfaces/IProvider.sol";
 import "./interfaces/IUnit.sol";
 import "./interfaces/IReservation.sol";
 import "./interfaces/IReservationHandler.sol";
 
-contract ReservationHandler is Owned, IReservationHandler {
+import "./AccessRestriction.sol";
+
+contract ReservationHandler is IReservationHandler, AccessRestriction {
     IProvider internal provider;
     event LogNewProvider(address sender, IProvider.ProviderStruct provider);
     event LogProviderDeleted(address sender, bytes32 providerKey);
@@ -37,13 +38,18 @@ contract ReservationHandler is Owned, IReservationHandler {
         provider = IProvider(adrProvider);
         unit = IUnit(adrUnit);
         reservation = IReservation(adrReservation);
+
+        provider.setRemote(address(this));
+        unit.setRemote(address(this));
+        reservation.setRemote(address(this));
+
+        unit.setChild(address(reservation));
+        provider.setChild(address(unit));
     }
 
     //provider methodes
-    function setProviderAddress(address adr) external onlyOwner {
-        require(address(unit) != address(0), "SET_UNIT_FIRST");
-        provider = IProvider(adr);
-        unit.setProviderAddress(adr);
+    function setLockAddress(address payable adr, bytes32 key) external{
+        provider.setLockAddress(adr, key);
     }
 
     function isProviderOwner(bytes32 providerKey) public view returns (bool) {
@@ -100,10 +106,10 @@ contract ReservationHandler is Owned, IReservationHandler {
     }
 
     //unit methodes
-    function setUnitAddress(address adr) external onlyOwner {
-        require(address(reservation) != address(0), "SET_RESERVATION_FIRST");
-        unit = IUnit(adr);
-        reservation.setUnitAddress(adr);
+    function setProviderAddress(address adr) external {
+        require(address(unit) != address(0), "SET_UNIT_FIRST");
+        provider = IProvider(adr);
+        unit.setProviderAddress(adr);
     }
 
     function isUnitOwner(bytes32 unitKey) public view returns (bool) {
@@ -126,6 +132,12 @@ contract ReservationHandler is Owned, IReservationHandler {
     }
 
     //reservation methodes
+    function setUnitAddress(address adr) external {
+        require(address(reservation) != address(0), "SET_RESERVATION_FIRST");
+        unit = IUnit(adr);
+        reservation.setUnitAddress(adr);
+    }
+
     function setReservationAddress(address adr) external onlyOwner {
         reservation = IReservation(adr);
     }
