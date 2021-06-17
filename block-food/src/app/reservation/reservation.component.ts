@@ -69,9 +69,10 @@ export class ReservationComponent implements OnInit {
     let mins = this.time.substr(3);
     this.date.setHours(hours);
     this.date.setMinutes(mins);
-    console.log(this.date, this.time);
+    let unix = Math.floor(this.date.valueOf() / 1000 )
+    console.log(unix);
     
-    this.contractService.createReservation(this.selected, this.date.valueOf());
+    this.contractService.createReservation(this.selected, unix);
 
 
   }

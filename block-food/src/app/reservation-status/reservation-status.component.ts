@@ -64,8 +64,8 @@ export class ReservationStatusComponent implements OnInit {
   }
 
   getDate(number: BigInt){
-    
-    return new Date(+number.toString())
+    let unix = +number.toString()*1000;
+    return new Date(unix);
 
   }
 
