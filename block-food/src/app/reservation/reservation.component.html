@@ -2,13 +2,13 @@
 <mat-divider class=""></mat-divider>
 <div class="marginTop">
 <mat-form-field>
-    <input matInput [matDatepicker]="picker" placeholder="Choose a date">
+    <input matInput [matDatepicker]="picker" [(value)]='date' placeholder="Choose a date">
     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
     <mat-datepicker #picker></mat-datepicker>
 </mat-form-field>
 <div>
     <span>Choose a time</span>
-<input matInput placeholder="Choose a time" type="time" style="width: 90px;margin-left: 20px;">
+<input matInput placeholder="Choose a time" type="time"  [(ngModel)]='time' style="width: 90px;margin-left: 20px;">
 </div>
 </div>
 <mat-divider class="marginTop"></mat-divider>

@@ -29,7 +29,7 @@ export class AppEffects {
         ofType(fetchRestaurantsType),
         mergeMap(() => from(this.contractService.getAllRestaurents())
             .pipe(
-                tap(res => console.log(res)),
+                // tap(res => console.log(res)),
                 map(restaurants => setRestaurants({ restaurants: restaurants })),
                 catchError(() => EMPTY)
             ))
@@ -39,10 +39,10 @@ export class AppEffects {
     createRestaurant$ = createEffect(() => this.actions$.pipe(
         ofType(createRestaurantType),
         switchMap((action: any) =>
-            from(this.contractService.createRestaurant(action.payload.name))
+            from(this.contractService.createRestaurant(action.payload.name, action.payload.time))
                 .pipe(
                     // tap(console.log),
-                    map(() => setRestaurantsLoading({isLoading: true})),
+                    map(() => setRestaurantsLoading({ isLoading: true })),
                     catchError(() => EMPTY)
                 ))
     )
@@ -75,7 +75,7 @@ export class AppEffects {
             from(this.contractService.saveTable(action.payload.restaurant, action.payload.guestCount))
                 .pipe(
                     // tap(console.log),
-                    map(() => setTablesLoading({isLoading: true})),
+                    map(() => setTablesLoading({ isLoading: true })),
                     catchError(() => EMPTY)
                 ))
     )
@@ -93,11 +93,13 @@ export class AppEffects {
                         reservations: reservations
                             .map((reservation: Reservation) => {
                                 let table: Table = store.data.tables.find((table: Table) =>
-                                    table.unitId == reservation.unitKey
+                                    table.unitKey == reservation.unitKey
                                 );
                                 let restaurant = store.data.restaurants.find((restaurant: Restaurant) =>
-                                    restaurant.providerId == table.providerKey
+                                    restaurant.providerKey == table?.providerKey
                                 );
+                                // reservation.startTime = new Date(+reservation.startTime.toString());
+                                // reservation.endTime = new Date(+reservation.endTime.toString());
                                 return {
                                     ...reservation,
                                     restaurant: restaurant,

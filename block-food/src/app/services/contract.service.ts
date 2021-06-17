@@ -24,22 +24,20 @@ export class ContractService {
     @Inject(WEB3PROVIDER) public web3provider: any,
     private store: Store    
     ) {   
-      console.log(window.ethereum);
-      
       if (typeof window.ethereum !== 'undefined') {   
       this.provider = new ethers.providers.Web3Provider(window.ethereum);
       this.contract = new ethers.Contract(this.daiAddress, this.daiAbi, this.provider);
       this.contract = this.contract.connect(this.provider.getSigner());
 
-    console.log(this.web3provider, this.provider, this.contract,this.provider.getSigner());
+      this.web3provider.enable()
+      .then((address: string) => 
+          this.store.dispatch(setAddress({address: address[0]}))
+          );
   } else {
     alert('please install metamask provider and then reload this page')
   }
   }
-  
-  public createContract():any {
 
-  }
   public connectMetamask(){
     
     this.web3provider.enable()
@@ -50,8 +48,8 @@ export class ContractService {
   }
   
   
-  public createRestaurant(name:string): Observable<boolean>{
-    return this.contract.createProvider(name); 
+  public createRestaurant(name:string, time: number): Observable<boolean>{
+    return this.contract.createProvider(name, time); 
   }
   
   public getRestaurant():Promise<Restaurant[]>{
@@ -59,8 +57,6 @@ export class ContractService {
     
   }
   getAllRestaurents(): Promise<Restaurant[]> {
-    console.log(this.contract);
-    
     return this.contract.getAllProviders();
   }
   
@@ -70,16 +66,25 @@ export class ContractService {
   }
   
   saveTable(restaurant: Restaurant, guestCount: number): Observable<boolean> {
-    return this.contract.functions.createUnit(restaurant.providerId,guestCount); 
+    return this.contract.functions.createUnit(restaurant.providerKey,guestCount); 
+  }
+
+  getKeyPrice(provider: Restaurant){
+    return this.contract.getKeyPrice(provider.providerKey);
   }
   
-  async createReservation (selected: Table | undefined) {
-    // let price = await this.contract.getKeyPrice();
+  async createReservation (selected: Table | undefined, time: number) {
+    let price = await this.contract.getKeyPrice(selected?.providerKey);
+    console.log(price.toString(), selected, utils.parseEther('0.01'), price);
+    
     // price = price.toString();
     
-    this.contract.createReservation(selected?.unitId,
-      // {value:price}
-      { value: utils.parseEther('0.01') }
+    return this.contract.createReservation(
+      // price,
+      selected?.unitKey,
+      time,
+      { value:price }
+      // { value: utils.parseEther('0.01') }
       );
   }
 

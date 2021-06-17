@@ -42,8 +42,6 @@ export class AppComponent implements OnInit {
       filter(address => address),
       take(1),
       tap((address) => {
-        console.log('got address', address);
-        
         this.store.dispatch({ type: fetchRestaurantsType });
         this.store.dispatch({ type: fetchTablesType });
         this.store.dispatch({ type: fetchReservationsType });
@@ -56,7 +54,7 @@ export class AppComponent implements OnInit {
       this.store.dispatch(addRestaurant({ restaurant: restaurant }));
       this.myAddress$.pipe(
         take(1),
-        filter((address) => address == _fromAddress ),
+        filter((address) => address.toLocaleLowerCase() == _fromAddress.toLocaleLowerCase() ),
         map(() => this.store.dispatch(setRestaurantsLoading({ isLoading: false })))).subscribe();
     });
 
@@ -64,8 +62,10 @@ export class AppComponent implements OnInit {
       this.store.dispatch(addTable({ table: table }));
       this.myAddress$.pipe(
         take(1),
-        filter((address) => address == _fromAddress ),
-        map(() => this.store.dispatch(setTablesLoading({ isLoading: false })))).subscribe();
+        filter((address: string) => address.toLocaleLowerCase() == _fromAddress.toLocaleLowerCase() ),
+        map(() => {this.store.dispatch(setTablesLoading({ isLoading: false }))
+      }
+      )).subscribe();
     })
 
     this.contractService.contract.on('LogNewReservation', (_fromAddress: any, reservation: any) => {

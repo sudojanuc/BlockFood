@@ -63,4 +63,10 @@ export class ReservationStatusComponent implements OnInit {
     // return id;
   }
 
+  getDate(number: BigInt){
+    
+    return new Date(+number.toString())
+
+  }
+
 }

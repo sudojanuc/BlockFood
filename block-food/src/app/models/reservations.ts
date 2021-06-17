@@ -6,6 +6,8 @@ export interface Reservation {
     reservationId: string
     unitKey: string
     restaurant?: Restaurant,
-    table?: Table
+    table?: Table,
+    startTime: any,
+    endTime: any
   }
   

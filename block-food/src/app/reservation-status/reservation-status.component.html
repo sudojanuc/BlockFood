@@ -12,14 +12,14 @@
   <!-- Name Column -->
   <ng-container matColumnDef="reservationid">
     <th mat-header-cell *matHeaderCellDef> Reservationid </th>
-    <td mat-cell *matCellDef="let element"> {{ getId(element.reservationId) }} </td>
+    <td mat-cell *matCellDef="let element"> {{ getId(element.reservationKey) }} </td>
     <!-- <th mat-header-cell *matHeaderCellDef> check in </th> -->
   </ng-container>
 
   <!-- Weight Column -->
   <ng-container matColumnDef="time">
     <th mat-header-cell *matHeaderCellDef> Time </th>
-    <td mat-cell *matCellDef="let element">//todo</td>
+    <td mat-cell *matCellDef="let element"> {{ getDate(element.startTime) | date: 'short' }} - {{ getDate(element.endTime) | date: 'short' }} </td>
   </ng-container>
 
   <ng-container matColumnDef="checkIn">
@@ -27,7 +27,7 @@
     <td mat-cell *matCellDef="let element">
       <mat-form-field style="padding-top: 10px;">
         <mat-label>code</mat-label>
-        <input matInput id="id{{element.reservationId}}">
+        <input matInput id="id{{element.reservationKey}}">
       </mat-form-field>
           <button mat-flat-button color="primary" (click)="checkin(element.reservationId)" style="margin-left: 20px;">checkIn</button>
     </td>

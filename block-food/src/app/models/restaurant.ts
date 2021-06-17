@@ -1,6 +1,7 @@
 export interface Restaurant {
-    providerId: string
+    providerKey: string
     name: string
     owner: string
+    timePerReservation: number
   }
   

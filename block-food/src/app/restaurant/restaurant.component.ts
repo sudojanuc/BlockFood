@@ -13,6 +13,7 @@ import { ContractService } from '../services/contract.service';
 })
 export class RestaurantComponent implements OnInit {
   name: string = '';
+  timePerReservation: number = 0;
   chairs: number = 0;
   isLoading: boolean = true;
   myRestaurant$ = this.store.pipe(
@@ -41,7 +42,8 @@ export class RestaurantComponent implements OnInit {
 
   public saveRestaurant() {
     this.store.dispatch({type: createRestaurantType, payload:{
-      name: this.name
+      name: this.name,
+      time: this.timePerReservation
     } })
   }
 
