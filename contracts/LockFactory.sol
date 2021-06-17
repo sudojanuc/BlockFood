@@ -6,9 +6,9 @@ pragma experimental ABIEncoderV2;
 import "./interfaces/unlock/IPublicLock.sol";
 import "./interfaces/unlock/IUnlock.sol";
 
-import "./Owned.sol";
+import "./AccessRestriction.sol";
 
-contract LockFactory is Owned {
+contract LockFactory is AccessRestriction {
     IUnlock internal unlock;
 
     mapping(bytes32 => IPublicLock) lockToKey;
@@ -33,7 +33,7 @@ contract LockFactory is Owned {
             "blu",
             bytes12(keccak256(abi.encodePacked(key)))
         );
-        IPublicLock lock = IPublicLock(address(uint160((unlock.publicLockAddress()))));
+        IPublicLock lock = IPublicLock(address(0)); //TODO fetch address from event -> possible??
         lockToKey[key] = lock;
     }
 

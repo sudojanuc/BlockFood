@@ -6,9 +6,9 @@ pragma experimental ABIEncoderV2;
 import "./interfaces/IReservation.sol";
 
 import "./Unit.sol";
-import "./Owned.sol";
+import "./AccessRestriction.sol";
 
-contract Reservation is IReservation, Owned {
+contract Reservation is IReservation, AccessRestriction {
     uint256 counter;
 
     struct ReservationInternalStruct {
@@ -31,7 +31,7 @@ contract Reservation is IReservation, Owned {
         unit = Unit(adrUnit);
     }
 
-    function setUnitAddress(address adr) external onlyOwner {
+    function setUnitAddress(address adr) external onlyRemote {
         unit = Unit(adr);
     }
 
@@ -81,7 +81,7 @@ contract Reservation is IReservation, Owned {
         address sender,
         bytes32 unitKey,
         uint256 startTime
-    ) public payable checkRemote returns (ReservationStruct memory) {
+    ) public payable onlyRemote returns (ReservationStruct memory) {
         return
             createReservation(sender, bytes32(counter++), unitKey, startTime);
     }
@@ -91,7 +91,7 @@ contract Reservation is IReservation, Owned {
         bytes32 reservationKey,
         bytes32 unitKey,
         uint256 startTime
-    ) public checkRemote returns (ReservationStruct memory) {
+    ) public onlyRemote returns (ReservationStruct memory) {
         require(unit.isUnit(unitKey), "UNIT_DOES_NOT_EXIST");
         require(!isReservation(reservationKey), "DUPLICATE_RESERVATION_KEY"); // duplicate key prohibited
         require(isTimeAvailable(startTime), "TIME_NOT_AVAILABLE");
@@ -113,7 +113,7 @@ contract Reservation is IReservation, Owned {
         reservationStructs[reservationKey].startTime = startTime;
         reservationStructs[reservationKey].endTime =
             startTime +
-            unit.getTimePerReservation(unitKey);
+            (unit.getTimePerReservation(unitKey) * 3600);
         reservationStructs[reservationKey]
             .checkInKey = generateRandomCheckInKey(
             block.number + uint256(unitKey)
@@ -179,7 +179,7 @@ contract Reservation is IReservation, Owned {
         address sender,
         bytes32 reservationKey,
         uint256 checkInKey
-    ) external checkRemote returns (ReservationStruct memory) {
+    ) external onlyRemote returns (ReservationStruct memory) {
         require(
             reservationStructs[reservationKey].checkInKey == checkInKey,
             "CHECK_IN_KEY_WRONG"
@@ -208,7 +208,7 @@ contract Reservation is IReservation, Owned {
     function getCheckInKey(address sender, bytes32 reservationKey)
         external
         view
-        checkRemote
+        onlyRemote
         returns (uint256)
     {
         require(

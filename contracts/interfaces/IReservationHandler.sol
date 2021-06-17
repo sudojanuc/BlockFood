@@ -1,4 +1,5 @@
 // SPDX-License-Keyentifier: MIT
+
 pragma solidity 0.5.17;
 pragma experimental ABIEncoderV2;
 
@@ -8,6 +9,8 @@ import "./IReservation.sol";
 
 interface IReservationHandler {
     ///provider
+    function setLockAddress(address payable adr, bytes32 key) external;
+
     function isProviderOwner(bytes32 providerKey) external view returns (bool);
 
     function getAllProviders()

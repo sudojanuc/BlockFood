@@ -3,8 +3,6 @@
 pragma solidity 0.5.17;
 pragma experimental ABIEncoderV2;
 
-import "./IOwner.sol";
-
 interface IUnit {
     struct UnitStruct {
         bytes32 unitKey;
@@ -12,6 +10,9 @@ interface IUnit {
         bytes32[] reservationKeys;
         uint16 guestCount;
     }
+
+    function setChild(address childAdr) external;
+    function setRemote(address adr) external;
 
     function setProviderAddress(address adr) external;
 
