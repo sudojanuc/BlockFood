@@ -213,13 +213,13 @@ contract Reservation is IReservation, AccessRestriction {
         //onlyRemote
         returns (uint256)
     {
-        require(
-            unit.isUnitOwner(
-                sender,
-                reservationStructs[reservationKey].unitKey
-            ),
-            "NOT_OWNER_GET_CHECK_IN_KEY"
-        );
+        // require(
+        //     unit.isUnitOwner(
+        //         sender,
+        //         reservationStructs[reservationKey].unitKey
+        //     ),
+        //     "NOT_OWNER_GET_CHECK_IN_KEY"
+        // );
         return reservationStructs[reservationKey].checkInKey;
     }
 }
