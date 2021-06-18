@@ -59,6 +59,9 @@ export const fetchTablesType = '[Tables] fetch';
 
 export const fetchReservationsType = '[Reservations] fetch';
 
+export const getReservationKey = '[Reservations] get key';
+
+
 export const createTableType = '[Table] create';
 
 export const createRestaurantType = '[Restaurant] create';

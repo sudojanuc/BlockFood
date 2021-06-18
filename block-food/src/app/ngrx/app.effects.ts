@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
-import { EMPTY, from } from 'rxjs';
+import { EMPTY, from, of } from 'rxjs';
 import { map, mergeMap, catchError, tap, filter, withLatestFrom, switchMap } from 'rxjs/operators';
 import { Reservation } from '../models/reservations';
 import { Restaurant } from '../models/restaurant';
@@ -14,6 +14,7 @@ import {
     fetchReservationsType,
     fetchRestaurantsType,
     fetchTablesType,
+    getReservationKey,
     setAddress,
     setReservations,
     setRestaurants,
@@ -78,6 +79,22 @@ export class AppEffects {
                     map(() => setTablesLoading({ isLoading: true })),
                     catchError(() => EMPTY)
                 ))
+    )
+    );
+
+    getReservationKey$ = createEffect(() => this.actions$.pipe(
+        ofType(getReservationKey),
+        withLatestFrom(this.store$),
+        switchMap((action: any) =>{
+            console.log(action);
+            return from(this.contractService.saveTable(action.payload.restaurant, action.payload.guestCount))
+                .pipe(
+                    // tap(console.log),
+                    map(() => setTablesLoading({ isLoading: true })),
+                    catchError(() => EMPTY)
+                
+                )
+            })
     )
     );
 

@@ -22,7 +22,7 @@
     <td mat-cell *matCellDef="let element"> {{ getDate(element.startTime) | date: 'short' }} - {{ getDate(element.endTime) | date: 'short' }} </td>
   </ng-container>
 
-  <ng-container matColumnDef="checkIn">
+  <ng-container matColumnDef="checkIn" *ngIf="!restaurant">
     <th mat-header-cell *matHeaderCellDef> check in </th>
     <td mat-cell *matCellDef="let element">
       <mat-form-field style="padding-top: 10px;">
@@ -30,6 +30,15 @@
         <input matInput id="id{{element.reservationKey}}">
       </mat-form-field>
           <button mat-flat-button color="primary" (click)="checkin(element.reservationKey)" style="margin-left: 20px;">checkIn</button>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="checkIn" *ngIf="restaurant">
+    <th mat-header-cell *matHeaderCellDef> check in </th>
+    <td mat-cell *matCellDef="let element">
+      <!-- {{getReservationKey(element.reservationKey) | async}} -->
+      <button mat-flat-button color="primary" (click)="getReservationKey(element.reservationKey)">getKey</button>
+      <!-- <div  *ngIf="getReservationKey(element.reservationKey) | async as key"> k {{ ( key) }}</div> -->
     </td>
   </ng-container>
 

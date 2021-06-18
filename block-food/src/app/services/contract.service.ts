@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { ethers, utils } from 'ethers';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Restaurant } from '../models/restaurant';
 import { Table } from '../models/table';
@@ -16,9 +16,12 @@ export class ContractService {
   
   public address: any;
   public contract: any;
+  public resContract: any;
   public provider: any;
   private daiAbi = environment.abi;
   private daiAddress = environment.address;
+  private resAbi = environment.resAbi;
+  private resAddress = environment.resAddress;
   
   constructor(
     @Inject(WEB3PROVIDER) public web3provider: any,
@@ -28,6 +31,10 @@ export class ContractService {
       this.provider = new ethers.providers.Web3Provider(window.ethereum);
       this.contract = new ethers.Contract(this.daiAddress, this.daiAbi, this.provider);
       this.contract = this.contract.connect(this.provider.getSigner());
+
+      this.resContract = new ethers.Contract(this.resAddress, this.resAbi, this.provider);
+      this.resContract = this.resContract.connect(this.provider.getSigner());
+
 
       this.web3provider.enable()
       .then((address: string) => 
@@ -94,6 +101,10 @@ export class ContractService {
   
   checkin(id:any,code:any) {
     this.contract.refundReservation(id,code,  {gasLimit : 300000} );
+  }
+
+  getReservationKey(reservationId: string, address:string): Promise<any>{
+    return this.resContract.getCheckInKey(address, reservationId);
   }
 
 }

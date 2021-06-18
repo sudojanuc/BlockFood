@@ -63,3 +63,6 @@
         </div>
     </ng-container>
 </div>
+<div style="margin-top: 5%;">
+<app-reservation-status  *ngIf="(myRestaurant$ | async)" [restaurant]="(myRestaurant$ | async)" ></app-reservation-status>
+</div>

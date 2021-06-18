@@ -1,4 +1,5 @@
 import { createSelector, createFeatureSelector, createReducer, on } from "@ngrx/store";
+import { Reservation } from "../models/reservations";
 import { Restaurant } from "../models/restaurant";
 import { Table } from "../models/table";
 import { addReservation, addRestaurant, addTable, fetchTablesType, setAddress, setReservations, setRestaurants, setRestaurantsLoading, setTables, setTablesLoading } from "./app.actions";
@@ -97,6 +98,13 @@ export const selectReservations = createSelector<any, any, any>(
 export const selectMyReservations = createSelector<any, any, any>(
   (reducer: any) => reducer.data,
   (state: AppState) => state.reservations.filter(reservation => reservation.owner.toLocaleLowerCase() == state.address.toLocaleLowerCase())
+);
+
+export const selectReservationsOfRestaurant = (restaurant: Restaurant) => createSelector<any, any, any>(
+  (reducer: any) => reducer.data,
+  (state: AppState) => 
+  state.reservations.filter((reservation: Reservation) => 
+  reservation?.restaurant?.providerKey == restaurant?.providerKey)
 );
 
 export const selectRestaurantsLoading = createSelector<any, any, any>(
