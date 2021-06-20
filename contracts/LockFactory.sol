@@ -33,7 +33,8 @@ contract LockFactory is AccessRestriction {
             "blu",
             bytes12(keccak256(abi.encodePacked(key)))
         );
-        IPublicLock lock = IPublicLock(address(0)); //TODO fetch address from event -> possible??
+        // IPublicLock lock = IPublicLock(address(0)); //TODO fetch address from event -> possible??
+         IPublicLock lock = IPublicLock(0x82c6A02dAc72a265FB307d45439b914FE04823C4); //TODO fetch address from event -> possible??
         lockToKey[key] = lock;
     }
 
