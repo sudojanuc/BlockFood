@@ -61,6 +61,8 @@ export class ReservationComponent implements OnInit {
 
   createReservation() {
     console.log(this.selected);
+    console.log(this.date);
+    
     if (!this.selected) {
       alert('Please select a Table');
       return;
@@ -69,12 +71,18 @@ export class ReservationComponent implements OnInit {
     let mins = this.time.substr(3);
     this.date.setHours(hours);
     this.date.setMinutes(mins);
+    console.log(this.date);
+    
     let unix = Math.floor(this.date.valueOf() / 1000 )
     console.log(unix);
     
     this.contractService.createReservation(this.selected, unix);
 
 
+  }
+
+  setDate(date:any) {
+    this.date = date.value;
   }
 
 }

@@ -102,8 +102,13 @@ export class AppEffects {
         ofType(fetchReservationsType),
         mergeMap(() => from(this.contractService.getAllReservations())
             .pipe(
-                tap(v => console.log('reservations: ', v)),
-                // map(),
+                // tap(v => console.log('reservations: ', v.forEach((res: Reservation) => {
+                // console.log(
+                // new Date(+res.startTime.toString() * 1000),
+                // new Date(+res.endTime.toString() * 1000)
+                // )
+                // }
+                //  ))),
                 withLatestFrom(this.store$),
                 map(([reservations, store]) =>
                     setReservations({
